@@ -210,7 +210,15 @@ if spec.get('pack_mapping'):
     # A third-party asset pack: its mapping (docs/asset-packs.md) drives the rest-pose fit.
     sys.path.insert(0,str(Path(__file__).parent))
     import pack_fit
-    objects=pack_fit.import_fitted(spec,rig,pack_fit.load_pack(spec['pack_mapping']))
+    pack=pack_fit.load_pack(spec['pack_mapping'])
+    objects=pack_fit.import_fitted(spec,rig,pack)
+    # The mapping's (lab-tuned) part settings are the defaults; explicit job settings add on top.
+    fit=next((p for p in pack['parts'] if p['code']==spec.get('pack_part')),{})
+    for i,a in enumerate('xyz'):
+        spec['offset_'+a]=spec.get('offset_'+a,0)+fit.get('offset',[0,0,0])[i]
+        spec['rotate_'+a]=spec.get('rotate_'+a,0)+fit.get('rotate',[0,0,0])[i]
+    spec['scale']=spec.get('scale',1)*fit.get('scale',1)
+    spec.setdefault('hide_body',fit.get('hide_body'))
 else:
     objects = import_asset(Path(spec['asset'])) if spec['input_kind']=='model' else starter(part)
 if spec.get('mount_source_origin'):
@@ -303,6 +311,14 @@ report={'model':'UO_Model3D v13','bones':len(rig.data.bones),'shape_keys':0,
 (job/'original-frames.json').write_text(bpy.data.texts['uo_original_frames.json'].as_string())
 bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(job/'item.blend'))
+if (spec.get('hide_body') or {}).get('enabled'):
+    # CC4-style: body faces under the item can't poke through or hold out holes (rest pose, after item.blend is saved).
+    sys.path.insert(0,str(Path(__file__).parent))
+    import pack_fit
+    rig.data.pose_position='REST'; bpy.context.view_layer.update()
+    hb=spec['hide_body']; report['hidden_body_faces']=pack_fit.hide_body_under(body,objects,hb.get('outward',.02),hb.get('inward',.01))
+    rig.data.pose_position='POSE'; bpy.context.view_layer.update()
+    (job/'scene-report.json').write_text(json.dumps(report,indent=2))
 module_spec=importlib.util.spec_from_file_location('external_vd_writer',backend/'pipeline/uo_vd_writer.py')
 writer=importlib.util.module_from_spec(module_spec); module_spec.loader.exec_module(writer)
 execute_external('render_uo_layer.py', {

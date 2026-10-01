@@ -112,3 +112,23 @@ def bind(objects, rig, rigid=False):
             for g in o.vertex_groups: g.name = 'rigid_'+g.name
     for o in objects:
         o.parent = rig; o.matrix_parent_inverse = Matrix.Identity(4); mod = o.modifiers.new('UO equipment animation', 'ARMATURE'); mod.object = rig
+
+
+def hide_body_under(body, objects, outward=.02, inward=.01):
+    """CC4-style hide-under-clothes: delete body faces whose centre, cast along its normal from `inward` inside,
+    reaches an item within inward+outward metres (rest pose). Same rule as the fit lab. Returns the face count."""
+    import bmesh
+    from mathutils.bvhtree import BVHTree
+    dg = bpy.context.evaluated_depsgraph_get()
+    trees = [(BVHTree.FromObject(o, dg), o.matrix_world.inverted()) for o in objects]   # trees are object-local
+    bm = bmesh.new(); bm.from_mesh(body.data)
+    M = body.matrix_world; N = M.to_3x3().inverted().transposed()
+    doomed = []
+    for f in bm.faces:
+        c = M @ f.calc_center_median(); n = (N @ f.normal).normalized()
+        start = c - n*inward
+        if any(t.ray_cast(inv @ start, (inv.to_3x3() @ n).normalized(), inward+outward)[0] is not None for t, inv in trees):
+            doomed.append(f)
+    bmesh.ops.delete(bm, geom=doomed, context='FACES_ONLY')
+    bm.to_mesh(body.data); bm.free(); body.data.update()
+    return len(doomed)

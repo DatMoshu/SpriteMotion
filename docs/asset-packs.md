@@ -59,9 +59,13 @@ One entry per part **type** (a helmet type, a left-hand type, and so on):
 | `studio_part` | Fit template in the studio (`helm`, `chest`, `arms`, `gloves`, `legs`, `boots`, `robe`, `cloak`, `skirt`, `weapon`, `shield`, `bow`, `quiver`) |
 | `bind` | `skinned` (deforms with its bones) or `rigid` (moves with one bone; metal must not stretch) |
 | `offset` | Rest-pose offset in metres, applied before binding (for example helmet crown clearance) |
+| `rotate`, `scale` | Rest-pose rotation (degrees, XYZ about the item centre) and uniform scale |
+| `hide_body` | `{enabled, outward, inward}`: CC4-style hiding of body faces under the part (metres along each face normal, rest pose), so the body cannot poke through or hold out holes in the sprite |
 | `weighted_bones` | Bones the pack's parts of this type are weighted to (sampled) |
 
 `uncovered_layers` lists the game's animated layers that the pack has no source for.
+
+Tune `offset`, `rotate`, `scale`, `bind` and `hide_body` per slot in the [fit lab](../tools/fit-lab/README.md).
 
 ## Adding a pack
 

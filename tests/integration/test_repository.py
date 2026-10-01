@@ -6,6 +6,7 @@ to the folder holding anim.mul / anim.idx.
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -65,3 +66,8 @@ def test_uo_extraction_matches_every_bundled_pose(tmp_path):
     status = dataset_status(Dataset.load(out))["totals"]
     assert status["annotated"] == status["frames"] == 1680
     assert status["approved"] == 6 and status["fingerprint_mismatches"] == 0
+
+
+def test_agent_routers_match_claude_sources():
+    result = subprocess.run([sys.executable, str(REPO / "tools" / "agents" / "run.py"), "--check"], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr or result.stdout

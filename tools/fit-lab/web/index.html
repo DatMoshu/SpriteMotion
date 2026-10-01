@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fit Lab</title>
+<link rel="stylesheet" href="lab.css">
+<script type="importmap">
+{"imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+  "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.7.3/build/index.module.js"
+}}
+</script>
+</head>
+<body>
+<aside id="left">
+  <h1>Fit Lab</h1>
+  <p class="sub" id="packName"></p>
+  <label>Slot <select id="slot"></select></label>
+  <p class="sub" id="slotInfo"></p>
+  <div id="items"></div>
+</aside>
+<main>
+  <div id="view"></div>
+  <div id="bar">
+    <label>Action <select id="action"></select></label>
+    <span id="dirs"></span>
+    <input id="frame" type="range" min="0" max="0" value="0">
+    <span id="frameLabel">0</span>
+    <button id="play">Play</button>
+    <button id="uoView" title="Reset to the UO camera">UO camera</button>
+    <label><input id="showHidden" type="checkbox"> show hidden faces</label>
+  </div>
+  <div id="sheetWrap"><h2>Across the slot <span class="sub">(UO camera, 136×120, magenta = body pokes through)</span></h2><div id="sheet"></div></div>
+</main>
+<aside id="right">
+  <h2>Slot fit <span class="sub" id="partCode"></span></h2>
+  <div id="fit"></div>
+  <h2>Hide body under clothes</h2>
+  <p class="sub">Like CC4's hide-mesh: body faces this close to the item are hidden, so they can't poke through or hold out holes in the sprite.</p>
+  <div id="hide"></div>
+  <h2>Measure</h2>
+  <p class="sub">Poke pixels = pixels where body limb/head faces that lie under the item (within 5 cm outside / 3 cm inside it at rest) show in front of it: the holes the renderer's body holdout would cut. Counted in every frame of the checked actions × 5 directions. The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so counts run high.</p>
+  <div id="measureActions"></div>
+  <button id="measure">Measure slot</button>
+  <table id="results"></table>
+  <div class="row"><button id="save">Save adjustments</button><button id="reset">Reset slot</button></div>
+  <p class="sub" id="status"></p>
+</aside>
+<script type="module" src="lab.js"></script>
+</body>
+</html>
