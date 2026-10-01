@@ -31,11 +31,19 @@ class UOReader:
                 body, original, converted, gump, hue = map(int, values[:5])
                 self.equip[body, original] = (converted, hue)
         self.unsupported = set()
+        self.conv = {}          # body -> (anim file number 2..5, body id inside that file), from Bodyconv.def
+        self._files = {}
         for filename in ['Body.def', 'Bodyconv.def']:
             for line in (self.root / filename).read_text(errors='replace').splitlines():
                 values = line.split('#')[0].split()
                 if values and values[0].isdigit():
-                    if filename == 'Body.def' or any(x.lstrip('-').isdigit() and int(x) >= 0 for x in values[1:5]):
+                    if filename == 'Body.def':
+                        self.unsupported.add(int(values[0]))
+                        continue
+                    targets = [(n, int(x)) for n, x in zip((2, 3, 4, 5), values[1:5]) if x.lstrip('-').isdigit() and int(x) >= 0]
+                    if targets and (self.root / f'anim{targets[0][0]}.idx').exists():
+                        self.conv[int(values[0])] = targets[0]
+                    elif targets:                          # remapped into an animN.mul this client lacks
                         self.unsupported.add(int(values[0]))
         self.tiledata = (self.root / 'tiledata.mul').read_bytes()
         if len(self.tiledata) != 3188736:
@@ -46,19 +54,39 @@ class UOReader:
         return {'graphic': graphic, 'animId': struct.unpack_from('<H', self.tiledata, p+14)[0],
                 'layer': self.tiledata[p+9], 'label': self.tiledata[p+21:p+41].split(b'\0')[0].decode('cp1252')}
 
+    def _file(self, n):
+        if n not in self._files:
+            self._files[n] = ((self.root / f'anim{n}.idx').read_bytes(), (self.root / f'anim{n}.mul').open('rb'))
+        return self._files[n]
+
+    @staticmethod
+    def _base(n, body):
+        """First idx record of a body inside animN (UOFiddler layouts)."""
+        if n == 3:
+            return body*65 if body < 300 else 33000+(body-300)*110 if body < 400 else 35000+(body-400)*175
+        if n == 2:
+            return body*110 if body < 200 else 22000+(body-200)*65
+        return body*110 if body < 200 else 22000+(body-200)*65 if body < 400 else 35000+(body-400)*175
+
     def sequence(self, body, action, direction):
         if body in self.unsupported:
             raise ValueError(f'Animation {body} requires a DEF remapping not supported by this classic-only export')
-        if body < 400:
-            raise ValueError('Only human/equipment animation IDs >= 400 are supported')
-        record = 35000 + (body-400)*175 + action*5 + direction
-        if record*12+12 > len(self.idx):
+        idx, mul = self.idx, self.mul
+        if body in self.conv:                      # Bodyconv.def: this body lives in anim2..5.mul
+            n, target = self.conv[body]
+            idx, mul = self._file(n)
+            record = self._base(n, target) + action*5 + direction
+        else:
+            if body < 400:
+                raise ValueError('Only human/equipment animation IDs >= 400 are supported')
+            record = 35000 + (body-400)*175 + action*5 + direction
+        if record*12+12 > len(idx):
             return []
-        offset, length, _ = struct.unpack_from('<iii', self.idx, record*12)
+        offset, length, _ = struct.unpack_from('<iii', idx, record*12)
         if offset < 0 or length <= 0:
             return []
-        self.mul.seek(offset)
-        data = self.mul.read(length)
+        mul.seek(offset)
+        data = mul.read(length)
         if len(data) != length or length < 516:
             raise ValueError('Truncated animation record')
         palette = struct.unpack_from('<256H', data)
@@ -98,3 +126,5 @@ class UOReader:
 
     def close(self):
         self.mul.close()
+        for _, handle in self._files.values():
+            handle.close()

@@ -9,16 +9,18 @@ from build import UOReader, canvas, ITEMS, FACING
 def verify(root):
     m=json.loads((root/'manifest.json').read_text());reader=UOReader(m['report']['source'])
     evidence=root/'evidence';evidence.mkdir(exist_ok=True)
-    checked=0;different={k:0 for k,_ in ITEMS};errors=[]
+    keys=[i['key'] for i in m['items']]          # items come from the manifest (build.py --config may change them)
+    order=[k for k in m.get('drawOrder',['pants','shoes','shirt','robe','hair','gloves','sword']) if k in keys]
+    checked=0;different={k:0 for k in keys};errors=[]
     for action in m['actions']:
       for facing,v in action['views'].items():
         atlas=Image.open(root/v['atlas']).convert('RGBA')
         body=reader.sequence(400,action['index'],FACING.index(int(facing)))
-        if atlas.size!=(256*v['count'],256*(2+2*len(ITEMS))): errors.append('atlas dimensions')
+        if atlas.size!=(256*v['count'],256*(2+2*len(keys))): errors.append('atlas dimensions')
         for f,b in enumerate(body):
           actual=atlas.crop((256*f,0,256*(f+1),256))
           if actual.tobytes()!=canvas(b).tobytes():errors.append(f'base mismatch {action["index"]}/{facing}/{f}')
-          for j,(key,_) in enumerate(ITEMS):
+          for j,key in enumerate(keys):
             original=np.array(atlas.crop((256*f,(2+j*2)*256,256*(f+1),(3+j*2)*256)))
             custom=np.array(atlas.crop((256*f,(3+j*2)*256,256*(f+1),(4+j*2)*256)))
             different[key]+=int(np.any(original!=custom))
@@ -34,10 +36,13 @@ def verify(root):
         for new in [False,True]:
           result=Image.new('RGBA',(256,256));back=facing in [0,6,7]
           def layer(row): result.alpha_composite(atlas.crop((0,row*256,256,(row+1)*256)))
-          def item(k):layer(2+[key for key,_ in ITEMS].index(k)*2+int(new))
+          def item(k):
+            if k in keys:layer(2+keys.index(k)*2+int(new))
           if not back:item('backpack')
           layer(0)
-          for k in ['pants','shoes','shirt']+(['robe'] if robed else [])+['hair','gloves','sword']:
+          for k in order:
+              if k=='robe' and not robed:continue
+              if k in ('crossbow','staff','hood'):continue       # alternatives / optional layers stay off in contact sheets
               item(k)
           if back:item('backpack')
           item('familiar')

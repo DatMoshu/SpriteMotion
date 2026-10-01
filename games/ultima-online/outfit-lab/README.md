@@ -24,6 +24,11 @@ Open http://127.0.0.1:8767. The generated index.html also works directly from di
 `--actions 0 4 9 16` makes a smaller build; default is all 35 actions.
 Source masks must already exist (see ../region-masks/README.md).
 
+`--config items.json` replaces the built-in ten items. Keys: `items` (`[key, ItemID]`), `cells`, `props`, `hide`,
+`drawOrder`, `defaultOff`, `exclusive`, `title`, `displayNames`, and per-item axis fit for slender hand-held items:
+`axisFit`, `axisImages`, `axisRatio`, `axisThickness` (constant px), `axisContinuity`, `axisTorsoRule`.
+The viewer and `verify.py` read the item list from the manifest. A UTF-8 BOM in the file is accepted.
+
 ## Representation
 
 Each action/stored-facing atlas has frames across columns (256 px per frame).

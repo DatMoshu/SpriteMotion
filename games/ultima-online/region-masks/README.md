@@ -21,7 +21,7 @@ python games/ultima-online/region-masks/build_regions.py
 python games/ultima-online/region-masks/package_masks.py
 ```
 
-`SPRITEMOTION_REGION_WORKSPACE` optionally overrides the data directory. Packaging uses the copied `../reference/anim_400_index.json`. The standalone classic MUL reader `uo.py` was imported from BodyMaskLab to preserve garment decoding behavior. It does not replace SpriteMotion's extraction adapter.
+`SPRITEMOTION_REGION_WORKSPACE` optionally overrides the data directory. Packaging uses the copied `../reference/anim_400_index.json`. The standalone classic MUL reader `uo.py` was imported from BodyMaskLab to preserve garment decoding behavior. It does not replace SpriteMotion's extraction adapter. It follows `Bodyconv.def` into `anim2`–`anim5.mul` (UOFiddler index layouts), so shard animations kept there are readable. Bodies remapped by `Body.def`, and `.uop`-only animations, are still rejected.
 
 `depth_test.py` additionally requires PyTorch, Transformers, model downloads/cache and a CUDA GPU. Existing depth results were copied; rerunning depth is optional.
 
