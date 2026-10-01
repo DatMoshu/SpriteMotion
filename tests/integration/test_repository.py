@@ -51,7 +51,8 @@ def test_no_game_assets_or_local_paths_are_published():
         assert path.suffix.lower() not in {".mul", ".uop", ".idx", ".blend", ".fbx", ".glb"}, rel
         if rel.startswith("games/") and path.suffix.lower() in {".png", ".bmp", ".gif"}:
             pytest.fail(f"image under games/ (game art must never be committed): {rel}")
-        if path.suffix.lower() in {".py", ".gd", ".json", ".md", ".bat", ".toml", ".cfg", ".godot", ".tscn"} \
+        if path.suffix.lower() in {".py", ".gd", ".json", ".md", ".bat", ".toml", ".cfg", ".godot", ".tscn",
+                                  ".html", ".js", ".css", ".yaml", ".yml", ".txt"} \
                 and path.exists() and path.stat().st_size < 2_000_000:
             text = path.read_text(encoding="utf-8", errors="replace")
             match = ABSOLUTE_PATH.search(text)
