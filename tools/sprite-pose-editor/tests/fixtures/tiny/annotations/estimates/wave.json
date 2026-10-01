@@ -1,0 +1,583 @@
+{
+ "schema": "spritemotion.pose-annotations",
+ "schema_version": 1,
+ "dataset_id": "fixture/tiny",
+ "skeleton": "tiny-6",
+ "coordinate_space": "canvas-px",
+ "sequence": "wave",
+ "layer": "estimate",
+ "poses": [
+  {
+   "frame_id": "fixture/tiny/wave/d0/f00",
+   "direction": 0,
+   "frame": 0,
+   "source_fingerprint": "sha256:381b322f3c342c111ac79e60d67e02e97f6f6f34589dd3e65f2ae0d59ccd19bd",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 23.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 23.5,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 23.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 33.5,
+     "y": 20.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 18.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 28.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d0/f01",
+   "direction": 0,
+   "frame": 1,
+   "source_fingerprint": "sha256:0c2aa9f4dbd6e7397d5d38face6b9ea7b8a28ef9de33f2951b3dae446df30ee3",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 23.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 23.5,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 23.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 36.391,
+     "y": 14.719,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 18.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 28.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d0/f02",
+   "direction": 0,
+   "frame": 2,
+   "source_fingerprint": "sha256:8430ec8f78dd639c42bf4688fc05effdb387d4baa2196f4402240d1dd0cb898c",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 23.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 23.5,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 23.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 35.047,
+     "y": 17.407,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 18.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 28.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d1/f00",
+   "direction": 1,
+   "frame": 0,
+   "source_fingerprint": "sha256:94dcac97949e034a3cbd7aab638441b821a24ccc742a32a7f06b3ddd17bf2ab9",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 26.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 25.9,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 23.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 33.5,
+     "y": 20.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 18.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 28.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d1/f01",
+   "direction": 1,
+   "frame": 1,
+   "source_fingerprint": "sha256:504853ea21963fe5eccf10f60a857234bf33bb394af897a528d22a4b07b2d64f",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 26.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 25.9,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 23.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 36.391,
+     "y": 14.719,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 18.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 28.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d1/f02",
+   "direction": 1,
+   "frame": 2,
+   "source_fingerprint": "sha256:6c232a4e972ae0b0a0dde4d2a1d9320aada08cd3b124cc9ebcc6cfd767547e2d",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 26.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 25.9,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 23.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 35.047,
+     "y": 17.407,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 18.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 28.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d2/f00",
+   "direction": 2,
+   "frame": 0,
+   "source_fingerprint": "sha256:ea96a580fea8fabf73443e8fb253c57f20d946a5af696d3a8990c9f12bbe61a4",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 26.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 26.5,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 26.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 16.5,
+     "y": 20.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 31.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 21.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d2/f01",
+   "direction": 2,
+   "frame": 1,
+   "source_fingerprint": "sha256:954a2ed9861876c7f52bc69d8621a54a293c3a3c91a271cfd42a28602d62784e",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 26.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 26.5,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 26.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 13.609,
+     "y": 14.719,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 31.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 21.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d2/f02",
+   "direction": 2,
+   "frame": 2,
+   "source_fingerprint": "sha256:2c75cfee1b38b4cfbf5d326e4bd39a0b9843898d099d68ea4b9932029a8efaa7",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 26.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 26.5,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 26.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 14.953,
+     "y": 17.407,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 31.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 21.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d3/f00",
+   "direction": 3,
+   "frame": 0,
+   "source_fingerprint": "sha256:8938e097559b528bbf6f651507edf7c74f25dc7c6ee603ecae2cac858184d19b",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 23.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 24.1,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 26.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 16.5,
+     "y": 20.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 31.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 21.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "fixture/tiny/wave/d3/f01",
+   "direction": 3,
+   "frame": 1,
+   "source_fingerprint": "sha256:9fa01dbc4c95dea5e988e102b0e6a446908c39a50414babbf6f2fea529b32b73",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "Synthetic test estimate."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 23.5,
+     "y": 10.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 24.1,
+     "y": 18.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 26.5,
+     "y": 36.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "hand": {
+     "x": 13.609,
+     "y": 14.719,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_a": {
+     "x": 31.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    },
+    "foot_b": {
+     "x": 21.5,
+     "y": 56.5,
+     "confidence": 0.5,
+     "status": "estimate"
+    }
+   }
+  }
+ ]
+}

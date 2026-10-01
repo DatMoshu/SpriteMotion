@@ -1,0 +1,2604 @@
+{
+ "schema": "spritemotion.pose-annotations",
+ "schema_version": 1,
+ "dataset_id": "examples/sample-character",
+ "sequence": "wave",
+ "skeleton": "stick-13",
+ "layer": "estimate",
+ "coordinate_space": "canvas-px",
+ "limb_identity": "anatomical",
+ "poses": [
+  {
+   "frame_id": "examples/sample-character/wave/d0/f00",
+   "direction": 0,
+   "frame": 0,
+   "source_fingerprint": "sha256:acd2cf0c2f90f222ded2add14a98cd1e67b00402c232001cdec045a93f44a2c8",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 79.207,
+     "y": 69.969,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 78.104,
+     "y": 83.494,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.638,
+     "y": 112.117,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 93.688,
+     "y": 84.221,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 98.041,
+     "y": 101.532,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 102.255,
+     "y": 117.796,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 65.936,
+     "y": 83.832,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 55.263,
+     "y": 67.71,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 44.832,
+     "y": 55.613,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 86.87,
+     "y": 137.102,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 86.523,
+     "y": 165.807,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 72.768,
+     "y": 138.328,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 73.642,
+     "y": 166.975,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f01",
+   "direction": 0,
+   "frame": 1,
+   "source_fingerprint": "sha256:13f1eb40212e56c07606e0ada6b2c16210dae0ed5fe2aea12b666702d8e4b638",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 76.308,
+     "y": 71.216,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 76.92,
+     "y": 82.334,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 78.83,
+     "y": 113.761,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 93.103,
+     "y": 84.195,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 97.235,
+     "y": 101.25,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 102.172,
+     "y": 115.376,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 64.855,
+     "y": 85.765,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 54.482,
+     "y": 68.255,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 53.487,
+     "y": 54.554,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 87.594,
+     "y": 139.196,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 89.183,
+     "y": 164.334,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 75.559,
+     "y": 141.628,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 74.618,
+     "y": 165.977,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f02",
+   "direction": 0,
+   "frame": 2,
+   "source_fingerprint": "sha256:016148d6f65944b22711cba7b5e213fb20c30ad901eefd03416859450e425e27",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 76.35,
+     "y": 70.19,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 77.708,
+     "y": 82.137,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.71,
+     "y": 112.693,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 93.557,
+     "y": 82.501,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 97.135,
+     "y": 99.562,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 101.723,
+     "y": 114.403,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 63.436,
+     "y": 86.181,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 53.684,
+     "y": 69.14,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 53.096,
+     "y": 53.279,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 85.259,
+     "y": 137.778,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 89.255,
+     "y": 164.567,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 74.12,
+     "y": 138.932,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 72.847,
+     "y": 164.498,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f03",
+   "direction": 0,
+   "frame": 3,
+   "source_fingerprint": "sha256:abd08c7b960a12e9342689060f19e3bfdb14e1588c2bd032064122a24c213c95",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 81.287,
+     "y": 68.373,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 81.527,
+     "y": 81.379,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.057,
+     "y": 112.875,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 94.373,
+     "y": 82.683,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 97.645,
+     "y": 101.562,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 100.681,
+     "y": 117.959,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 66.588,
+     "y": 81.96,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 53.296,
+     "y": 67.043,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 45.353,
+     "y": 57.098,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 86.618,
+     "y": 138.727,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 85.937,
+     "y": 164.103,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 71.043,
+     "y": 138.448,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 73.947,
+     "y": 164.794,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f04",
+   "direction": 0,
+   "frame": 4,
+   "source_fingerprint": "sha256:bc111e4a7033db5ef10bbd90a15c823e8b0ecf6874f66bed6d6b9ce05fb799c4",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 84.375,
+     "y": 68.822,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 81.813,
+     "y": 82.676,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.487,
+     "y": 113.557,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 94.849,
+     "y": 82.6,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 98.507,
+     "y": 102.348,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 100.229,
+     "y": 120.314,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 66.628,
+     "y": 83.822,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 56.974,
+     "y": 68.369,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 40.546,
+     "y": 60.96,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 86.318,
+     "y": 139.516,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 87.72,
+     "y": 166.541,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 73.212,
+     "y": 140.1,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 72.718,
+     "y": 164.09,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f05",
+   "direction": 0,
+   "frame": 5,
+   "source_fingerprint": "sha256:1412c8d5ed4bdf5a4a1f7e430e689ae1862a19c0329bc08e2fd4b989b084f58f",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.949,
+     "y": 68.028,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 82.668,
+     "y": 80.694,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.548,
+     "y": 114.516,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 96.498,
+     "y": 86.679,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 97.401,
+     "y": 100.5,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 101.772,
+     "y": 117.233,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 67.822,
+     "y": 83.274,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 55.079,
+     "y": 69.461,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 40.977,
+     "y": 61.97,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 86.971,
+     "y": 138.668,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 85.904,
+     "y": 164.911,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 72.895,
+     "y": 137.624,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 73.849,
+     "y": 163.724,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f00",
+   "direction": 1,
+   "frame": 0,
+   "source_fingerprint": "sha256:4838c864b7defda9703e52a32674ec959845ecaa64d99e3c6c12db9e65339a6c",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.725,
+     "y": 66.887,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.497,
+     "y": 82.841,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.621,
+     "y": 115.327,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 80.94,
+     "y": 75.975,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 82.664,
+     "y": 91.683,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 80.789,
+     "y": 107.257,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 79.12,
+     "y": 92.312,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 80.355,
+     "y": 81.344,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 79.324,
+     "y": 73.75,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 79.139,
+     "y": 133.198,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 81.425,
+     "y": 161.224,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 80.043,
+     "y": 143.899,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 81.136,
+     "y": 169.283,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f01",
+   "direction": 1,
+   "frame": 1,
+   "source_fingerprint": "sha256:bd3ac92ba579442e89582959379cf4afdf6990526fe16f228317013edea45010",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 82.313,
+     "y": 70.008,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.753,
+     "y": 84.194,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.755,
+     "y": 112.205,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 76.253,
+     "y": 77.48,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 80.115,
+     "y": 91.135,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 80.778,
+     "y": 104.754,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 80.204,
+     "y": 91.23,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 78.541,
+     "y": 82.115,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 80.076,
+     "y": 66.092,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 80.166,
+     "y": 135.388,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 80.036,
+     "y": 161.808,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 80.256,
+     "y": 142.906,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 79.485,
+     "y": 169.437,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f02",
+   "direction": 1,
+   "frame": 2,
+   "source_fingerprint": "sha256:954fc99c2e8a650754f12d696c3e275c88ec0ceb0e487f44f25b9836a5c001d6",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.703,
+     "y": 70.761,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 79.525,
+     "y": 83.453,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.864,
+     "y": 111.334,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 80.062,
+     "y": 76.987,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 79.339,
+     "y": 90.885,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 78.449,
+     "y": 103.385,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 78.463,
+     "y": 92.097,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 79.44,
+     "y": 81.203,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 80.372,
+     "y": 65.766,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 79.271,
+     "y": 134.255,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 78.868,
+     "y": 161.454,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 79.786,
+     "y": 143.6,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 81.534,
+     "y": 170.128,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f03",
+   "direction": 1,
+   "frame": 3,
+   "source_fingerprint": "sha256:80dc0a82bb3d8e23d70f6560f01611ce52546e6625ab954174d550bde8f28d2c",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.901,
+     "y": 67.923,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.673,
+     "y": 82.859,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.476,
+     "y": 114.536,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 82.538,
+     "y": 77.896,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 80.653,
+     "y": 91.481,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 78.88,
+     "y": 107.214,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 79.924,
+     "y": 89.587,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 79.876,
+     "y": 81.133,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 80.936,
+     "y": 72.34,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 79.731,
+     "y": 134.983,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 80.173,
+     "y": 160.487,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 80.833,
+     "y": 144.167,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 80.814,
+     "y": 167.202,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f04",
+   "direction": 1,
+   "frame": 4,
+   "source_fingerprint": "sha256:ca95a0f890896dd6b6a70a1c71a37d1837cf705863f3d2c307802795b76a3a64",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 78.851,
+     "y": 65.991,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 78.171,
+     "y": 81.893,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.078,
+     "y": 111.722,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 77.913,
+     "y": 75.793,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 80.162,
+     "y": 93.795,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 80.69,
+     "y": 110.045,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 79.661,
+     "y": 89.66,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 79.862,
+     "y": 79.397,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 79.755,
+     "y": 82.666,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 78.972,
+     "y": 136.118,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 81.477,
+     "y": 161.686,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 80.255,
+     "y": 140.565,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 82.361,
+     "y": 169.629,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f05",
+   "direction": 1,
+   "frame": 5,
+   "source_fingerprint": "sha256:d4b077187905aa285b7b3910fc6a3e97fd2146e0e692f88102b9774f9f46584f",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.106,
+     "y": 67.727,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.451,
+     "y": 80.583,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.283,
+     "y": 111.486,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 80.497,
+     "y": 76.384,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 80.896,
+     "y": 93.643,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 80.269,
+     "y": 111.483,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 80.804,
+     "y": 89.459,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 80.044,
+     "y": 78.855,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 81.084,
+     "y": 83.307,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 80.064,
+     "y": 136.653,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 79.888,
+     "y": 159.877,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 79.347,
+     "y": 140.92,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 79.725,
+     "y": 169.277,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d2/f00",
+   "direction": 2,
+   "frame": 0,
+   "source_fingerprint": "sha256:12e707833a11b8a08c27ed1c41fa04b35e552349fa14ff2b0b96dc11865b4da9",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 79.071,
+     "y": 68.471,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.199,
+     "y": 81.365,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.091,
+     "y": 112.496,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 66.872,
+     "y": 83.314,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 60.94,
+     "y": 101.617,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 58.755,
+     "y": 116.739,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 93.666,
+     "y": 83.686,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 103.813,
+     "y": 68.147,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 114.204,
+     "y": 56.649,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 72.483,
+     "y": 138.934,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 73.38,
+     "y": 164.032,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 85.751,
+     "y": 138.031,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 87.663,
+     "y": 164.577,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d2/f01",
+   "direction": 2,
+   "frame": 1,
+   "source_fingerprint": "sha256:eba15938f6ca42a606cfd108fbdbd217bbadd637f10d889a074a7c7ce22d2603",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 82.323,
+     "y": 65.724,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 81.453,
+     "y": 82.471,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.445,
+     "y": 112.839,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 67.403,
+     "y": 82.83,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 62.711,
+     "y": 100.429,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 55.006,
+     "y": 116.854,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 94.574,
+     "y": 86.263,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 107.416,
+     "y": 69.646,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 106.591,
+     "y": 54.968,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 71.898,
+     "y": 138.731,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 73.239,
+     "y": 164.183,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 89.012,
+     "y": 137.896,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 86.269,
+     "y": 165.418,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d2/f02",
+   "direction": 2,
+   "frame": 2,
+   "source_fingerprint": "sha256:ff1d4ebe4ce4892d3d6e941a2fbe4bcd9022ca0f948babcfa960eb950abb26a4",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 84.017,
+     "y": 68.529,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 81.25,
+     "y": 82.663,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 78.574,
+     "y": 111.637,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 66.893,
+     "y": 82.623,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 61.737,
+     "y": 102.409,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 58.216,
+     "y": 115.856,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 95.427,
+     "y": 85.762,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 106.151,
+     "y": 69.774,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 107.068,
+     "y": 52.102,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 70.747,
+     "y": 138.455,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 73.079,
+     "y": 165.437,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 86.401,
+     "y": 138.244,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 87.559,
+     "y": 165.763,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d2/f03",
+   "direction": 2,
+   "frame": 3,
+   "source_fingerprint": "sha256:5bb5fa1422443e522a2f44d7ca8faaaba61a7e65f528d050114be54d4b5de530",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 81.331,
+     "y": 67.563,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 78.351,
+     "y": 83.56,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.608,
+     "y": 113.203,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 65.715,
+     "y": 83.443,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 61.891,
+     "y": 100.818,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 56.935,
+     "y": 116.171,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 94.117,
+     "y": 84.554,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 106.55,
+     "y": 68.696,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 115.237,
+     "y": 56.753,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 72.223,
+     "y": 137.517,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 72.462,
+     "y": 165.054,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 89.023,
+     "y": 138.128,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 88.307,
+     "y": 164.678,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d2/f04",
+   "direction": 2,
+   "frame": 4,
+   "source_fingerprint": "sha256:ce1a24da207b58aa06761dd5bbeb6cedc7f371a37585c0ccbe64d8beb3537bb7",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 77.513,
+     "y": 70.549,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 78.683,
+     "y": 82.91,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.311,
+     "y": 113.865,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 65.33,
+     "y": 84.186,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 62.113,
+     "y": 101.886,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 59.839,
+     "y": 117.479,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 92.987,
+     "y": 86.021,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 105.443,
+     "y": 68.639,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 119.67,
+     "y": 61.799,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 74.185,
+     "y": 138.388,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 73.129,
+     "y": 163.456,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 86.145,
+     "y": 136.628,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 88.914,
+     "y": 165.623,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d2/f05",
+   "direction": 2,
+   "frame": 5,
+   "source_fingerprint": "sha256:5469a289b755bb9c9ff87139209f826aa0342d86e612252b2b00537dad082928",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 77.739,
+     "y": 68.993,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 76.69,
+     "y": 82.335,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.364,
+     "y": 111.439,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 64.404,
+     "y": 84.998,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 61.427,
+     "y": 102.185,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 58.758,
+     "y": 118.656,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 93.491,
+     "y": 81.453,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 103.315,
+     "y": 67.746,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 120.414,
+     "y": 60.826,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 74.929,
+     "y": 138.876,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 72.015,
+     "y": 163.268,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 86.828,
+     "y": 139.956,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 87.193,
+     "y": 162.834,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d3/f00",
+   "direction": 3,
+   "frame": 0,
+   "source_fingerprint": "sha256:fd2e7404352eb8aec98c83e5b2b159730dfc01f94708571bab64570469894f64",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 77.445,
+     "y": 69.263,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 81.068,
+     "y": 82.239,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.149,
+     "y": 113.482,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 81.256,
+     "y": 90.241,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 80.438,
+     "y": 109.955,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 78.923,
+     "y": 128.638,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 78.577,
+     "y": 77.087,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 80.314,
+     "y": 56.736,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 78.85,
+     "y": 38.064,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 79.875,
+     "y": 143.463,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 79.257,
+     "y": 167.54,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 80.5,
+     "y": 134.121,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 78.706,
+     "y": 162.56,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d3/f01",
+   "direction": 3,
+   "frame": 1,
+   "source_fingerprint": "sha256:71914a7ee839dcff290c9b516bc17c125b53b8b7e06d520f2a2e8184768938c1",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 79.187,
+     "y": 64.645,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 79.079,
+     "y": 80.126,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.644,
+     "y": 113.882,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 82.058,
+     "y": 89.898,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 78.904,
+     "y": 108.494,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 79.047,
+     "y": 127.669,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 81.265,
+     "y": 75.144,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 80.609,
+     "y": 56.95,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 80.316,
+     "y": 43.503,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 80.535,
+     "y": 142.009,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 80.611,
+     "y": 168.106,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 78.901,
+     "y": 135.399,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 81.154,
+     "y": 161.415,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d3/f02",
+   "direction": 3,
+   "frame": 2,
+   "source_fingerprint": "sha256:4bc9d024e8135763b9e1a6be4f85c07c5e2da2153dfee204ca0dd8558627000a",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.859,
+     "y": 67.294,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 81.631,
+     "y": 81.449,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.534,
+     "y": 113.175,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 78.648,
+     "y": 89.009,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 81.841,
+     "y": 109.662,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 81.403,
+     "y": 128.064,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 78.172,
+     "y": 77.77,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 78.912,
+     "y": 56.283,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 79.584,
+     "y": 40.288,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 79.929,
+     "y": 142.219,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 79.552,
+     "y": 167.299,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 78.99,
+     "y": 135.893,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 81.724,
+     "y": 161.883,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d3/f03",
+   "direction": 3,
+   "frame": 3,
+   "source_fingerprint": "sha256:477c006a7b2ac0f7664837f48811ff93a12b574974fab006a9b75f36ca84fb02",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 82.02,
+     "y": 70.117,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 78.634,
+     "y": 80.226,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.949,
+     "y": 110.517,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 79.728,
+     "y": 89.439,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 79.376,
+     "y": 110.161,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 80.52,
+     "y": 127.402,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 78.852,
+     "y": 76.966,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 82.967,
+     "y": 56.368,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 78.055,
+     "y": 37.775,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 82.571,
+     "y": 142.146,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 81.281,
+     "y": 169.76,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 81.188,
+     "y": 136.027,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 80.283,
+     "y": 161.466,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d3/f04",
+   "direction": 3,
+   "frame": 4,
+   "source_fingerprint": "sha256:18157a4d69f89c10a4dbd8c103b6b937bfcf278c44d666b775f424d66cf01e71",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 80.965,
+     "y": 70.856,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.427,
+     "y": 81.808,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 79.72,
+     "y": 112.369,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 80.108,
+     "y": 92.404,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 80.806,
+     "y": 112.052,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 79.625,
+     "y": 127.541,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 79.223,
+     "y": 77.152,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 80.119,
+     "y": 53.883,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 80.924,
+     "y": 40.43,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 79.098,
+     "y": 143.091,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 81.163,
+     "y": 167.939,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 79.644,
+     "y": 133.753,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 80.814,
+     "y": 162.555,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d3/f05",
+   "direction": 3,
+   "frame": 5,
+   "source_fingerprint": "sha256:a68474ae09290b16edced4a8c63622c253f3bada97c616dedad1f8af999221ae",
+   "provenance": {
+    "method": "estimator",
+    "independent": true,
+    "estimator": "synthetic-noise",
+    "detail": "Ground truth plus 1px Gaussian noise; stands in for an image-based detector."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 79.627,
+     "y": 72.047,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 80.919,
+     "y": 82.96,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 80.722,
+     "y": 110.755,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_shoulder": {
+     "x": 79.737,
+     "y": 92.965,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_elbow": {
+     "x": 79.99,
+     "y": 114.206,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_hand": {
+     "x": 80.311,
+     "y": 129.145,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_shoulder": {
+     "x": 78.672,
+     "y": 76.735,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_elbow": {
+     "x": 79.216,
+     "y": 58.271,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_hand": {
+     "x": 79.584,
+     "y": 41.251,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_knee": {
+     "x": 81.216,
+     "y": 142.633,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "left_foot": {
+     "x": 78.589,
+     "y": 169.289,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_knee": {
+     "x": 80.71,
+     "y": 134.795,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "right_foot": {
+     "x": 80.464,
+     "y": 161.755,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  }
+ ]
+}

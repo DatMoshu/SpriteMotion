@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SpriteMotion · live pose editor</title>
+<link rel="stylesheet" href="editor.css">
+<header><div><span class="eyebrow">SPRITEMOTION / BODY 401</span><h1>Live pose editor</h1><p>Drag a wrist to pose the arm. Drag an elbow to change its bend. All three views update together.</p></div><span id="saveState" role="status">Loading model…</span></header>
+<main>
+<div class="toolbar">
+<label>Clip<select id="clip"><option>Idle</option><option>Walk</option><option>Run</option></select></label>
+<label>View<select id="dir"><option value="3">SE</option><option value="4">S</option><option value="5" selected>SW</option><option value="6">W</option><option value="7">NW</option></select></label>
+<button id="play">Play</button><label class="timeline">Frame<input id="frame" type="range" min="0" max="0" value="0"><output id="frameLabel">1 / 1</output></label>
+<label class="check"><input id="points" type="checkbox" checked> Joint controls</label>
+<label>Overlay<input id="opacity" type="range" min="0" max="1" step="0.05" value="0.5"></label>
+</div>
+<div class="legend"><span class="a">● Arm A · left</span><span class="b">● Arm B · right</span><span class="la">● Leg A</span><span class="lb">● Leg B</span><span class="core">● Head / spine</span><span>□ wrist · ○ elbow / knee · drag on any panel</span></div>
+<div class="views">
+<article><h2>UO female sprite <small>body 401</small></h2><canvas id="source" width="576" height="576" aria-label="Sprite with draggable pose joints"></canvas></article>
+<article><h2>Live 3D model <small>same camera</small></h2><canvas id="model" width="576" height="576" aria-label="Live posed female model"></canvas></article>
+<article><h2>Overlay <small>sprite + live model</small></h2><canvas id="overlay" width="576" height="576" aria-label="Live sprite and model overlay"></canvas></article>
+</div>
+<div class="editbar">
+<label>Selected control<select id="control"><optgroup label="Arms"><option value="arm_A_wrist">Arm A · wrist</option><option value="arm_A_elbow">Arm A · elbow</option><option value="arm_B_wrist">Arm B · wrist</option><option value="arm_B_elbow">Arm B · elbow</option></optgroup><optgroup label="Legs"><option value="leg_A_ankle">Leg A · ankle</option><option value="leg_A_knee">Leg A · knee</option><option value="leg_B_ankle">Leg B · ankle</option><option value="leg_B_knee">Leg B · knee</option></optgroup></select></label>
+<div><span class="label">Move in this view</span><div class="buttons"><button id="left" title="Left one sprite pixel">←</button><button id="right" title="Right one sprite pixel">→</button><button id="up" title="Up one sprite pixel">↑</button><button id="down" title="Down one sprite pixel">↓</button></div></div>
+<div><span class="label">Depth · 1 cm</span><div class="buttons"><button id="near">Toward camera</button><button id="far">Away</button></div></div>
+<div><span class="label">Wrist / foot twist · 5°</span><div class="buttons"><button id="twistMinus">−</button><button id="twistPlus">+</button></div></div>
+<div class="buttons"><button id="undo" disabled>Undo</button><button id="redo" disabled>Redo</button><button id="reset">Reset frame</button></div>
+</div>
+<p class="hint">Edits affect this frame in every direction. Change the view to check depth. Bone lengths stay fixed; unreachable targets stop at the arm’s reach. Fingers keep the closed grip. Shift + arrow keys makes fine adjustments.</p>
+<footer><div class="buttons"><button id="save">Save edits</button><button id="download">Download edits</button><label class="fileButton">Load edits<input id="import" type="file" accept=".json"></label><button class="primary" id="bake">Export edited Blender scene</button><a id="blendLink" hidden download>Download edited scene</a></div><p id="status" role="status">Preparing live preview…</p><p class="hint">Live preview uses WebGL lighting; Blender retains the original materials and render setup. Saved edits are separate from the original scene.</p></footer>
+</main><script type="module" src="editor.js"></script></html>

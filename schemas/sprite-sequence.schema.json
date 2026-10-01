@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/sprite-sequence.schema.json",
+  "title": "SpriteMotion dataset manifest",
+  "description": "A self-contained set of normalized sprite frames: canvas, directions, projection, and every frame's identity, image path and fingerprint. Written by a game adapter; read by the editor, the fitting tools and the comparison tools. Paths are relative to the manifest.",
+  "type": "object",
+  "required": ["schema", "schema_version", "dataset_id", "canvas", "directions", "skeleton", "sequences"],
+  "additionalProperties": false,
+  "$defs": {
+    "vec2": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "frame": {
+      "type": "object",
+      "required": ["frame_id", "direction", "frame", "image", "fingerprint"],
+      "additionalProperties": false,
+      "properties": {
+        "frame_id": { "type": "string", "description": "Stable identity: <dataset_id>/<sequence>/d<direction>/f<frame, 2 digits>." },
+        "direction": { "type": "integer", "minimum": 0 },
+        "frame": { "type": "integer", "minimum": 0 },
+        "image": { "type": "string" },
+        "fingerprint": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "bounds": {
+          "description": "Opaque-pixel bounding box on the canvas: [x0, y0, x1, y1), pixel indices.",
+          "type": "array", "items": { "type": "integer" }, "minItems": 4, "maxItems": 4
+        },
+        "mirrored_from": { "type": "integer", "description": "Direction whose source art was mirrored to produce this frame." },
+        "source": { "type": "object", "description": "Adapter-specific placement metadata (offsets, encoded centers, stored indices)." }
+      }
+    }
+  },
+  "properties": {
+    "schema": { "const": "spritemotion.dataset" },
+    "schema_version": { "const": 1 },
+    "dataset_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string" },
+    "game": { "type": "string" },
+    "character": { "type": "string" },
+    "created_by": { "type": "string" },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "anchor": { "$ref": "#/$defs/vec2", "description": "Canvas pixel where the character's ground origin sits." },
+        "mirror_axis_x": { "type": "number", "description": "Mirroring maps x to 2*axis - x (both joints and pixel columns)." },
+        "notes": { "type": "string" }
+      }
+    },
+    "directions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "integer", "minimum": 0 },
+          "name": { "type": "string" },
+          "mirror_of": { "type": "integer", "description": "Direction that is this one's horizontal mirror image." },
+          "stored": { "type": "boolean", "description": "False when the game only produces this view by mirroring." },
+          "facing": { "$ref": "#/$defs/vec2", "description": "Character facing in world XY (x east, y north) for this view." }
+        }
+      }
+    },
+    "camera": {
+      "description": "Optional projection used by fitting and rendering. affine_orthographic: canvas = anchor + matrix @ [x, y, z] in world units.",
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["affine_orthographic"] },
+        "matrix": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } } },
+        "anchor": { "$ref": "#/$defs/vec2" },
+        "notes": { "type": "string" }
+      }
+    },
+    "skeleton": { "type": "string", "description": "Path to a spritemotion.skeleton file." },
+    "annotations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "estimates": { "type": "string" },
+        "corrections": { "type": "string" }
+      }
+    },
+    "sequences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "frame_count", "frames"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "name": { "type": "string" },
+          "index": { "type": "integer" },
+          "frame_count": { "type": "integer", "minimum": 1 },
+          "frame_duration_ms": { "type": "number" },
+          "frames": { "type": "array", "items": { "$ref": "#/$defs/frame" } }
+        }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}

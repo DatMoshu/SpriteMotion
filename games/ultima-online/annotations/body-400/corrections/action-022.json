@@ -1,0 +1,966 @@
+{
+ "schema": "spritemotion.pose-annotations",
+ "schema_version": 1,
+ "dataset_id": "ultima-online/body-400",
+ "sequence": "action-022",
+ "skeleton": "humanoid-20",
+ "layer": "correction",
+ "coordinate_space": "canvas-px",
+ "limb_identity": "A/B provisional per stored view; mirrors preserve source chain labels, not screen-left/right",
+ "editor": "UO Armature Lab / Godot",
+ "saved_at_utc": "2026-09-24T20:46:08",
+ "migrated_from": {
+  "tool": "UO Roto",
+  "file": "corrections/action_022.json"
+ },
+ "poses": [
+  {
+   "frame_id": "ultima-online/body-400/action-022/d3/f00",
+   "direction": 3,
+   "frame": 0,
+   "source_fingerprint": "sha256:7c98e02428f5916021856327585a247a2ddbf0aa044adcb5a0f5c6ef8c24442e",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "manual",
+    "detail": "Person-corrected in UO Roto on top of the estimate."
+   },
+   "review": {
+    "status": "approved",
+    "updated_at": "2026-09-24T20:46:08Z"
+   },
+   "joints": {
+    "head": {
+     "x": 126.0,
+     "y": 148.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 127.0,
+     "y": 155.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 127.0,
+     "y": 162.6,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 127.0,
+     "y": 174.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 120.0,
+     "y": 157.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 117.58406829834,
+     "y": 168.730087280273,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_A_wrist": {
+     "x": 119.0,
+     "y": 179.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 119.36,
+     "y": 180.98,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 134.0,
+     "y": 157.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 138.314163208008,
+     "y": 166.247787475586,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_wrist": {
+     "x": 139.0,
+     "y": 175.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 139.36,
+     "y": 176.26,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 124.022125244141,
+     "y": 174.438049316406,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_knee": {
+     "x": 124.358413696289,
+     "y": 184.438064575195,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_ankle": {
+     "x": 124.504425048828,
+     "y": 191.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_toe": {
+     "x": 121.314155578613,
+     "y": 194.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_hip": {
+     "x": 131.0,
+     "y": 174.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 131.0,
+     "y": 184.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 131.0,
+     "y": 191.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 133.0,
+     "y": 194.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-022/d3/f01",
+   "direction": 3,
+   "frame": 1,
+   "source_fingerprint": "sha256:1e8770c22b6971b2b0d6c585f07d821c40e934b3cb3aa310fcdfa74e37142b4d",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "manual",
+    "detail": "Person-corrected in UO Roto on top of the estimate."
+   },
+   "review": {
+    "status": "approved",
+    "updated_at": "2026-09-24T20:46:08Z"
+   },
+   "joints": {
+    "head": {
+     "x": 127.0,
+     "y": 166.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 128.0,
+     "y": 173.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 127.6,
+     "y": 178.2,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 127.0,
+     "y": 186.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 119.851768493652,
+     "y": 174.269897460938,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_A_elbow": {
+     "x": 118.0,
+     "y": 185.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 118.0,
+     "y": 194.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 118.0,
+     "y": 195.62,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 136.095138549805,
+     "y": 172.296463012695,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_elbow": {
+     "x": 139.274856567383,
+     "y": 181.123245239258,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_wrist": {
+     "x": 140.539825439453,
+     "y": 187.269912719727,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_hand": {
+     "x": 142.9,
+     "y": 188.9,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 123.0,
+     "y": 186.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 121.0,
+     "y": 199.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 124.227882385254,
+     "y": 191.619476318359,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_toe": {
+     "x": 119.048667907715,
+     "y": 191.931411743164,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_hip": {
+     "x": 131.0,
+     "y": 186.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 133.672958374023,
+     "y": 201.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_ankle": {
+     "x": 134.0,
+     "y": 196.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.0,
+     "y": 196.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-022/d3/f02",
+   "direction": 3,
+   "frame": 2,
+   "source_fingerprint": "sha256:61103b9af15d807ac93b39f5fe494ec00ab40aa059cfc2336f28570228948f36",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "manual",
+    "detail": "Person-corrected in UO Roto on top of the estimate."
+   },
+   "review": {
+    "status": "approved",
+    "updated_at": "2026-09-24T20:46:08Z"
+   },
+   "joints": {
+    "head": {
+     "x": 129.0,
+     "y": 188.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 130.0,
+     "y": 191.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 131.6,
+     "y": 188.2,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 134.0,
+     "y": 184.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 122.0,
+     "y": 190.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 120.672019958496,
+     "y": 200.898666381836,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_A_wrist": {
+     "x": 120.433624267578,
+     "y": 211.349563598633,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_A_hand": {
+     "x": 120.18,
+     "y": 213.98,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 134.618621826172,
+     "y": 192.445373535156,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_elbow": {
+     "x": 137.871978759766,
+     "y": 197.152008056641,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_wrist": {
+     "x": 140.807952880859,
+     "y": 199.581314086914,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_hand": {
+     "x": 142.74397277832,
+     "y": 199.287963867188,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_hip": {
+     "x": 130.0,
+     "y": 184.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 121.023971557617,
+     "y": 192.453277587891,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_ankle": {
+     "x": 118.666580200195,
+     "y": 196.983917236328,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_toe": {
+     "x": 119.423873901367,
+     "y": 199.31462097168,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_hip": {
+     "x": 137.0,
+     "y": 184.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 141.445388793945,
+     "y": 190.794616699219,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_ankle": {
+     "x": 143.0,
+     "y": 199.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 145.0,
+     "y": 200.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-022/d3/f03",
+   "direction": 3,
+   "frame": 3,
+   "source_fingerprint": "sha256:4352aa454d0ee1cee7b106ca70ccd498fbb2bcb1e6390e23c66fefe5fcb58674",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "manual",
+    "detail": "Person-corrected in UO Roto on top of the estimate."
+   },
+   "review": {
+    "status": "approved",
+    "updated_at": "2026-09-24T20:46:08Z"
+   },
+   "joints": {
+    "head": {
+     "x": 128.007339477539,
+     "y": 202.694869995117,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 129.0,
+     "y": 197.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 129.0,
+     "y": 193.4,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 129.0,
+     "y": 188.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 121.0,
+     "y": 195.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 119.0,
+     "y": 206.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 120.602935791016,
+     "y": 212.461364746094,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_A_hand": {
+     "x": 121.36,
+     "y": 215.44,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 137.0,
+     "y": 195.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 143.021560668945,
+     "y": 200.423599243164,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_wrist": {
+     "x": 150.781158447266,
+     "y": 206.05696105957,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_hand": {
+     "x": 152.88493347168,
+     "y": 208.31559753418,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_hip": {
+     "x": 124.0,
+     "y": 189.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 118.0,
+     "y": 194.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 121.446701049805,
+     "y": 189.573593139648,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_toe": {
+     "x": 124.397064208984,
+     "y": 186.397064208984,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_hip": {
+     "x": 134.0,
+     "y": 189.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 136.12126159668,
+     "y": 192.694854736328,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_ankle": {
+     "x": 136.766494750977,
+     "y": 189.389739990234,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_toe": {
+     "x": 139.773834228516,
+     "y": 191.737167358398,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-022/d3/f04",
+   "direction": 3,
+   "frame": 4,
+   "source_fingerprint": "sha256:74c3b233f6911f2171f163f5ff8e2fff5bb99e5b9b3c72222e8ffd57e7dbfed6",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "manual",
+    "detail": "Person-corrected in UO Roto on top of the estimate."
+   },
+   "review": {
+    "status": "approved",
+    "updated_at": "2026-09-24T20:46:08Z"
+   },
+   "joints": {
+    "head": {
+     "x": 128.0,
+     "y": 209.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 129.0,
+     "y": 203.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 129.0,
+     "y": 199.8,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 129.0,
+     "y": 195.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 120.0,
+     "y": 203.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 116.0,
+     "y": 213.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 113.878929138184,
+     "y": 218.242141723633,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_A_hand": {
+     "x": 112.46,
+     "y": 221.26,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 137.0,
+     "y": 202.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 146.0,
+     "y": 209.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 151.500671386719,
+     "y": 213.069366455078,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "arm_B_hand": {
+     "x": 154.26,
+     "y": 214.9,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 124.0,
+     "y": 195.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 119.0,
+     "y": 198.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 117.880531311035,
+     "y": 194.668151855469,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_A_toe": {
+     "x": 114.0,
+     "y": 196.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 134.0,
+     "y": 195.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 137.0,
+     "y": 194.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 137.442489624023,
+     "y": 189.548675537109,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    },
+    "leg_B_toe": {
+     "x": 141.110610961914,
+     "y": 191.548675537109,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-022/d3/f05",
+   "direction": 3,
+   "frame": 5,
+   "source_fingerprint": "sha256:bead89e91ee341e9e2f63a5c7743e217879ba01498b73632afaa67439879c8cf",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "manual",
+    "detail": "Person-corrected in UO Roto on top of the estimate."
+   },
+   "review": {
+    "status": "approved",
+    "updated_at": "2026-09-24T20:46:08Z"
+   },
+   "joints": {
+    "head": {
+     "x": 127.0,
+     "y": 218.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 127.0,
+     "y": 213.5,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 127.0,
+     "y": 210.5,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 127.0,
+     "y": 204.5,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 122.5,
+     "y": 212.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 113.5,
+     "y": 216.5,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 105.5,
+     "y": 220.5,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 104.0,
+     "y": 222.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 132.0,
+     "y": 212.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 144.5,
+     "y": 214.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 155.0,
+     "y": 217.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 157.0,
+     "y": 218.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 122.0,
+     "y": 204.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 118.0,
+     "y": 201.5,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 116.5,
+     "y": 194.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 113.0,
+     "y": 195.5,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 132.0,
+     "y": 204.0,
+     "confidence": 0.4,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 137.0,
+     "y": 201.5,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 139.0,
+     "y": 192.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 144.0,
+     "y": 193.0,
+     "confidence": 0.6,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,553 @@
+{
+ "schema": "spritemotion.pose-solution",
+ "schema_version": 1,
+ "dataset_id": "examples/sample-character",
+ "sequence": "walk",
+ "rig": "sample-rig",
+ "source": {
+  "tool": "make_sample.py",
+  "ground_truth": true
+ },
+ "frames": [
+  {
+   "frame": 0,
+   "bones": {
+    "thigh.L": {
+     "rotation_quaternion": [
+      1.0,
+      -0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "thigh.R": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.L": {
+     "rotation_quaternion": [
+      0.947541,
+      0.319634,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.R": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "upper_arm.L": {
+     "rotation_quaternion": [
+      0.99863,
+      0.0,
+      0.0,
+      -0.052336
+     ]
+    },
+    "upper_arm.R": {
+     "rotation_quaternion": [
+      0.99863,
+      -0.0,
+      0.0,
+      0.052336
+     ]
+    },
+    "forearm.L": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "forearm.R": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "spine": {
+     "rotation_quaternion": [
+      0.999391,
+      0.034899,
+      0.0,
+      0.0
+     ]
+    },
+    "hips": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "location": [
+      0,
+      0.03,
+      0
+     ]
+    }
+   }
+  },
+  {
+   "frame": 1,
+   "bones": {
+    "thigh.L": {
+     "rotation_quaternion": [
+      0.977694,
+      -0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "thigh.R": {
+     "rotation_quaternion": [
+      0.977694,
+      0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.L": {
+     "rotation_quaternion": [
+      0.963178,
+      0.268863,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.R": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "upper_arm.L": {
+     "rotation_quaternion": [
+      0.984341,
+      0.168403,
+      0.0,
+      -0.052086
+     ]
+    },
+    "upper_arm.R": {
+     "rotation_quaternion": [
+      0.984341,
+      -0.168403,
+      0.0,
+      0.052086
+     ]
+    },
+    "forearm.L": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "forearm.R": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "spine": {
+     "rotation_quaternion": [
+      0.997564,
+      0.034878,
+      0.060411,
+      0.0
+     ]
+    },
+    "hips": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "location": [
+      0,
+      0.015000000000000003,
+      0
+     ]
+    }
+   }
+  },
+  {
+   "frame": 2,
+   "bones": {
+    "thigh.L": {
+     "rotation_quaternion": [
+      0.977694,
+      -0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "thigh.R": {
+     "rotation_quaternion": [
+      0.977694,
+      0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.L": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.R": {
+     "rotation_quaternion": [
+      0.998589,
+      0.053106,
+      0.0,
+      0.0
+     ]
+    },
+    "upper_arm.L": {
+     "rotation_quaternion": [
+      0.984341,
+      0.168403,
+      0.0,
+      -0.052086
+     ]
+    },
+    "upper_arm.R": {
+     "rotation_quaternion": [
+      0.984341,
+      -0.168403,
+      0.0,
+      0.052086
+     ]
+    },
+    "forearm.L": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "forearm.R": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "spine": {
+     "rotation_quaternion": [
+      0.997564,
+      0.034878,
+      0.060411,
+      0.0
+     ]
+    },
+    "hips": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "location": [
+      0,
+      0.014999999999999993,
+      0
+     ]
+    }
+   }
+  },
+  {
+   "frame": 3,
+   "bones": {
+    "thigh.L": {
+     "rotation_quaternion": [
+      1.0,
+      -0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "thigh.R": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.L": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.R": {
+     "rotation_quaternion": [
+      0.947541,
+      0.319634,
+      0.0,
+      0.0
+     ]
+    },
+    "upper_arm.L": {
+     "rotation_quaternion": [
+      0.99863,
+      0.0,
+      0.0,
+      -0.052336
+     ]
+    },
+    "upper_arm.R": {
+     "rotation_quaternion": [
+      0.99863,
+      -0.0,
+      0.0,
+      0.052336
+     ]
+    },
+    "forearm.L": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "forearm.R": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "spine": {
+     "rotation_quaternion": [
+      0.999391,
+      0.034899,
+      0.0,
+      0.0
+     ]
+    },
+    "hips": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "location": [
+      0,
+      0.03,
+      0
+     ]
+    }
+   }
+  },
+  {
+   "frame": 4,
+   "bones": {
+    "thigh.L": {
+     "rotation_quaternion": [
+      0.977694,
+      0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "thigh.R": {
+     "rotation_quaternion": [
+      0.977694,
+      -0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.L": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.R": {
+     "rotation_quaternion": [
+      0.963178,
+      0.268863,
+      0.0,
+      0.0
+     ]
+    },
+    "upper_arm.L": {
+     "rotation_quaternion": [
+      0.984341,
+      -0.168403,
+      0.0,
+      -0.052086
+     ]
+    },
+    "upper_arm.R": {
+     "rotation_quaternion": [
+      0.984341,
+      0.168403,
+      0.0,
+      0.052086
+     ]
+    },
+    "forearm.L": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "forearm.R": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "spine": {
+     "rotation_quaternion": [
+      0.997564,
+      0.034878,
+      -0.060411,
+      0.0
+     ]
+    },
+    "hips": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "location": [
+      0,
+      0.015000000000000013,
+      0
+     ]
+    }
+   }
+  },
+  {
+   "frame": 5,
+   "bones": {
+    "thigh.L": {
+     "rotation_quaternion": [
+      0.977694,
+      0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "thigh.R": {
+     "rotation_quaternion": [
+      0.977694,
+      -0.210034,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.L": {
+     "rotation_quaternion": [
+      0.998589,
+      0.053106,
+      0.0,
+      0.0
+     ]
+    },
+    "shin.R": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "upper_arm.L": {
+     "rotation_quaternion": [
+      0.984341,
+      -0.168403,
+      0.0,
+      -0.052086
+     ]
+    },
+    "upper_arm.R": {
+     "rotation_quaternion": [
+      0.984341,
+      0.168403,
+      0.0,
+      0.052086
+     ]
+    },
+    "forearm.L": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "forearm.R": {
+     "rotation_quaternion": [
+      0.984808,
+      -0.173648,
+      0.0,
+      0.0
+     ]
+    },
+    "spine": {
+     "rotation_quaternion": [
+      0.997564,
+      0.034878,
+      -0.060411,
+      0.0
+     ]
+    },
+    "hips": {
+     "rotation_quaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "location": [
+      0,
+      0.015000000000000003,
+      0
+     ]
+    }
+   }
+  }
+ ]
+}

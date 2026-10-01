@@ -1,0 +1,74 @@
+{
+ "schema": "spritemotion.skeleton",
+ "schema_version": 1,
+ "id": "tiny-6",
+ "title": "Tiny six-joint test skeleton",
+ "joints": [
+  {
+   "name": "head",
+   "label": "Head"
+  },
+  {
+   "name": "neck",
+   "label": "Neck"
+  },
+  {
+   "name": "pelvis",
+   "label": "Pelvis"
+  },
+  {
+   "name": "hand",
+   "label": "Hand"
+  },
+  {
+   "name": "foot_a",
+   "label": "Foot A"
+  },
+  {
+   "name": "foot_b",
+   "label": "Foot B"
+  }
+ ],
+ "chains": [
+  {
+   "name": "spine",
+   "label": "Spine",
+   "color": "#ffe45e",
+   "joints": [
+    "head",
+    "neck",
+    "pelvis"
+   ]
+  },
+  {
+   "name": "arm",
+   "label": "Arm",
+   "color": "#28d9ff",
+   "joints": [
+    "neck",
+    "hand"
+   ]
+  },
+  {
+   "name": "leg_a",
+   "label": "Leg A",
+   "color": "#78ff6b",
+   "joints": [
+    "pelvis",
+    "foot_a"
+   ]
+  }
+ ],
+ "inferred_connections": [
+  [
+   "pelvis",
+   "foot_b"
+  ]
+ ],
+ "symmetric_pairs": [
+  [
+   "foot_a",
+   "foot_b"
+  ]
+ ]
+}

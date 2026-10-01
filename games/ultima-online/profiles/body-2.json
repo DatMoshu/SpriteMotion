@@ -1,0 +1,110 @@
+{
+ "description": "Ettin (two-headed giant), body 2 (0x02), classic MUL, unarmed. Monster action group (22 slots, 13 present). Placement, directions and projection as the human bodies; the canvas is wider and taller because the Ettin is ~2.2x human height and its deaths reach 130 px sideways. Body 18 is the same creature holding an axe.",
+ "body": 2,
+ "anim_source": "mul",
+ "action_group": "monster",
+ "canvas": {
+  "width": 320,
+  "height": 256,
+  "anchor": [
+   160,
+   184
+  ],
+  "mirror_axis_x": 159.5,
+  "notes": "A frame's ground origin (encoded center cx, height+cy from its top-left) lands on the anchor. Measured extents over all actions and stored directions: x -130..+129, y -146..+60 around the origin. Mirroring: pixel column i -> 319 - i, joint x -> 319 - x."
+ },
+ "directions": [
+  {
+   "id": 0,
+   "name": "N",
+   "stored_index": 3,
+   "mirrored": true,
+   "mirror_of": 6,
+   "facing": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": 1,
+   "name": "NE",
+   "stored_index": 2,
+   "mirrored": true,
+   "mirror_of": 5,
+   "facing": [
+    1,
+    1
+   ]
+  },
+  {
+   "id": 2,
+   "name": "E",
+   "stored_index": 1,
+   "mirrored": true,
+   "mirror_of": 4,
+   "facing": [
+    1,
+    0
+   ]
+  },
+  {
+   "id": 3,
+   "name": "SE",
+   "stored_index": 0,
+   "mirrored": false,
+   "facing": [
+    1,
+    -1
+   ]
+  },
+  {
+   "id": 4,
+   "name": "S",
+   "stored_index": 1,
+   "mirrored": false,
+   "mirror_of": 2,
+   "facing": [
+    0,
+    -1
+   ]
+  },
+  {
+   "id": 5,
+   "name": "SW",
+   "stored_index": 2,
+   "mirrored": false,
+   "mirror_of": 1,
+   "facing": [
+    -1,
+    -1
+   ]
+  },
+  {
+   "id": 6,
+   "name": "W",
+   "stored_index": 3,
+   "mirrored": false,
+   "mirror_of": 0,
+   "facing": [
+    -1,
+    0
+   ]
+  },
+  {
+   "id": 7,
+   "name": "NW",
+   "stored_index": 4,
+   "mirrored": false,
+   "facing": [
+    -1,
+    1
+   ]
+  }
+ ],
+ "camera": "cameras/ground-grid.json",
+ "blender": {
+  "frame_start": 1,
+  "frame_step": 4,
+  "notes": "Source frame f is keyed at Blender frame 1 + 4f. Playback timing is not inferred from the animation files."
+ }
+}

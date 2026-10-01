@@ -1,0 +1,93 @@
+{
+ "description": "Action table for classic high-detail monster bodies (body < 200): the 22 animation slots in client order, named as in ClassicUO's high-detail monster groups. A body lacks many of them (the Ettin, body 2, has 0-6, 10, 11, 15-18); missing groups are skipped at extraction.",
+ "actions": [
+  {
+   "index": 0,
+   "name": "walk"
+  },
+  {
+   "index": 1,
+   "name": "idle"
+  },
+  {
+   "index": 2,
+   "name": "die1"
+  },
+  {
+   "index": 3,
+   "name": "die2"
+  },
+  {
+   "index": 4,
+   "name": "attack1"
+  },
+  {
+   "index": 5,
+   "name": "attack2"
+  },
+  {
+   "index": 6,
+   "name": "attack3"
+  },
+  {
+   "index": 7,
+   "name": "attack_bow"
+  },
+  {
+   "index": 8,
+   "name": "attack_crossbow"
+  },
+  {
+   "index": 9,
+   "name": "attack_throw"
+  },
+  {
+   "index": 10,
+   "name": "get_hit"
+  },
+  {
+   "index": 11,
+   "name": "pillage"
+  },
+  {
+   "index": 12,
+   "name": "stomp"
+  },
+  {
+   "index": 13,
+   "name": "cast2"
+  },
+  {
+   "index": 14,
+   "name": "cast3"
+  },
+  {
+   "index": 15,
+   "name": "block_right"
+  },
+  {
+   "index": 16,
+   "name": "block_left"
+  },
+  {
+   "index": 17,
+   "name": "fidget1"
+  },
+  {
+   "index": 18,
+   "name": "fidget2"
+  },
+  {
+   "index": 19,
+   "name": "fly"
+  },
+  {
+   "index": 20,
+   "name": "take_off"
+  },
+  {
+   "index": 21,
+   "name": "get_hit_in_air"
+  }
+ ]
+}

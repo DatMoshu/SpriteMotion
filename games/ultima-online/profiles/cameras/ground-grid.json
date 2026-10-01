@@ -1,0 +1,5 @@
+{
+ "type": "affine_orthographic",
+ "matrix": [[22.0, 22.0, 0.0], [22.0, -22.0, -31.1127]],
+ "notes": "ClassicUO screen math in world units (1 unit = 1 tile side; x east, y north, z up): screen x = 22(x + y), screen y = 22(x - y) - 31.1127 z. Equivalent to an orthographic camera at 45 deg elevation looking north-west with the render stretched vertically by sqrt(2). Matches the ground grid exactly; it is not proven to be the camera the character art was drawn/rendered with."
+}

@@ -1,0 +1,31 @@
+{
+ "schema": "spritemotion.rig-mapping",
+ "schema_version": 1,
+ "skeleton": "humanoid-20",
+ "rig": "mixamo",
+ "description": "Mixamo-named skeleton (mixamorig:*). Mirrors the joint definition used when the six approved SE death_forward poses were fitted: A -> Right, B -> Left there. Note this is the opposite of the Rigify mapping's A -> L; the manual action-22 limb labels are provisional per view.",
+ "sides": {"A": "Right", "B": "Left"},
+ "joints": {
+  "head": {"mix": [{"bone": "mixamorig:Head", "at": 0, "w": 0.5}, {"bone": "mixamorig:HeadTop_End", "at": 0, "w": 0.5}]},
+  "neck": {"bone": "mixamorig:Neck", "at": 0},
+  "chest": {"mix": [{"bone": "mixamorig:Neck", "at": 0, "w": 0.6}, {"bone": "mixamorig:Hips", "at": 0, "w": 0.4}]},
+  "pelvis": {"bone": "mixamorig:Hips", "at": 0},
+  "arm_{chain}_shoulder": {"bone": "mixamorig:{side}Arm", "at": 0},
+  "arm_{chain}_elbow": {"bone": "mixamorig:{side}ForeArm", "at": 0},
+  "arm_{chain}_wrist": {"bone": "mixamorig:{side}Hand", "at": 0},
+  "arm_{chain}_hand": {"mix": [{"bone": "mixamorig:{side}Hand", "at": 0, "w": 0.45}, {"bone": "mixamorig:{side}HandMiddle4", "at": 0, "w": 0.55}]},
+  "leg_{chain}_hip": {"bone": "mixamorig:{side}UpLeg", "at": 0},
+  "leg_{chain}_knee": {"bone": "mixamorig:{side}Leg", "at": 0},
+  "leg_{chain}_ankle": {"bone": "mixamorig:{side}Foot", "at": 0},
+  "leg_{chain}_toe": {"bone": "mixamorig:{side}Toe_End", "at": 0}
+ },
+ "fit": {
+  "root_bone": "mixamorig:Hips",
+  "bones": ["mixamorig:Hips", "mixamorig:Spine", "mixamorig:Spine1", "mixamorig:Spine2", "mixamorig:Neck", "mixamorig:Head",
+            "mixamorig:{side}Shoulder", "mixamorig:{side}Arm", "mixamorig:{side}ForeArm", "mixamorig:{side}Hand",
+            "mixamorig:{side}UpLeg", "mixamorig:{side}Leg", "mixamorig:{side}Foot"],
+  "limits_deg": {"default": 150, "mixamorig:Hips": 100, "mixamorig:Spine": 35, "mixamorig:Spine1": 35, "mixamorig:Spine2": 35,
+                 "mixamorig:Neck": 45, "mixamorig:Head": 50, "mixamorig:{side}Shoulder": 25, "mixamorig:{side}Hand": 70,
+                 "mixamorig:{side}Foot": 60}
+ }
+}

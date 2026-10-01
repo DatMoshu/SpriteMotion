@@ -1,0 +1,5 @@
+{
+ "type": "affine_orthographic",
+ "matrix": [[22.0, 22.0, 0.0], [9.834, -9.834, -31.1127]],
+ "notes": "Candidate character camera: ground-depth term scaled by 0.447, the factor independent source landmarks supported in the 2026-09 experiments (see research/findings.md). Improved 27 of 35 action means but regressed idle; not validated."
+}

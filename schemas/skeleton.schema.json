@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/skeleton.schema.json",
+  "title": "SpriteMotion 2D annotation skeleton",
+  "description": "Named joints and the drawn connectivity used to annotate sprites. Game-independent; rig mappings to 3D bones live beside the skeleton, not in it.",
+  "type": "object",
+  "required": ["schema", "schema_version", "id", "joints", "chains"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "spritemotion.skeleton" },
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "joints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "pattern": "^[A-Za-z0-9_]+$" },
+          "label": { "type": "string" },
+          "legacy_id": { "type": "integer", "description": "Numeric ID used by older tools; informational only." }
+        }
+      }
+    },
+    "chains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "joints"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "label": { "type": "string" },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "joints": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+        }
+      }
+    },
+    "inferred_connections": {
+      "description": "Connections drawn dashed: attachments that are inferred rather than directly observable.",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "type": "string" }, { "type": "string" }], "minItems": 2, "maxItems": 2 }
+    },
+    "symmetric_pairs": {
+      "description": "Joint pairs that swap under an anatomical left/right swap. Mirroring a sprite view does NOT swap them unless a workflow asks for it.",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "type": "string" }, { "type": "string" }], "minItems": 2, "maxItems": 2 }
+    },
+    "notes": { "type": "string" }
+  }
+}

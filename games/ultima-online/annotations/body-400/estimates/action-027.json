@@ -1,0 +1,6436 @@
+{
+ "schema": "spritemotion.pose-annotations",
+ "schema_version": 1,
+ "dataset_id": "ultima-online/body-400",
+ "sequence": "action-027",
+ "skeleton": "humanoid-20",
+ "layer": "estimate",
+ "coordinate_space": "canvas-px",
+ "limb_identity": "A = source rig L, B = source rig R in stored views; mirrored views preserve chain IDs. Existing action22 manual A/B labels remain provisional per view.",
+ "migrated_from": {
+  "tool": "UO Roto",
+  "file": "data/actions/action_027.json"
+ },
+ "poses": [
+  {
+   "frame_id": "ultima-online/body-400/action-027/d0/f00",
+   "direction": 0,
+   "frame": 0,
+   "source_fingerprint": "sha256:1b8ea082f3f6a3b773faf6d1f447d3468991c9faee328de1c2119c07cbd0c78f",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 6,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 131.679,
+     "y": 122.34,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 131.618,
+     "y": 125.546,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 131.915,
+     "y": 131.192,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 131.204,
+     "y": 144.892,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 137.749,
+     "y": 135.951,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 142.688,
+     "y": 144.2,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 147.594,
+     "y": 141.503,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 151.279,
+     "y": 139.77,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 124.329,
+     "y": 126.742,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 120.681,
+     "y": 126.402,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 126.86,
+     "y": 125.012,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 131.653,
+     "y": 126.004,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 134.556,
+     "y": 146.923,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 149.688,
+     "y": 149.868,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 144.613,
+     "y": 166.154,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 146.318,
+     "y": 161.239,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 127.851,
+     "y": 142.861,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 127.178,
+     "y": 130.095,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 121.438,
+     "y": 144.208,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 124.481,
+     "y": 138.156,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d0/f01",
+   "direction": 0,
+   "frame": 1,
+   "source_fingerprint": "sha256:a78fc0708ef06f50c643af93b7bb3accd1d602023bb9565ec72492b03c7e0ba1",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 6,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 139.637,
+     "y": 124.389,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 138.223,
+     "y": 127.368,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 136.891,
+     "y": 133.63,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 135.102,
+     "y": 144.371,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 140.266,
+     "y": 138.536,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 146.093,
+     "y": 138.129,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 148.999,
+     "y": 132.142,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 148.637,
+     "y": 126.818,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 133.477,
+     "y": 127.214,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 136.534,
+     "y": 124.227,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 137.001,
+     "y": 126.863,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 135.788,
+     "y": 127.744,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 137.621,
+     "y": 146.78,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 149.106,
+     "y": 149.613,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 146.028,
+     "y": 165.167,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 145.341,
+     "y": 160.582,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 132.583,
+     "y": 141.962,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 132.132,
+     "y": 133.45,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 125.372,
+     "y": 146.317,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 128.003,
+     "y": 143.29,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d0/f02",
+   "direction": 0,
+   "frame": 2,
+   "source_fingerprint": "sha256:d68dd26d36d55d8ab8db28ccb57fef4c7b035f919ebe14a8378ddb5afe7fd01f",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 6,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 142.074,
+     "y": 124.608,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 141.016,
+     "y": 128.236,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 137.983,
+     "y": 136.45,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 136.542,
+     "y": 146.139,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 143.821,
+     "y": 137.891,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 149.553,
+     "y": 138.015,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 152.344,
+     "y": 132.592,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 153.554,
+     "y": 127.835,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 134.236,
+     "y": 128.952,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 133.822,
+     "y": 128.508,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 137.366,
+     "y": 130.165,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 138.446,
+     "y": 130.216,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 139.519,
+     "y": 148.408,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 151.921,
+     "y": 150.404,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 147.887,
+     "y": 165.897,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 148.342,
+     "y": 162.127,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 133.565,
+     "y": 143.869,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 130.446,
+     "y": 135.42,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 124.113,
+     "y": 147.279,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 127.597,
+     "y": 144.102,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d0/f03",
+   "direction": 0,
+   "frame": 3,
+   "source_fingerprint": "sha256:6c31c383832b5970f5c50130bf8e1ddf5893382a85a5925a8d95c49a9c912db2",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 6,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 142.915,
+     "y": 123.318,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 141.734,
+     "y": 127.081,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 138.53,
+     "y": 135.344,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 137.177,
+     "y": 145.121,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 145.537,
+     "y": 136.757,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 151.816,
+     "y": 137.329,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 156.242,
+     "y": 133.111,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 159.22,
+     "y": 130.488,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 134.597,
+     "y": 128.336,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 134.642,
+     "y": 134.862,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 136.448,
+     "y": 125.79,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 133.444,
+     "y": 123.474,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 139.823,
+     "y": 147.974,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 151.407,
+     "y": 148.891,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 146.674,
+     "y": 165.49,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 148.52,
+     "y": 163.252,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 134.532,
+     "y": 142.267,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 135.855,
+     "y": 134.706,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 126.11,
+     "y": 145.252,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 128.404,
+     "y": 145.443,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d0/f04",
+   "direction": 0,
+   "frame": 4,
+   "source_fingerprint": "sha256:43ea7cd6d65762cc4bcf3220982e44cf731c76c09771cf8634426689769eda51",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 6,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 133.434,
+     "y": 122.687,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 132.052,
+     "y": 125.73,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 130.757,
+     "y": 132.589,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 129.996,
+     "y": 145.437,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 136.736,
+     "y": 135.82,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 142.563,
+     "y": 142.276,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 148.578,
+     "y": 139.669,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 151.282,
+     "y": 134.878,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 125.038,
+     "y": 126.876,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 124.982,
+     "y": 127.864,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 131.467,
+     "y": 128.744,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 135.96,
+     "y": 129.712,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 133.22,
+     "y": 147.668,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 148.112,
+     "y": 151.098,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 145.22,
+     "y": 166.373,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 144.25,
+     "y": 160.671,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 126.771,
+     "y": 143.207,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 125.471,
+     "y": 132.987,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 121.156,
+     "y": 146.973,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 123.119,
+     "y": 140.695,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d1/f00",
+   "direction": 1,
+   "frame": 0,
+   "source_fingerprint": "sha256:8110bf067de1ea1aae6e985719953a8078a20ce44f13f072775ded24b368ec8b",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 5,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 129.782,
+     "y": 124.132,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 129.667,
+     "y": 127.094,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 131.271,
+     "y": 133.037,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 130.459,
+     "y": 145.444,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 130.865,
+     "y": 139.306,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 131.814,
+     "y": 149.012,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 139.675,
+     "y": 150.662,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 144.937,
+     "y": 151.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.263,
+     "y": 125.365,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 129.777,
+     "y": 124.342,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 137.563,
+     "y": 127.617,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 141.841,
+     "y": 131.53,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 130.941,
+     "y": 148.618,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 142.955,
+     "y": 160.307,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 135.827,
+     "y": 171.645,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 141.757,
+     "y": 169.519,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.976,
+     "y": 142.271,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 140.911,
+     "y": 133.608,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 135.478,
+     "y": 143.236,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 141.981,
+     "y": 140.667,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d1/f01",
+   "direction": 1,
+   "frame": 1,
+   "source_fingerprint": "sha256:39045da8557ed1fd644ee06c8a30921c35d1ccf7d0b8eb6d0d3a0b3df1dd3e39",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 5,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 134.551,
+     "y": 127.285,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 132.672,
+     "y": 129.106,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 131.581,
+     "y": 134.439,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 130.936,
+     "y": 144.151,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 129.075,
+     "y": 139.854,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 136.971,
+     "y": 144.122,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 145.14,
+     "y": 141.814,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 148.546,
+     "y": 137.441,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 133.232,
+     "y": 127.259,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 141.202,
+     "y": 127.914,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 136.243,
+     "y": 129.204,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 132.026,
+     "y": 128.326,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 131.191,
+     "y": 147.596,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 143.677,
+     "y": 158.671,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 136.176,
+     "y": 170.563,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 140.493,
+     "y": 167.067,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 130.682,
+     "y": 140.706,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 141.536,
+     "y": 135.396,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 132.309,
+     "y": 142.667,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.93,
+     "y": 142.708,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d1/f02",
+   "direction": 1,
+   "frame": 2,
+   "source_fingerprint": "sha256:40254a372c6a465f43ed76eb4ff3a145a522bc15c73cfb8941fbbbd51f788e0e",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 5,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 137.829,
+     "y": 127.481,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 135.444,
+     "y": 130.051,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 130.075,
+     "y": 135.643,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 130.71,
+     "y": 145.182,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 131.185,
+     "y": 139.621,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 138.775,
+     "y": 144.22,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 146.726,
+     "y": 142.182,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 151.483,
+     "y": 139.249,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 132.378,
+     "y": 127.317,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 136.654,
+     "y": 128.032,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 135.226,
+     "y": 130.596,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 133.392,
+     "y": 130.482,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 131.537,
+     "y": 148.856,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 144.417,
+     "y": 159.473,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 135.592,
+     "y": 171.047,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 140.804,
+     "y": 168.981,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.884,
+     "y": 141.508,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 138.189,
+     "y": 134.3,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 131.434,
+     "y": 141.955,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.312,
+     "y": 142.132,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d1/f03",
+   "direction": 1,
+   "frame": 3,
+   "source_fingerprint": "sha256:1c7d2c370aad8aa0584de10a889cbb776269d1cafdfdc63d350d06735abd22bb",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 5,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 138.232,
+     "y": 125.342,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 135.766,
+     "y": 127.942,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 130.741,
+     "y": 133.538,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 131.849,
+     "y": 143.375,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 133.675,
+     "y": 138.657,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 141.201,
+     "y": 144.105,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 149.81,
+     "y": 144.276,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 155.437,
+     "y": 144.558,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 132.516,
+     "y": 125.403,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 132.837,
+     "y": 132.203,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 138.495,
+     "y": 125.437,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 135.079,
+     "y": 120.799,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 132.006,
+     "y": 147.377,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 146.048,
+     "y": 157.336,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 135.082,
+     "y": 168.963,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 140.961,
+     "y": 169.278,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 131.693,
+     "y": 139.373,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 143.908,
+     "y": 136.07,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 133.755,
+     "y": 139.809,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.945,
+     "y": 142.564,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d1/f04",
+   "direction": 1,
+   "frame": 4,
+   "source_fingerprint": "sha256:a6eae769b3eac028f2041c3f1d1dc7013786bc364c9a8c94363f63654e31321d",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 5,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 133.966,
+     "y": 125.665,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 132.532,
+     "y": 127.687,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 131.465,
+     "y": 133.444,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 130.595,
+     "y": 145.077,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 131.598,
+     "y": 138.423,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 134.371,
+     "y": 147.155,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 143.124,
+     "y": 149.111,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 148.63,
+     "y": 147.028,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 131.379,
+     "y": 126.219,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 135.5,
+     "y": 128.316,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 142.871,
+     "y": 133.315,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 147.45,
+     "y": 136.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 131.038,
+     "y": 148.329,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 143.185,
+     "y": 159.766,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 137.724,
+     "y": 171.696,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 142.154,
+     "y": 167.281,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 130.151,
+     "y": 141.825,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 141.138,
+     "y": 134.924,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 135.819,
+     "y": 145.23,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 142.235,
+     "y": 141.769,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d2/f00",
+   "direction": 2,
+   "frame": 0,
+   "source_fingerprint": "sha256:741cbb27650a46d951bfcd1eb407183b0ce759c47982e1302f7adabdac046963",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 4,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 126.491,
+     "y": 124.075,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 126.42,
+     "y": 126.849,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 127.776,
+     "y": 133.676,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 127.476,
+     "y": 145.186,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 123.36,
+     "y": 137.541,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 120.879,
+     "y": 146.016,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 125.141,
+     "y": 152.023,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 127.717,
+     "y": 156.109,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 130.079,
+     "y": 126.423,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 134.065,
+     "y": 127.741,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 137.376,
+     "y": 134.848,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 138.233,
+     "y": 140.34,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 125.635,
+     "y": 147.54,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 126.887,
+     "y": 163.107,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 123.455,
+     "y": 170.172,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 128.045,
+     "y": 172.099,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.318,
+     "y": 142.832,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 140.413,
+     "y": 143.039,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 139.087,
+     "y": 149.96,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 143.312,
+     "y": 151.474,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d2/f01",
+   "direction": 2,
+   "frame": 1,
+   "source_fingerprint": "sha256:1711f0a37fd1b0a800189c5217fcb12cb716e7066fff83dbe1b2c127cd29a389",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 4,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 123.941,
+     "y": 127.618,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 123.39,
+     "y": 128.66,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 123.519,
+     "y": 133.901,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 124.471,
+     "y": 144.198,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 118.183,
+     "y": 136.245,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 120.592,
+     "y": 144.25,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 125.818,
+     "y": 146.841,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 129.373,
+     "y": 145.03,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.076,
+     "y": 129.1,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 132.98,
+     "y": 134.546,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 127.856,
+     "y": 131.952,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 124.906,
+     "y": 128.355,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 122.509,
+     "y": 146.933,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 124.333,
+     "y": 163.149,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 119.894,
+     "y": 171.056,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 124.599,
+     "y": 170.971,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 126.433,
+     "y": 141.463,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 137.149,
+     "y": 144.335,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 134.29,
+     "y": 147.653,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.284,
+     "y": 151.619,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d2/f02",
+   "direction": 2,
+   "frame": 2,
+   "source_fingerprint": "sha256:bc712bde192a67b4b2ad3c034e6fcce996a4cdf33b58f92a350cb57296dc11a2",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 4,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 126.185,
+     "y": 129.008,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 124.761,
+     "y": 130.215,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 122.087,
+     "y": 132.982,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 123.87,
+     "y": 143.733,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 118.398,
+     "y": 135.672,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 121.001,
+     "y": 143.958,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 126.345,
+     "y": 146.866,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 129.917,
+     "y": 147.034,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 127.345,
+     "y": 127.664,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 131.779,
+     "y": 131.799,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 127.524,
+     "y": 131.986,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 124.888,
+     "y": 130.068,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 122.238,
+     "y": 146.98,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 124.477,
+     "y": 162.895,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 119.308,
+     "y": 169.513,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 123.931,
+     "y": 171.195,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 125.502,
+     "y": 140.487,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 135.998,
+     "y": 140.63,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 134.683,
+     "y": 145.697,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.435,
+     "y": 149.785,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d2/f03",
+   "direction": 2,
+   "frame": 3,
+   "source_fingerprint": "sha256:2d3f9762ae9ca462784e541ed39a67daea84f8bc5b956d5f0ce45641179d66bc",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 4,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 126.335,
+     "y": 128.693,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 124.971,
+     "y": 129.818,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 122.833,
+     "y": 132.708,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 124.965,
+     "y": 143.702,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 119.941,
+     "y": 137.275,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 121.948,
+     "y": 145.929,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 126.467,
+     "y": 150.943,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 129.352,
+     "y": 154.354,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 127.672,
+     "y": 127.588,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 127.937,
+     "y": 134.475,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 131.796,
+     "y": 131.453,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 131.009,
+     "y": 125.464,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 122.979,
+     "y": 146.731,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 126.831,
+     "y": 162.726,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 120.345,
+     "y": 167.597,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 124.38,
+     "y": 171.664,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 126.951,
+     "y": 140.672,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 137.36,
+     "y": 146.205,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 135.678,
+     "y": 145.88,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 138.705,
+     "y": 151.643,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d2/f04",
+   "direction": 2,
+   "frame": 4,
+   "source_fingerprint": "sha256:ff6d340f52b4c6b9d775a7186c6a7b82d47c4fba4d7d76a6c186dc21222dadf1",
+   "provenance": {
+    "method": "mirrored",
+    "independent": false,
+    "source_method": "rig_projection",
+    "mirrored_from": 4,
+    "detail": "Exact mirror (x' = 255 - x) of the stored-direction pose; chain IDs preserved."
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 127.051,
+     "y": 125.47,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 126.725,
+     "y": 127.007,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 126.673,
+     "y": 132.7,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 126.421,
+     "y": 144.523,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 122.559,
+     "y": 136.035,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 120.952,
+     "y": 145.278,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 124.65,
+     "y": 151.7,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 127.739,
+     "y": 152.621,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 130.646,
+     "y": 126.957,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 134.432,
+     "y": 132.172,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 136.54,
+     "y": 140.625,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 137.52,
+     "y": 146.293,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 124.54,
+     "y": 147.187,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 125.035,
+     "y": 163.076,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 122.119,
+     "y": 172.579,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 126.834,
+     "y": 171.492,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.302,
+     "y": 141.859,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 139.212,
+     "y": 143.043,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 137.432,
+     "y": 151.417,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 141.875,
+     "y": 151.802,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d3/f00",
+   "direction": 3,
+   "frame": 0,
+   "source_fingerprint": "sha256:51d8ee132f23f20302dedee75174c6ac8793fb041bde7bd5ec0a2bffd849aff0",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.8571428571428571,
+      0.8484848484848485
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 135.682,
+     "y": 123.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 135.705,
+     "y": 126.764,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 134.775,
+     "y": 134.772,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 134.621,
+     "y": 146.482,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 141.593,
+     "y": 133.865,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 146.349,
+     "y": 139.431,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 145.637,
+     "y": 147.872,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 145.607,
+     "y": 153.275,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.689,
+     "y": 130.919,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 123.436,
+     "y": 136.291,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 124.201,
+     "y": 144.806,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 126.178,
+     "y": 150.022,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 137.976,
+     "y": 146.654,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 145.392,
+     "y": 160.141,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 145.339,
+     "y": 165.789,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 142.579,
+     "y": 171.045,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 131.266,
+     "y": 146.31,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 121.925,
+     "y": 155.551,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 119.799,
+     "y": 162.889,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 118.08,
+     "y": 167.124,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d3/f01",
+   "direction": 3,
+   "frame": 1,
+   "source_fingerprint": "sha256:b3db2c32f96602c828424ddc6e029b5d72f4537fdd31edfa5df1eed3748dbf87",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9,
+      0.8833333333333333
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 136.616,
+     "y": 124.654,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 136.034,
+     "y": 125.717,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 134.935,
+     "y": 131.729,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 132.799,
+     "y": 143.874,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 141.968,
+     "y": 128.728,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 144.251,
+     "y": 137.381,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 141.974,
+     "y": 143.577,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 138.688,
+     "y": 144.745,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.533,
+     "y": 131.514,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 126.642,
+     "y": 140.393,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 131.337,
+     "y": 133.262,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 132.939,
+     "y": 127.394,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 136.334,
+     "y": 144.352,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 143.313,
+     "y": 159.431,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 144.795,
+     "y": 164.965,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 140.292,
+     "y": 169.002,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.264,
+     "y": 143.396,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 119.836,
+     "y": 155.473,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 117.243,
+     "y": 158.615,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 115.807,
+     "y": 165.313,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d3/f02",
+   "direction": 3,
+   "frame": 2,
+   "source_fingerprint": "sha256:268428b1194c70693a4147d56bad075b8dfbd5d53e664e5686ad64818bcee116",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9047619047619048,
+      0.9137931034482759
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 134.571,
+     "y": 126.995,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 135.051,
+     "y": 127.387,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 135.224,
+     "y": 128.971,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 132.703,
+     "y": 142.603,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 142.427,
+     "y": 127.018,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 144.188,
+     "y": 136.595,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 141.568,
+     "y": 143.547,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 139.361,
+     "y": 146.455,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.137,
+     "y": 128.813,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 124.068,
+     "y": 137.244,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 130.159,
+     "y": 132.752,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 133.158,
+     "y": 128.083,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 136.163,
+     "y": 143.859,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 142.867,
+     "y": 159.472,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 144.474,
+     "y": 163.379,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 140.847,
+     "y": 169.056,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.243,
+     "y": 141.348,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 118.123,
+     "y": 151.453,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 114.846,
+     "y": 157.664,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 114.065,
+     "y": 164.325,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d3/f03",
+   "direction": 3,
+   "frame": 3,
+   "source_fingerprint": "sha256:64ce60f07cb07e259bc1180729d2872fd77cfe2f558b4136ec0b619aabdc2908",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9523809523809523,
+      0.9473684210526315
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 136.632,
+     "y": 126.456,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 137.002,
+     "y": 126.834,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 136.603,
+     "y": 129.075,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 133.708,
+     "y": 143.533,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 144.271,
+     "y": 129.45,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 147.015,
+     "y": 138.934,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 146.162,
+     "y": 147.192,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 145.727,
+     "y": 152.651,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 129.41,
+     "y": 128.911,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 129.204,
+     "y": 136.746,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 127.047,
+     "y": 136.315,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 125.578,
+     "y": 129.888,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 137.407,
+     "y": 144.319,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 142.335,
+     "y": 161.982,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 144.731,
+     "y": 162.985,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 142.445,
+     "y": 170.533,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 130.01,
+     "y": 142.747,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 121.621,
+     "y": 157.766,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 116.077,
+     "y": 158.811,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 115.02,
+     "y": 167.2,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d3/f04",
+   "direction": 3,
+   "frame": 4,
+   "source_fingerprint": "sha256:f8d0656e438952f3f0d3c4710f0c282c840355fb7658734e671a9dfa1394fd3f",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.825,
+      0.873015873015873
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 133.853,
+     "y": 124.318,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 133.346,
+     "y": 125.964,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 132.672,
+     "y": 132.093,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 132.45,
+     "y": 144.234,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 139.167,
+     "y": 130.694,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 143.627,
+     "y": 137.475,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 144.065,
+     "y": 145.673,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 143.152,
+     "y": 148.51,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 126.432,
+     "y": 130.834,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 123.456,
+     "y": 139.33,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 125.389,
+     "y": 148.196,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 127.103,
+     "y": 153.749,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 135.689,
+     "y": 144.647,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 143.509,
+     "y": 157.808,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 144.184,
+     "y": 165.883,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 139.982,
+     "y": 168.88,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.21,
+     "y": 143.82,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 120.008,
+     "y": 154.331,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 119.015,
+     "y": 162.524,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.64,
+     "y": 166.103,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d4/f00",
+   "direction": 4,
+   "frame": 0,
+   "source_fingerprint": "sha256:58a2feed62c79a677a5a78e527a26f0e1abd570e1e37321e384e5e69007e18e2",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.75,
+      0.8285714285714286
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 128.509,
+     "y": 124.075,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 128.58,
+     "y": 126.849,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 127.224,
+     "y": 133.676,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 127.524,
+     "y": 145.186,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 131.64,
+     "y": 137.541,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 134.121,
+     "y": 146.016,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 129.859,
+     "y": 152.023,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 127.283,
+     "y": 156.109,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 124.921,
+     "y": 126.423,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 120.935,
+     "y": 127.741,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 117.624,
+     "y": 134.848,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 116.767,
+     "y": 140.34,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 129.365,
+     "y": 147.54,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 128.113,
+     "y": 163.107,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 131.545,
+     "y": 170.172,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 126.955,
+     "y": 172.099,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 125.682,
+     "y": 142.832,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 114.587,
+     "y": 143.039,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 115.913,
+     "y": 149.96,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 111.688,
+     "y": 151.474,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d4/f01",
+   "direction": 4,
+   "frame": 1,
+   "source_fingerprint": "sha256:c0288cde5d7894c8b0f439ef87d709c0857dfad1e015570f817995943f239f5d",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.75,
+      0.8412698412698413
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 131.059,
+     "y": 127.618,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 131.61,
+     "y": 128.66,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 131.481,
+     "y": 133.901,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 130.529,
+     "y": 144.198,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 136.817,
+     "y": 136.245,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 134.408,
+     "y": 144.25,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 129.182,
+     "y": 146.841,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 125.627,
+     "y": 145.03,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 126.924,
+     "y": 129.1,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 122.02,
+     "y": 134.546,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 127.144,
+     "y": 131.952,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 130.094,
+     "y": 128.355,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 132.491,
+     "y": 146.933,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 130.667,
+     "y": 163.149,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 135.106,
+     "y": 171.056,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 130.401,
+     "y": 170.971,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.567,
+     "y": 141.463,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 117.851,
+     "y": 144.335,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 120.71,
+     "y": 147.653,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.716,
+     "y": 151.619,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d4/f02",
+   "direction": 4,
+   "frame": 2,
+   "source_fingerprint": "sha256:59b9f9f17ce7ea466e0feed91faa336da79014faa41241bc6d996a7e3a036663",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.75,
+      0.8412698412698413
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 128.815,
+     "y": 129.008,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 130.239,
+     "y": 130.215,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 132.913,
+     "y": 132.982,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 131.13,
+     "y": 143.733,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 136.602,
+     "y": 135.672,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 133.999,
+     "y": 143.958,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 128.655,
+     "y": 146.866,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 125.083,
+     "y": 147.034,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 127.655,
+     "y": 127.664,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 123.221,
+     "y": 131.799,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 127.476,
+     "y": 131.986,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 130.112,
+     "y": 130.068,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 132.762,
+     "y": 146.98,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 130.523,
+     "y": 162.895,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 135.692,
+     "y": 169.513,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 131.069,
+     "y": 171.195,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 129.498,
+     "y": 140.487,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 119.002,
+     "y": 140.63,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 120.317,
+     "y": 145.697,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.565,
+     "y": 149.785,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d4/f03",
+   "direction": 4,
+   "frame": 3,
+   "source_fingerprint": "sha256:6bae024a75a45c81c853f8ecfbdf5e8bd909f85e845d10fac3eb12eeee595e44",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.75,
+      0.8571428571428571
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 128.665,
+     "y": 128.693,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 130.029,
+     "y": 129.818,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 132.167,
+     "y": 132.708,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 130.035,
+     "y": 143.702,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 135.059,
+     "y": 137.275,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 133.052,
+     "y": 145.929,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 128.533,
+     "y": 150.943,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 125.648,
+     "y": 154.354,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 127.328,
+     "y": 127.588,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 127.063,
+     "y": 134.475,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 123.204,
+     "y": 131.453,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 123.991,
+     "y": 125.464,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 132.021,
+     "y": 146.731,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 128.169,
+     "y": 162.726,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 134.655,
+     "y": 167.597,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 130.62,
+     "y": 171.664,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.049,
+     "y": 140.672,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 117.64,
+     "y": 146.205,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 119.322,
+     "y": 145.88,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.295,
+     "y": 151.643,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d4/f04",
+   "direction": 4,
+   "frame": 4,
+   "source_fingerprint": "sha256:e651c7f806c7ea3e98518c4f2c4d6a921cae85e21d0ccb2d950fba4bb82534fc",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.75,
+      0.8484848484848485
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 127.949,
+     "y": 125.47,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 128.275,
+     "y": 127.007,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 128.327,
+     "y": 132.7,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 128.579,
+     "y": 144.523,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 132.441,
+     "y": 136.035,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 134.048,
+     "y": 145.278,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 130.35,
+     "y": 151.7,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 127.261,
+     "y": 152.621,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 124.354,
+     "y": 126.957,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 120.568,
+     "y": 132.172,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 118.46,
+     "y": 140.625,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 117.48,
+     "y": 146.293,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 130.46,
+     "y": 147.187,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 129.965,
+     "y": 163.076,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 132.881,
+     "y": 172.579,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 128.166,
+     "y": 171.492,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 126.698,
+     "y": 141.859,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 115.788,
+     "y": 143.043,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 117.568,
+     "y": 151.417,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 113.125,
+     "y": 151.802,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d5/f00",
+   "direction": 5,
+   "frame": 0,
+   "source_fingerprint": "sha256:d2cfa2e92bc70fba8b21a77a0c1689fdd3f263a53eb4354a676b7195742a9418",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.0909090909090908,
+      0.8636363636363636
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 125.218,
+     "y": 124.132,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 125.333,
+     "y": 127.094,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 123.729,
+     "y": 133.037,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 124.541,
+     "y": 145.444,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 124.135,
+     "y": 139.306,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 123.186,
+     "y": 149.012,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 115.325,
+     "y": 150.662,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 110.063,
+     "y": 151.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 126.737,
+     "y": 125.365,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 125.223,
+     "y": 124.342,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 117.437,
+     "y": 127.617,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 113.159,
+     "y": 131.53,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 124.059,
+     "y": 148.618,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 112.045,
+     "y": 160.307,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 119.173,
+     "y": 171.645,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 113.243,
+     "y": 169.519,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 125.024,
+     "y": 142.271,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 114.089,
+     "y": 133.608,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 119.522,
+     "y": 143.236,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 113.019,
+     "y": 140.667,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d5/f01",
+   "direction": 5,
+   "frame": 1,
+   "source_fingerprint": "sha256:379bd3246189ebb6b1a85f311a2459b54f5484ca98fa46098f0c2d10233f0a74",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.1153846153846154,
+      0.8125
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 120.449,
+     "y": 127.285,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 122.328,
+     "y": 129.106,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 123.419,
+     "y": 134.439,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 124.064,
+     "y": 144.151,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 125.925,
+     "y": 139.854,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 118.029,
+     "y": 144.122,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 109.86,
+     "y": 141.814,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 106.454,
+     "y": 137.441,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 121.768,
+     "y": 127.259,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 113.798,
+     "y": 127.914,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 118.757,
+     "y": 129.204,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 122.974,
+     "y": 128.326,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 123.809,
+     "y": 147.596,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 111.323,
+     "y": 158.671,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 118.824,
+     "y": 170.563,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 114.507,
+     "y": 167.067,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 124.318,
+     "y": 140.706,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 113.464,
+     "y": 135.396,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 122.691,
+     "y": 142.667,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.07,
+     "y": 142.708,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d5/f02",
+   "direction": 5,
+   "frame": 2,
+   "source_fingerprint": "sha256:23674b0f2f434a02992e035ac251a6a4b63459eaf187ecf2944b708454e48726",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.1071428571428572,
+      0.8253968253968254
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 117.171,
+     "y": 127.481,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 119.556,
+     "y": 130.051,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 124.925,
+     "y": 135.643,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 124.29,
+     "y": 145.182,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 123.815,
+     "y": 139.621,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 116.225,
+     "y": 144.22,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 108.274,
+     "y": 142.182,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 103.517,
+     "y": 139.249,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 122.622,
+     "y": 127.317,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 118.346,
+     "y": 128.032,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 119.774,
+     "y": 130.596,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 121.608,
+     "y": 130.482,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 123.463,
+     "y": 148.856,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 110.583,
+     "y": 159.473,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 119.408,
+     "y": 171.047,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 114.196,
+     "y": 168.981,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 125.116,
+     "y": 141.508,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 116.811,
+     "y": 134.3,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 123.566,
+     "y": 141.955,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.688,
+     "y": 142.132,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d5/f03",
+   "direction": 5,
+   "frame": 3,
+   "source_fingerprint": "sha256:61c18446e3956414752a28eb720d28d234e438a8b9d9b5595f59ceb6c26fd64f",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.1290322580645162,
+      0.875
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 116.768,
+     "y": 125.342,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 119.234,
+     "y": 127.942,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 124.259,
+     "y": 133.538,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 123.151,
+     "y": 143.375,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 121.325,
+     "y": 138.657,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 113.799,
+     "y": 144.105,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 105.19,
+     "y": 144.276,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 99.563,
+     "y": 144.558,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 122.484,
+     "y": 125.403,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 122.163,
+     "y": 132.203,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 116.505,
+     "y": 125.437,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 119.921,
+     "y": 120.799,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 122.994,
+     "y": 147.377,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 108.952,
+     "y": 157.336,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 119.918,
+     "y": 168.963,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 114.039,
+     "y": 169.278,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 123.307,
+     "y": 139.373,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 111.092,
+     "y": 136.07,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 121.245,
+     "y": 139.809,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 116.055,
+     "y": 142.564,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d5/f04",
+   "direction": 5,
+   "frame": 4,
+   "source_fingerprint": "sha256:914b601955f72928f49e333c47669bfc2f47295567b8e764a3696e767a0e41a0",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.1666666666666667,
+      0.8088235294117647
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 121.034,
+     "y": 125.665,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 122.468,
+     "y": 127.687,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 123.535,
+     "y": 133.444,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 124.405,
+     "y": 145.077,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 123.402,
+     "y": 138.423,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 120.629,
+     "y": 147.155,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 111.876,
+     "y": 149.111,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 106.37,
+     "y": 147.028,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 123.621,
+     "y": 126.219,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 119.5,
+     "y": 128.316,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 112.129,
+     "y": 133.315,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 107.55,
+     "y": 136.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 123.962,
+     "y": 148.329,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 111.815,
+     "y": 159.766,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 117.276,
+     "y": 171.696,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 112.846,
+     "y": 167.281,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 124.849,
+     "y": 141.825,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 113.862,
+     "y": 134.924,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 119.181,
+     "y": 145.23,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 112.765,
+     "y": 141.769,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d6/f00",
+   "direction": 6,
+   "frame": 0,
+   "source_fingerprint": "sha256:93e8d5e5190bfbdfa48d51f372236332941d0ae9daf8955ac9a9302531cfc82e",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.088235294117647,
+      0.9166666666666666
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 123.321,
+     "y": 122.34,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 123.382,
+     "y": 125.546,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 123.085,
+     "y": 131.192,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 123.796,
+     "y": 144.892,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 117.251,
+     "y": 135.951,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 112.312,
+     "y": 144.2,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 107.406,
+     "y": 141.503,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 103.721,
+     "y": 139.77,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 130.671,
+     "y": 126.742,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 134.319,
+     "y": 126.402,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 128.14,
+     "y": 125.012,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 123.347,
+     "y": 126.004,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 120.444,
+     "y": 146.923,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 105.312,
+     "y": 149.868,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 110.387,
+     "y": 166.154,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 108.682,
+     "y": 161.239,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 127.149,
+     "y": 142.861,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 127.822,
+     "y": 130.095,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 133.562,
+     "y": 144.208,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 130.519,
+     "y": 138.156,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d6/f01",
+   "direction": 6,
+   "frame": 1,
+   "source_fingerprint": "sha256:464d09dccacb8d28f70d577794b83ddc93b80d73d419812a3ea5bc902025e35f",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.8571428571428571,
+      0.8225806451612904
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 115.363,
+     "y": 124.389,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 116.777,
+     "y": 127.368,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 118.109,
+     "y": 133.63,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 119.898,
+     "y": 144.371,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 114.734,
+     "y": 138.536,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 108.907,
+     "y": 138.129,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 106.001,
+     "y": 132.142,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 106.363,
+     "y": 126.818,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 121.523,
+     "y": 127.214,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 118.466,
+     "y": 124.227,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 117.999,
+     "y": 126.863,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 119.212,
+     "y": 127.744,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 117.379,
+     "y": 146.78,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 105.894,
+     "y": 149.613,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 108.972,
+     "y": 165.167,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 109.659,
+     "y": 160.582,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 122.417,
+     "y": 141.962,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 122.868,
+     "y": 133.45,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 129.628,
+     "y": 146.317,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 126.997,
+     "y": 143.29,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d6/f02",
+   "direction": 6,
+   "frame": 2,
+   "source_fingerprint": "sha256:35a03fe16cc3d35408669564b1003446cc80a4d04f90f36e3f9545a89b7a5858",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9210526315789473,
+      0.8095238095238095
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 112.926,
+     "y": 124.608,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 113.984,
+     "y": 128.236,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 117.017,
+     "y": 136.45,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 118.458,
+     "y": 146.139,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 111.179,
+     "y": 137.891,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 105.447,
+     "y": 138.015,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 102.656,
+     "y": 132.592,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 101.446,
+     "y": 127.835,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 120.764,
+     "y": 128.952,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 121.178,
+     "y": 128.508,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 117.634,
+     "y": 130.165,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 116.554,
+     "y": 130.216,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 115.481,
+     "y": 148.408,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 103.079,
+     "y": 150.404,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 107.113,
+     "y": 165.897,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 106.658,
+     "y": 162.127,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 121.435,
+     "y": 143.869,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 124.554,
+     "y": 135.42,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 130.887,
+     "y": 147.279,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 127.403,
+     "y": 144.102,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d6/f03",
+   "direction": 6,
+   "frame": 3,
+   "source_fingerprint": "sha256:235da4731cd6c1e663e50d6385f586c1fb96c16e9f9644e52b9a9836e8b3a570",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9302325581395349,
+      0.8548387096774194
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 112.085,
+     "y": 123.318,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 113.266,
+     "y": 127.081,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 116.47,
+     "y": 135.344,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 117.823,
+     "y": 145.121,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 109.463,
+     "y": 136.757,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 103.184,
+     "y": 137.329,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 98.758,
+     "y": 133.111,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 95.78,
+     "y": 130.488,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 120.403,
+     "y": 128.336,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 120.358,
+     "y": 134.862,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 118.552,
+     "y": 125.79,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 121.556,
+     "y": 123.474,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 115.177,
+     "y": 147.974,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 103.593,
+     "y": 148.891,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 108.326,
+     "y": 165.49,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 106.48,
+     "y": 163.252,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 120.468,
+     "y": 142.267,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 119.145,
+     "y": 134.706,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 128.89,
+     "y": 145.252,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 126.596,
+     "y": 145.443,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d6/f04",
+   "direction": 6,
+   "frame": 4,
+   "source_fingerprint": "sha256:e9cb6bf8dda90fed58a79f6568ec48fa901b618701b0ac6eecc4237775b8fba5",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      1.0588235294117647,
+      0.8571428571428571
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 121.566,
+     "y": 122.687,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 122.948,
+     "y": 125.73,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 124.243,
+     "y": 132.589,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 125.004,
+     "y": 145.437,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 118.264,
+     "y": 135.82,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 112.437,
+     "y": 142.276,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 106.422,
+     "y": 139.669,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 103.718,
+     "y": 134.878,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 129.962,
+     "y": 126.876,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 130.018,
+     "y": 127.864,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 123.533,
+     "y": 128.744,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 119.04,
+     "y": 129.712,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 121.78,
+     "y": 147.668,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 106.888,
+     "y": 151.098,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 109.78,
+     "y": 166.373,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 110.75,
+     "y": 160.671,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.229,
+     "y": 143.207,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 129.529,
+     "y": 132.987,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 133.844,
+     "y": 146.973,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 131.881,
+     "y": 140.695,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d7/f00",
+   "direction": 7,
+   "frame": 0,
+   "source_fingerprint": "sha256:0514baaabe39432d156430753979dc1d1e7b052ad00e8e87cd1b4391e78dbe5f",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.8780487804878049,
+      1.0
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 121.78,
+     "y": 122.43,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 121.757,
+     "y": 125.938,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 122.709,
+     "y": 132.435,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 122.867,
+     "y": 147.725,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 115.725,
+     "y": 132.111,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 110.853,
+     "y": 136.931,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 111.583,
+     "y": 132.466,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 111.613,
+     "y": 129.188,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.944,
+     "y": 133.409,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 134.325,
+     "y": 136.965,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 133.541,
+     "y": 132.727,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 131.516,
+     "y": 131.03,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 119.43,
+     "y": 147.044,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 111.834,
+     "y": 140.914,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 111.888,
+     "y": 160.638,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 114.715,
+     "y": 155.96,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 126.304,
+     "y": 148.407,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 135.873,
+     "y": 139.251,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 138.051,
+     "y": 157.859,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 139.812,
+     "y": 150.929,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d7/f01",
+   "direction": 7,
+   "frame": 1,
+   "source_fingerprint": "sha256:e7b1ab4a6875cd9b1088c862e6e5980022c89f192c72dc6088d3a9421917525b",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9,
+      0.8928571428571429
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 121.375,
+     "y": 121.863,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 121.957,
+     "y": 125.946,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 123.056,
+     "y": 133.77,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 125.192,
+     "y": 147.077,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 116.022,
+     "y": 134.748,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 113.74,
+     "y": 130.854,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 116.017,
+     "y": 124.037,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 119.303,
+     "y": 119.765,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 129.458,
+     "y": 130.909,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 131.349,
+     "y": 127.125,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 126.654,
+     "y": 127.855,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 125.052,
+     "y": 128.676,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 121.657,
+     "y": 147.152,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 114.677,
+     "y": 142.404,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 113.196,
+     "y": 160.007,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 117.698,
+     "y": 157.176,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.726,
+     "y": 147.002,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 138.155,
+     "y": 141.832,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 140.748,
+     "y": 159.781,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 142.184,
+     "y": 155.95,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d7/f02",
+   "direction": 7,
+   "frame": 2,
+   "source_fingerprint": "sha256:ac6c02786e6be1d0142717932bb165192503fc05bc9aa1db84a40753d5497a40",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9047619047619048,
+      0.8448275862068966
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 123.42,
+     "y": 120.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 122.94,
+     "y": 124.968,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 122.766,
+     "y": 134.626,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 125.288,
+     "y": 146.259,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 115.564,
+     "y": 131.125,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 113.803,
+     "y": 128.397,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 116.423,
+     "y": 122.69,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 118.63,
+     "y": 118.119,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 129.854,
+     "y": 130.966,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 133.923,
+     "y": 132.234,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 127.832,
+     "y": 130.261,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 124.833,
+     "y": 128.743,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 121.828,
+     "y": 146.158,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 115.123,
+     "y": 140.936,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 113.517,
+     "y": 158.017,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 117.144,
+     "y": 155.312,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.748,
+     "y": 146.361,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 139.868,
+     "y": 143.029,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 143.145,
+     "y": 159.079,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 143.926,
+     "y": 154.741,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d7/f03",
+   "direction": 7,
+   "frame": 3,
+   "source_fingerprint": "sha256:9164fe2376f8ea4c4addf03d1dea4933e3940e7d58bdd097c3cabf3c683bddf0",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.9285714285714286,
+      0.8928571428571429
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 120.999,
+     "y": 120.217,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 120.639,
+     "y": 124.474,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 121.028,
+     "y": 134.532,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 123.85,
+     "y": 146.406,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 113.551,
+     "y": 130.245,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 110.876,
+     "y": 127.281,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 111.708,
+     "y": 121.447,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 112.131,
+     "y": 117.692,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 128.041,
+     "y": 131.57,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 128.241,
+     "y": 138.448,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 130.345,
+     "y": 129.092,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 131.777,
+     "y": 128.438,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 120.244,
+     "y": 146.899,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 115.439,
+     "y": 141.337,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 113.102,
+     "y": 159.626,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 115.332,
+     "y": 157.442,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 127.455,
+     "y": 145.913,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 135.635,
+     "y": 140.748,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 141.041,
+     "y": 157.79,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 142.071,
+     "y": 157.488,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  },
+  {
+   "frame_id": "ultima-online/body-400/action-027/d7/f04",
+   "direction": 7,
+   "frame": 4,
+   "source_fingerprint": "sha256:03ee463acf82101069d53575983b4ec90bae1ccf0b7c23fdbb7c8042e9baaef3",
+   "provenance": {
+    "method": "rig_projection",
+    "independent": false,
+    "detail": "rig projection + bbox registration: Projected latest fitted Rigify joints, registered to source silhouette bounding box; mirrored views use 255-x. Automatic, unapproved seeds, not independently measured 2D anatomy.",
+    "parameters": {
+     "registration_scale": [
+      0.825,
+      0.9444444444444444
+     ]
+    }
+   },
+   "review": {
+    "status": "unreviewed"
+   },
+   "joints": {
+    "head": {
+     "x": 124.138,
+     "y": 121.953,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "neck": {
+     "x": 124.645,
+     "y": 126.056,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "chest": {
+     "x": 125.319,
+     "y": 134.413,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "pelvis": {
+     "x": 125.542,
+     "y": 148.956,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_shoulder": {
+     "x": 118.825,
+     "y": 132.684,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_elbow": {
+     "x": 114.365,
+     "y": 135.53,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_wrist": {
+     "x": 113.927,
+     "y": 130.227,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_A_hand": {
+     "x": 114.84,
+     "y": 124.382,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_shoulder": {
+     "x": 131.56,
+     "y": 133.19,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_elbow": {
+     "x": 134.536,
+     "y": 135.71,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_wrist": {
+     "x": 132.602,
+     "y": 133.367,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "arm_B_hand": {
+     "x": 130.889,
+     "y": 131.962,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_hip": {
+     "x": 122.302,
+     "y": 148.687,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_knee": {
+     "x": 114.483,
+     "y": 143.257,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_ankle": {
+     "x": 113.808,
+     "y": 160.835,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_A_toe": {
+     "x": 118.01,
+     "y": 156.903,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_hip": {
+     "x": 128.782,
+     "y": 149.226,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_knee": {
+     "x": 137.984,
+     "y": 142.81,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_ankle": {
+     "x": 138.977,
+     "y": 160.285,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    },
+    "leg_B_toe": {
+     "x": 141.352,
+     "y": 153.769,
+     "confidence": 0.35,
+     "visibility": "unknown",
+     "status": "estimate"
+    }
+   }
+  }
+ ]
+}

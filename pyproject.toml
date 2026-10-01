@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spritemotion"
+version = "0.1.0"
+description = "Reconstruct editable 3D characters and animations from existing 2D sprites."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["numpy>=1.24", "Pillow>=10"]
+
+[project.optional-dependencies]
+test = ["pytest>=7", "jsonschema>=4"]
+
+[project.scripts]
+spritemotion = "spritemotion.pipeline.cli:main"
+
+# The shared layer lives in common/ but imports as `spritemotion`.
+[tool.setuptools]
+package-dir = { "spritemotion" = "common" }
+packages = [
+    "spritemotion",
+    "spritemotion.sprites",
+    "spritemotion.poses",
+    "spritemotion.estimation",
+    "spritemotion.fitting",
+    "spritemotion.rendering",
+    "spritemotion.pipeline",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

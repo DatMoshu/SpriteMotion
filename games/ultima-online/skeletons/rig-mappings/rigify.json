@@ -1,0 +1,30 @@
+{
+ "schema": "spritemotion.rig-mapping",
+ "schema_version": 1,
+ "skeleton": "humanoid-20",
+ "rig": "rigify",
+ "description": "Generated Rigify rig driven through its FK controls (the rig must be in FK mode). Joint points match the ones the 2026-09 UO Roto seeds were projected from.",
+ "sides": {"A": "L", "B": "R"},
+ "joints": {
+  "head": {"bone": "head", "at": 0.5},
+  "neck": {"bone": "head", "at": 0},
+  "chest": {"bone": "spine_fk.003", "at": 0},
+  "pelvis": {"mix": [{"bone": "thigh_fk.L", "at": 0, "w": 0.5}, {"bone": "thigh_fk.R", "at": 0, "w": 0.5}]},
+  "arm_{chain}_shoulder": {"bone": "upper_arm_fk.{side}", "at": 0},
+  "arm_{chain}_elbow": {"bone": "forearm_fk.{side}", "at": 0},
+  "arm_{chain}_wrist": {"bone": "hand_fk.{side}", "at": 0},
+  "arm_{chain}_hand": {"bone": "hand_fk.{side}", "at": 1},
+  "leg_{chain}_hip": {"bone": "thigh_fk.{side}", "at": 0},
+  "leg_{chain}_knee": {"bone": "shin_fk.{side}", "at": 0},
+  "leg_{chain}_ankle": {"bone": "foot_fk.{side}", "at": 0},
+  "leg_{chain}_toe": {"bone": "toe_fk.{side}", "at": 1}
+ },
+ "fit": {
+  "root_bone": "torso",
+  "bones": ["torso", "spine_fk.001", "spine_fk.002", "spine_fk.003", "neck", "head",
+            "upper_arm_fk.{side}", "forearm_fk.{side}", "hand_fk.{side}",
+            "thigh_fk.{side}", "shin_fk.{side}", "foot_fk.{side}"],
+  "limits_deg": {"default": 150, "torso": 100, "spine_fk.001": 35, "spine_fk.002": 35, "spine_fk.003": 35,
+                 "neck": 45, "head": 50, "hand_fk.{side}": 70, "foot_fk.{side}": 60}
+ }
+}

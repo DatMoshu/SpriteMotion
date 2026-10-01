@@ -1,0 +1,65 @@
+{
+ "schema": "spritemotion.pose-annotations",
+ "schema_version": 1,
+ "dataset_id": "fixture/tiny",
+ "skeleton": "tiny-6",
+ "coordinate_space": "canvas-px",
+ "sequence": "wave",
+ "layer": "correction",
+ "poses": [
+  {
+   "frame_id": "fixture/tiny/wave/d0/f01",
+   "direction": 0,
+   "frame": 1,
+   "source_fingerprint": "sha256:0c2aa9f4dbd6e7397d5d38face6b9ea7b8a28ef9de33f2951b3dae446df30ee3",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "rig_projection"
+   },
+   "review": {
+    "status": "approved",
+    "notes": "Fixture approval.",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 22.0,
+     "y": 12.0,
+     "confidence": 0.5,
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 22.0,
+     "y": 20.0,
+     "confidence": 0.5,
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 22.0,
+     "y": 38.0,
+     "confidence": 0.5,
+     "status": "corrected"
+    },
+    "hand": {
+     "x": 34.891,
+     "y": 16.219,
+     "confidence": 0.5,
+     "status": "corrected"
+    },
+    "foot_a": {
+     "x": 17.0,
+     "y": 58.0,
+     "confidence": 0.5,
+     "status": "corrected"
+    },
+    "foot_b": {
+     "x": 27.0,
+     "y": 58.0,
+     "confidence": 0.5,
+     "status": "corrected"
+    }
+   }
+  }
+ ]
+}

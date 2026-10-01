@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hand Review</title>
+<style>
+:root{--bg:#12141a;--panel:#1b1e27;--line:#2c3140;--text:#e6e8ee;--muted:#9aa1b2;--accent:#7fb2ff;--a:#28d9ff;--b:#ff5edb;--ok:#5fd38d}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f4f5f8;--panel:#fff;--line:#dde0e8;--text:#1b1e27;--muted:#5d6475;--accent:#2f6fdb;--a:#0a8fb0;--b:#b3279a;--ok:#1f9d57}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+h1{font-size:16px;margin:0}a{color:var(--accent)}select,button,input,textarea{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+button{cursor:pointer}button:hover{border-color:var(--accent)}.muted{color:var(--muted)}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 56px)}
+nav{border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+nav div{padding:5px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:6px;border-bottom:1px solid var(--line);font-size:13px}
+nav div:hover{background:var(--panel)}nav div.sel{background:var(--panel);box-shadow:inset 3px 0 0 var(--accent)}
+.badge{font-size:11px;color:var(--muted);white-space:nowrap}.done{color:var(--ok)}
+main{padding:14px 16px;min-width:0}
+.hand{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.hand h2{font-size:15px;margin:0 0 8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chip{display:inline-block;width:10px;height:10px;border-radius:50%}
+.states{display:inline-flex;gap:4px}.states button.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+.notes{flex:1;min-width:180px}
+.grid{overflow-x:auto}.row{display:flex;gap:8px;align-items:flex-start;margin:6px 0}
+.rowlab{width:52px;flex:none;color:var(--muted);font-size:12px;padding-top:30px}
+.cell{flex:none;text-align:center}.pair{display:flex;gap:2px}
+.tile{width:84px;height:84px;border-radius:4px;background-repeat:no-repeat;image-rendering:pixelated;position:relative;
+ background-color:#262b38}
+.tile::after{content:"";position:absolute;left:calc(50% - 4px);top:calc(50% - 4px);width:8px;height:8px;border:1px solid #ffeb3b;border-radius:50%;opacity:.7}
+.hide-mark .tile::after{display:none}
+.cap{font-size:11px;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-bottom:10px}
+label{display:inline-flex;gap:5px;align-items:center;color:var(--muted)}
+@media (max-width:760px){.layout{grid-template-columns:1fr}nav{position:static;max-height:220px}}
+</style></head><body>
+<header><h1>Hand Review</h1><a href="index.html">← Full pass</a>
+<label>Body <select id="body"></select></label>
+<span class="muted" id="progress"></span>
+<button id="export">Export hand-states.json</button><button id="copy">Copy JSON</button>
+<label><input type="checkbox" id="mark" checked>Hand marker</label>
+<label>Zoom <select id="zoom"><option value="4">4×</option><option value="5" selected>5×</option><option value="7">7×</option><option value="9">9×</option></select></label>
+</header>
+<div class="layout"><nav id="list"></nav><main id="main"></main></div>
+<script src="data.js"></script>
+<script>
+const DATA = window.DATA, STATES = ["fist", "grip", "relaxed", "open"], VIEWS = [3,4,5,6,7], DIRS = ["N","NE","E","SE","S","SW","W","NW"];
+const KEY = "cc4-hand-review-v1", WIN = 18;
+let b = 0, a = 0, store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { store = {}; }
+const $ = id => document.getElementById(id);
+const slug = i => DATA.bodies[i].label.split(" ")[0].toLowerCase();
+function rec(i, id) { const s = store[slug(i)] ||= {}; return s[id] ||= { A: "fist", B: "fist", notes: "", reviewed: false }; }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+DATA.bodies.forEach((x, i) => $("body").add(new Option(x.label, i)));
+
+function list() {
+  const body = DATA.bodies[b]; let html = "", done = 0;
+  body.actions.forEach((x, i) => { const r = rec(b, x.id); if (r.reviewed) done++;
+    html += `<div class="${i === a ? "sel" : ""}" data-i="${i}"><span>${x.id.slice(7)} ${x.name}</span><span class="badge ${r.reviewed ? "done" : ""}">${r.A[0].toUpperCase()}/${r.B[0].toUpperCase()}${r.reviewed ? " ✓" : ""}</span></div>`; });
+  $("list").innerHTML = html; $("progress").textContent = `${done}/${body.actions.length} reviewed`;
+  $("list").querySelectorAll("div").forEach(d => d.onclick = () => { a = +d.dataset.i; draw(); });
+}
+function tile(src, x, y, z, canvas) {
+  const [cw, ch] = canvas || [256, 256], off = WIN / 2;
+  return `<div class="tile" style="width:${WIN*z}px;height:${WIN*z}px;background-image:url('${src}');background-size:${cw*z}px ${ch*z}px;background-position:${-(x - off) * z}px ${-(y - off) * z}px"></div>`;
+}
+function draw() {
+  const body = DATA.bodies[b], act = body.actions[a], r = rec(b, act.id), z = +$("zoom").value;
+  const [x0, y0] = act.crop, idx = { A: body.names.indexOf("arm_A_hand"), B: body.names.indexOf("arm_B_hand") };
+  const rb = act.shaded_base || act.render_base;
+  let html = `<div class="top"><b>${body.label} · ${act.id} ${act.name}</b><span class="muted">${act.frames} frame${act.frames > 1 ? "s" : ""}</span>
+    <label><input type="checkbox" id="rev" ${r.reviewed ? "checked" : ""}>Reviewed</label>
+    <input class="notes" id="notes" placeholder="Notes for this action (e.g. holds weapon in B from frame 3)" value="${(r.notes || "").replace(/"/g, "&quot;")}">
+    <span class="muted">Keys: 1–4 hand A · Shift+1–4 hand B · R reviewed · ↑/↓ action</span></div>`;
+  for (const chain of ["A", "B"]) {
+    html += `<section class="hand"><h2><span class="chip" style="background:var(--${chain.toLowerCase()})"></span>Hand ${chain}
+      <span class="states">${STATES.map((s, k) => `<button data-c="${chain}" data-s="${s}" class="${r[chain] === s ? "on" : ""}">${k + 1} ${s}</button>`).join("")}</span></h2><div class="grid">`;
+    for (const d of VIEWS) {
+      html += `<div class="row"><div class="rowlab">${DIRS[d]}<br>d${d}</div>`;
+      for (let f = 0; f < act.frames; f++) {
+        const e = (act.views[d] || {})[f]; if (!e) continue;
+        const p = e.fit ? e.fit[idx[chain]] : null, t = e.target ? e.target[idx[chain]] : p;  // no marks: centre the sprite crop on the fitted hand
+        html += `<div class="cell"><div class="pair">${t ? tile(act.sprite_base + "/" + e.sprite, t[0] + x0, t[1] + y0, z, act.canvas) : ""}${p ? tile(rb + "/" + e.render, p[0] + x0, p[1] + y0, z, act.canvas) : ""}</div><div class="cap">f${f} sprite · model</div></div>`;
+      }
+      html += `</div>`;
+    }
+    html += `</div></section>`;
+  }
+  $("main").innerHTML = html;
+  $("main").classList.toggle("hide-mark", !$("mark").checked);
+  $("main").querySelectorAll(".states button").forEach(btn => btn.onclick = () => { r[btn.dataset.c] = btn.dataset.s; save(); draw(); });
+  $("rev").onchange = e => { r.reviewed = e.target.checked; save(); list(); };
+  $("notes").oninput = e => { r.notes = e.target.value; save(); };
+  list();
+}
+function exportJson(i) {
+  const out = {}; DATA.bodies[i].actions.forEach(x => { const r = rec(i, x.id); out[x.id] = { A: r.A, B: r.B, notes: r.notes, reviewed: r.reviewed }; });
+  return JSON.stringify(out, null, 1);
+}
+$("export").onclick = () => { const blob = new Blob([exportJson(b)], { type: "application/json" }); const u = URL.createObjectURL(blob);
+  const l = document.createElement("a"); l.href = u; l.download = `hand-states-${slug(b)}.json`; l.click(); setTimeout(() => URL.revokeObjectURL(u), 1000); };
+$("copy").onclick = async () => { try { await navigator.clipboard.writeText(exportJson(b)); $("copy").textContent = "Copied"; } catch (e) { $("copy").textContent = "Copy failed"; } setTimeout(() => $("copy").textContent = "Copy JSON", 1500); };
+$("body").onchange = e => { b = +e.target.value; a = Math.min(a, DATA.bodies[b].actions.length - 1); draw(); };
+$("zoom").onchange = draw; $("mark").onchange = draw;
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT" && e.target.type !== "checkbox") return;
+  const n = DATA.bodies[b].actions.length, r = rec(b, DATA.bodies[b].actions[a].id);
+  const k = e.code.startsWith("Digit") ? +e.code.slice(5) : 0;
+  if (k >= 1 && k <= 4) { r[e.shiftKey ? "B" : "A"] = STATES[k - 1]; save(); draw(); }
+  else if (e.key === "ArrowDown") { e.preventDefault(); a = (a + 1) % n; draw(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); a = (a + n - 1) % n; draw(); }
+  else if (e.key === "r" || e.key === "R") { r.reviewed = !r.reviewed; save(); draw(); }
+});
+draw();
+</script></body></html>

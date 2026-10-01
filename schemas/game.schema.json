@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/game.schema.json",
+  "title": "SpriteMotion game adapter descriptor",
+  "description": "Declares one game folder under games/: its extraction adapter, profiles, skeletons and bundled annotation sets. Everything game-specific is reached through this file.",
+  "type": "object",
+  "required": ["schema", "schema_version", "id", "title", "adapter", "characters"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "spritemotion.game" },
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "adapter": {
+      "type": "object",
+      "required": ["module", "class"],
+      "additionalProperties": false,
+      "properties": {
+        "module": { "type": "string", "description": "Python file relative to the game folder." },
+        "class": { "type": "string" }
+      }
+    },
+    "source_hint": { "type": "string", "description": "What the user should point the extractor at." },
+    "characters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "profile", "skeleton"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "title": { "type": "string" },
+          "profile": { "type": "string", "description": "Path to the character profile, relative to the game folder." },
+          "skeleton": { "type": "string", "description": "Path to the skeleton, relative to the game folder." },
+          "annotations": { "type": "string", "description": "Folder with estimates/ and corrections/, relative to the game folder." },
+          "sequences": { "type": "string", "description": "Optional sequence catalog, relative to the game folder." }
+        }
+      }
+    }
+  }
+}

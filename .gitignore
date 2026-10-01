@@ -1,0 +1,38 @@
+# Local art, models, scenes and renders never leave the workspace.
+/workspace/*
+!/workspace/README.md
+
+# Generated packages, portable builds and their node_modules.
+/outputs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/dist/
+.pytest_cache/
+/.venvs/
+/.venv*/
+
+# Godot
+.godot/
+*.import
+/tools/sprite-pose-editor/tests/output/
+/tools/godot/*.exe
+/tools/godot/*.zip
+/tools/godot/Godot_v*
+/tools/godot/Godot.app/
+
+# Blender
+*.blend1
+*.blend2
+
+# Editor autosave / backup artefacts
+*.autosave.json
+*.bak
+*.tmp
+
+# Test output
+/tests/output/
+/tools/blender-runtime/

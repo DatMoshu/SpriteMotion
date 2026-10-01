@@ -1,0 +1,41 @@
+{
+ "schema": "spritemotion.skeleton",
+ "schema_version": 1,
+ "id": "humanoid-20",
+ "title": "Humanoid, 20 joints",
+ "description": "The joint set used for the body-400 annotations. Limb chains are named A and B rather than left/right because a sprite view does not reliably reveal which anatomical side a limb is; each annotation set states its limb identity.",
+ "joints": [
+  {"name": "head", "label": "Head centre", "legacy_id": 1},
+  {"name": "neck", "label": "Neck", "legacy_id": 2},
+  {"name": "chest", "label": "Chest", "legacy_id": 3},
+  {"name": "pelvis", "label": "Pelvis", "legacy_id": 4},
+  {"name": "arm_A_shoulder", "label": "Arm A shoulder", "legacy_id": 5},
+  {"name": "arm_A_elbow", "label": "Arm A elbow", "legacy_id": 6},
+  {"name": "arm_A_wrist", "label": "Arm A wrist", "legacy_id": 7},
+  {"name": "arm_A_hand", "label": "Arm A hand", "legacy_id": 8},
+  {"name": "arm_B_shoulder", "label": "Arm B shoulder", "legacy_id": 9},
+  {"name": "arm_B_elbow", "label": "Arm B elbow", "legacy_id": 10},
+  {"name": "arm_B_wrist", "label": "Arm B wrist", "legacy_id": 11},
+  {"name": "arm_B_hand", "label": "Arm B hand", "legacy_id": 12},
+  {"name": "leg_A_hip", "label": "Leg A hip", "legacy_id": 13},
+  {"name": "leg_A_knee", "label": "Leg A knee", "legacy_id": 14},
+  {"name": "leg_A_ankle", "label": "Leg A ankle", "legacy_id": 15},
+  {"name": "leg_A_toe", "label": "Leg A toe", "legacy_id": 16},
+  {"name": "leg_B_hip", "label": "Leg B hip", "legacy_id": 17},
+  {"name": "leg_B_knee", "label": "Leg B knee", "legacy_id": 18},
+  {"name": "leg_B_ankle", "label": "Leg B ankle", "legacy_id": 19},
+  {"name": "leg_B_toe", "label": "Leg B toe", "legacy_id": 20}
+ ],
+ "chains": [
+  {"name": "spine", "label": "Spine / head", "color": "#ffe45e", "joints": ["head", "neck", "chest", "pelvis"]},
+  {"name": "arm_A", "label": "Arm A", "color": "#28d9ff", "joints": ["arm_A_shoulder", "arm_A_elbow", "arm_A_wrist", "arm_A_hand"]},
+  {"name": "arm_B", "label": "Arm B", "color": "#ff5edb", "joints": ["arm_B_shoulder", "arm_B_elbow", "arm_B_wrist", "arm_B_hand"]},
+  {"name": "leg_A", "label": "Leg A", "color": "#78ff6b", "joints": ["leg_A_hip", "leg_A_knee", "leg_A_ankle", "leg_A_toe"]},
+  {"name": "leg_B", "label": "Leg B", "color": "#ff9a3b", "joints": ["leg_B_hip", "leg_B_knee", "leg_B_ankle", "leg_B_toe"]}
+ ],
+ "inferred_connections": [["neck", "arm_A_shoulder"], ["neck", "arm_B_shoulder"], ["pelvis", "leg_A_hip"], ["pelvis", "leg_B_hip"]],
+ "symmetric_pairs": [
+  ["arm_A_shoulder", "arm_B_shoulder"], ["arm_A_elbow", "arm_B_elbow"], ["arm_A_wrist", "arm_B_wrist"], ["arm_A_hand", "arm_B_hand"],
+  ["leg_A_hip", "leg_B_hip"], ["leg_A_knee", "leg_B_knee"], ["leg_A_ankle", "leg_B_ankle"], ["leg_A_toe", "leg_B_toe"]
+ ]
+}

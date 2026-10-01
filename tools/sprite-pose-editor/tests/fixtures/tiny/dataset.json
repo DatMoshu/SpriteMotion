@@ -1,0 +1,339 @@
+{
+ "schema": "spritemotion.dataset",
+ "schema_version": 1,
+ "dataset_id": "fixture/tiny",
+ "title": "Tiny editor fixture",
+ "game": "fixture",
+ "character": "stick",
+ "created_by": "tools/sprite-pose-editor/tests/make_fixture.py",
+ "canvas": {
+  "width": 48,
+  "height": 64,
+  "anchor": [
+   22,
+   58
+  ],
+  "mirror_axis_x": 23.5
+ },
+ "directions": [
+  {
+   "id": 0,
+   "name": "E",
+   "mirror_of": 2,
+   "stored": true
+  },
+  {
+   "id": 1,
+   "name": "NE",
+   "mirror_of": 3,
+   "stored": true
+  },
+  {
+   "id": 2,
+   "name": "W",
+   "mirror_of": 0,
+   "stored": false
+  },
+  {
+   "id": 3,
+   "name": "NW",
+   "mirror_of": 1,
+   "stored": false
+  }
+ ],
+ "skeleton": "skeleton.json",
+ "annotations": {
+  "estimates": "annotations/estimates",
+  "corrections": "annotations/corrections"
+ },
+ "sequences": [
+  {
+   "id": "wave",
+   "name": "Wave",
+   "index": 0,
+   "frame_count": 3,
+   "frame_duration_ms": 150,
+   "frames": [
+    {
+     "frame_id": "fixture/tiny/wave/d0/f00",
+     "direction": 0,
+     "frame": 0,
+     "image": "frames/wave/d0_f00.png",
+     "fingerprint": "sha256:381b322f3c342c111ac79e60d67e02e97f6f6f34589dd3e65f2ae0d59ccd19bd",
+     "bounds": [
+      16,
+      7,
+      33,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d0/f01",
+     "direction": 0,
+     "frame": 1,
+     "image": "frames/wave/d0_f01.png",
+     "fingerprint": "sha256:0c2aa9f4dbd6e7397d5d38face6b9ea7b8a28ef9de33f2951b3dae446df30ee3",
+     "bounds": [
+      16,
+      7,
+      35,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d0/f02",
+     "direction": 0,
+     "frame": 2,
+     "image": "frames/wave/d0_f02.png",
+     "fingerprint": "sha256:8430ec8f78dd639c42bf4688fc05effdb387d4baa2196f4402240d1dd0cb898c",
+     "bounds": [
+      16,
+      7,
+      34,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d1/f00",
+     "direction": 1,
+     "frame": 0,
+     "image": "frames/wave/d1_f00.png",
+     "fingerprint": "sha256:94dcac97949e034a3cbd7aab638441b821a24ccc742a32a7f06b3ddd17bf2ab9",
+     "bounds": [
+      16,
+      7,
+      33,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d1/f01",
+     "direction": 1,
+     "frame": 1,
+     "image": "frames/wave/d1_f01.png",
+     "fingerprint": "sha256:504853ea21963fe5eccf10f60a857234bf33bb394af897a528d22a4b07b2d64f",
+     "bounds": [
+      16,
+      7,
+      35,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d1/f02",
+     "direction": 1,
+     "frame": 2,
+     "image": "frames/wave/d1_f02.png",
+     "fingerprint": "sha256:6c232a4e972ae0b0a0dde4d2a1d9320aada08cd3b124cc9ebcc6cfd767547e2d",
+     "bounds": [
+      16,
+      7,
+      34,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d2/f00",
+     "direction": 2,
+     "frame": 0,
+     "image": "frames/wave/d2_f00.png",
+     "fingerprint": "sha256:ea96a580fea8fabf73443e8fb253c57f20d946a5af696d3a8990c9f12bbe61a4",
+     "bounds": [
+      15,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 0
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d2/f01",
+     "direction": 2,
+     "frame": 1,
+     "image": "frames/wave/d2_f01.png",
+     "fingerprint": "sha256:954a2ed9861876c7f52bc69d8621a54a293c3a3c91a271cfd42a28602d62784e",
+     "bounds": [
+      13,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 0
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d2/f02",
+     "direction": 2,
+     "frame": 2,
+     "image": "frames/wave/d2_f02.png",
+     "fingerprint": "sha256:2c75cfee1b38b4cfbf5d326e4bd39a0b9843898d099d68ea4b9932029a8efaa7",
+     "bounds": [
+      14,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 0
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d3/f00",
+     "direction": 3,
+     "frame": 0,
+     "image": "frames/wave/d3_f00.png",
+     "fingerprint": "sha256:8938e097559b528bbf6f651507edf7c74f25dc7c6ee603ecae2cac858184d19b",
+     "bounds": [
+      15,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 1
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d3/f01",
+     "direction": 3,
+     "frame": 1,
+     "image": "frames/wave/d3_f01.png",
+     "fingerprint": "sha256:9fa01dbc4c95dea5e988e102b0e6a446908c39a50414babbf6f2fea529b32b73",
+     "bounds": [
+      13,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 1
+    },
+    {
+     "frame_id": "fixture/tiny/wave/d3/f02",
+     "direction": 3,
+     "frame": 2,
+     "image": "frames/wave/d3_f02.png",
+     "fingerprint": "sha256:abdc6e327aa5cf41a423064c02d826157d684cc50db7625a841b986372ce0d86",
+     "bounds": [
+      14,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 1
+    }
+   ]
+  },
+  {
+   "id": "hop",
+   "name": "Hop",
+   "index": 1,
+   "frame_count": 2,
+   "frame_duration_ms": 150,
+   "frames": [
+    {
+     "frame_id": "fixture/tiny/hop/d0/f00",
+     "direction": 0,
+     "frame": 0,
+     "image": "frames/hop/d0_f00.png",
+     "fingerprint": "sha256:594fb5758ebafaed11a1bd9324fabb8cb9a6d7efcbe7f45f21bcd4e254251d7d",
+     "bounds": [
+      16,
+      7,
+      34,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d0/f01",
+     "direction": 0,
+     "frame": 1,
+     "image": "frames/hop/d0_f01.png",
+     "fingerprint": "sha256:6cebf83ae6d21cff24950f6d3f47b1eb316add0d55a4d8934c78e8238d9e9f6a",
+     "bounds": [
+      16,
+      3,
+      34,
+      55
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d1/f00",
+     "direction": 1,
+     "frame": 0,
+     "image": "frames/hop/d1_f00.png",
+     "fingerprint": "sha256:ed11d5658488ee03dff4d82a6edab0070595d344cdc202263216c9ba58584cb4",
+     "bounds": [
+      16,
+      7,
+      34,
+      59
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d1/f01",
+     "direction": 1,
+     "frame": 1,
+     "image": "frames/hop/d1_f01.png",
+     "fingerprint": "sha256:60fc1bb51f75a2c33086136c9e63218cb944665ff57a97596e46f7f267ad6c00",
+     "bounds": [
+      16,
+      3,
+      34,
+      55
+     ]
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d2/f00",
+     "direction": 2,
+     "frame": 0,
+     "image": "frames/hop/d2_f00.png",
+     "fingerprint": "sha256:dc20bf2d4d17dbbf090d58dc2c9992867be5db1e7623d2bc0761735d2daee892",
+     "bounds": [
+      14,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 0
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d2/f01",
+     "direction": 2,
+     "frame": 1,
+     "image": "frames/hop/d2_f01.png",
+     "fingerprint": "sha256:64176115f91fcc0abd2d0cb057811f21153c43535d43b3aa0e265a582cfb19cd",
+     "bounds": [
+      14,
+      3,
+      32,
+      55
+     ],
+     "mirrored_from": 0
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d3/f00",
+     "direction": 3,
+     "frame": 0,
+     "image": "frames/hop/d3_f00.png",
+     "fingerprint": "sha256:38bcbf39e95506d34d0511caffb35ed60ec89f2471d11a270a2ab924b4452d4f",
+     "bounds": [
+      14,
+      7,
+      32,
+      59
+     ],
+     "mirrored_from": 1
+    },
+    {
+     "frame_id": "fixture/tiny/hop/d3/f01",
+     "direction": 3,
+     "frame": 1,
+     "image": "frames/hop/d3_f01.png",
+     "fingerprint": "sha256:d8949815cb1b484a4b2b86724c41692a9b8d72e82249d9b44d5a80671218069a",
+     "bounds": [
+      14,
+      3,
+      32,
+      55
+     ],
+     "mirrored_from": 1
+    }
+   ]
+  }
+ ]
+}

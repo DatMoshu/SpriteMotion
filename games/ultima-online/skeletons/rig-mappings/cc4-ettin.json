@@ -1,0 +1,123 @@
+{
+ "schema": "spritemotion.rig-mapping",
+ "schema_version": 1,
+ "skeleton": "ettin-21",
+ "rig": "cc4-ettin",
+ "description": "CC4 standard skeleton reshaped into the Ettin by tools/creature-build (games/ultima-online/models/ettin-build.json): two heads, CC_Base_Head (head A, anatomical left) and CC_Base_Head_B. Head tails are extended on import. Sides A -> L as cc4.json.",
+ "sides": {
+  "A": "L",
+  "B": "R"
+ },
+ "joints": {
+  "head_A": {
+   "bone": "CC_Base_Head",
+   "at": 0.5
+  },
+  "head_B": {
+   "bone": "CC_Base_Head_B",
+   "at": 0.5
+  },
+  "neck": {
+   "bone": "CC_Base_NeckTwist01",
+   "at": 0
+  },
+  "chest": {
+   "mix": [
+    {
+     "bone": "CC_Base_NeckTwist01",
+     "at": 0,
+     "w": 0.6
+    },
+    {
+     "bone": "CC_Base_Hip",
+     "at": 0,
+     "w": 0.4
+    }
+   ]
+  },
+  "pelvis": {
+   "bone": "CC_Base_Hip",
+   "at": 0
+  },
+  "arm_{chain}_shoulder": {
+   "bone": "CC_Base_{side}_Upperarm",
+   "at": 0
+  },
+  "arm_{chain}_elbow": {
+   "bone": "CC_Base_{side}_Forearm",
+   "at": 0
+  },
+  "arm_{chain}_wrist": {
+   "bone": "CC_Base_{side}_Hand",
+   "at": 0
+  },
+  "arm_{chain}_hand": {
+   "mix": [
+    {
+     "bone": "CC_Base_{side}_Hand",
+     "at": 0,
+     "w": 0.45
+    },
+    {
+     "bone": "CC_Base_{side}_Mid3",
+     "at": 1,
+     "w": 0.55
+    }
+   ]
+  },
+  "leg_{chain}_hip": {
+   "bone": "CC_Base_{side}_Thigh",
+   "at": 0
+  },
+  "leg_{chain}_knee": {
+   "bone": "CC_Base_{side}_Calf",
+   "at": 0
+  },
+  "leg_{chain}_ankle": {
+   "bone": "CC_Base_{side}_Foot",
+   "at": 0
+  },
+  "leg_{chain}_toe": {
+   "bone": "CC_Base_{side}_ToeBase",
+   "at": 1
+  }
+ },
+ "fit": {
+  "root_bone": "CC_Base_Hip",
+  "bones": [
+   "CC_Base_Hip",
+   "CC_Base_Waist",
+   "CC_Base_Spine01",
+   "CC_Base_Spine02",
+   "CC_Base_NeckTwist01",
+   "CC_Base_Head",
+   "CC_Base_Head_B",
+   "CC_Base_{side}_Clavicle",
+   "CC_Base_{side}_Upperarm",
+   "CC_Base_{side}_Forearm",
+   "CC_Base_{side}_Hand",
+   "CC_Base_{side}_Thigh",
+   "CC_Base_{side}_Calf",
+   "CC_Base_{side}_Foot"
+  ],
+  "limits_deg": {
+   "default": 150,
+   "CC_Base_Hip": 100,
+   "CC_Base_Waist": 35,
+   "CC_Base_Spine01": 35,
+   "CC_Base_Spine02": 35,
+   "CC_Base_NeckTwist01": 45,
+   "CC_Base_Head": 50,
+   "CC_Base_{side}_Clavicle": 25,
+   "CC_Base_{side}_Hand": 70,
+   "CC_Base_{side}_Foot": 60,
+   "CC_Base_Head_B": 50
+  }
+ },
+ "import_fixups": {
+  "CC_Base_Head": {
+   "tail": "+Z",
+   "length_cm_from": "<model>.export.json:head_tail_extend_cm"
+  }
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "description": "Classic UO human female base. Placement, directions and projection follow ClassicUO's mobile drawing; see research/uo-conventions.md.",
+ "body": 401,
+ "anim_file": 1,
+ "action_group": "people",
+ "canvas": {
+  "width": 256,
+  "height": 256,
+  "anchor": [128, 192],
+  "mirror_axis_x": 127.5,
+  "notes": "A frame's ground origin (encoded center cx, height+cy from its top-left) lands on the anchor. The canvas is generous so deaths and weapon reaches fit. Mirroring: pixel column i -> 255 - i, joint x -> 255 - x."
+ },
+ "directions": [
+  {"id": 0, "name": "N",  "stored_index": 3, "mirrored": true,  "mirror_of": 6, "facing": [0, 1]},
+  {"id": 1, "name": "NE", "stored_index": 2, "mirrored": true,  "mirror_of": 5, "facing": [1, 1]},
+  {"id": 2, "name": "E",  "stored_index": 1, "mirrored": true,  "mirror_of": 4, "facing": [1, 0]},
+  {"id": 3, "name": "SE", "stored_index": 0, "mirrored": false, "facing": [1, -1]},
+  {"id": 4, "name": "S",  "stored_index": 1, "mirrored": false, "mirror_of": 2, "facing": [0, -1]},
+  {"id": 5, "name": "SW", "stored_index": 2, "mirrored": false, "mirror_of": 1, "facing": [-1, -1]},
+  {"id": 6, "name": "W",  "stored_index": 3, "mirrored": false, "mirror_of": 0, "facing": [-1, 0]},
+  {"id": 7, "name": "NW", "stored_index": 4, "mirrored": false, "facing": [-1, 1]}
+ ],
+ "camera": "cameras/ground-grid.json",
+ "blender": {
+  "frame_start": 1,
+  "frame_step": 4,
+  "notes": "Timeline used by the existing scenes: source frame f is keyed at Blender frame 1 + 4f. Playback timing is not inferred from the MUL files."
+ }
+}

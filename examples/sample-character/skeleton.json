@@ -1,0 +1,145 @@
+{
+ "schema": "spritemotion.skeleton",
+ "schema_version": 1,
+ "id": "stick-13",
+ "title": "Sample stick figure, 13 joints",
+ "description": "Anatomical left/right names: this sample's views never hide which side a limb is.",
+ "joints": [
+  {
+   "name": "head",
+   "label": "Head"
+  },
+  {
+   "name": "neck",
+   "label": "Neck"
+  },
+  {
+   "name": "pelvis",
+   "label": "Pelvis"
+  },
+  {
+   "name": "left_shoulder",
+   "label": "Left shoulder"
+  },
+  {
+   "name": "left_elbow",
+   "label": "Left elbow"
+  },
+  {
+   "name": "left_hand",
+   "label": "Left hand"
+  },
+  {
+   "name": "right_shoulder",
+   "label": "Right shoulder"
+  },
+  {
+   "name": "right_elbow",
+   "label": "Right elbow"
+  },
+  {
+   "name": "right_hand",
+   "label": "Right hand"
+  },
+  {
+   "name": "left_knee",
+   "label": "Left knee"
+  },
+  {
+   "name": "left_foot",
+   "label": "Left foot"
+  },
+  {
+   "name": "right_knee",
+   "label": "Right knee"
+  },
+  {
+   "name": "right_foot",
+   "label": "Right foot"
+  }
+ ],
+ "chains": [
+  {
+   "name": "spine",
+   "label": "Spine",
+   "color": "#ffd166",
+   "joints": [
+    "head",
+    "neck",
+    "pelvis"
+   ]
+  },
+  {
+   "name": "left_arm",
+   "label": "Left arm",
+   "color": "#06d6a0",
+   "joints": [
+    "left_shoulder",
+    "left_elbow",
+    "left_hand"
+   ]
+  },
+  {
+   "name": "right_arm",
+   "label": "Right arm",
+   "color": "#ef476f",
+   "joints": [
+    "right_shoulder",
+    "right_elbow",
+    "right_hand"
+   ]
+  },
+  {
+   "name": "left_leg",
+   "label": "Left leg",
+   "color": "#118ab2",
+   "joints": [
+    "pelvis",
+    "left_knee",
+    "left_foot"
+   ]
+  },
+  {
+   "name": "right_leg",
+   "label": "Right leg",
+   "color": "#f78c6b",
+   "joints": [
+    "pelvis",
+    "right_knee",
+    "right_foot"
+   ]
+  }
+ ],
+ "inferred_connections": [
+  [
+   "neck",
+   "left_shoulder"
+  ],
+  [
+   "neck",
+   "right_shoulder"
+  ]
+ ],
+ "symmetric_pairs": [
+  [
+   "left_shoulder",
+   "right_shoulder"
+  ],
+  [
+   "left_elbow",
+   "right_elbow"
+  ],
+  [
+   "left_hand",
+   "right_hand"
+  ],
+  [
+   "left_knee",
+   "right_knee"
+  ],
+  [
+   "left_foot",
+   "right_foot"
+  ]
+ ]
+}

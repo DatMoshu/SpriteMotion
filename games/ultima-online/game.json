@@ -1,0 +1,50 @@
+{
+ "schema": "spritemotion.game",
+ "schema_version": 1,
+ "id": "ultima-online",
+ "title": "Ultima Online (classic 2D client)",
+ "description": "Mobile animations from the client's anim.mul or AnimationFrame*.uop files. Five facings are stored; the client mirrors three more.",
+ "adapter": {
+  "module": "extraction/uo_adapter.py",
+  "class": "UltimaOnlineAdapter"
+ },
+ "source_hint": "Your Ultima Online Classic client folder (the one containing anim.mul/anim.idx and, for newer bodies, AnimationFrame*.uop and mobtypes.txt).",
+ "characters": [
+  {
+   "id": "body-400",
+   "title": "Human male base, body 400 (0x190)",
+   "profile": "profiles/body-400.json",
+   "skeleton": "skeletons/humanoid-20.json",
+   "annotations": "annotations/body-400",
+   "sequences": "profiles/human-actions.json"
+  },
+  {
+   "id": "body-401",
+   "title": "Human female base, body 401 (0x191)",
+   "profile": "profiles/body-401.json",
+   "skeleton": "skeletons/humanoid-20.json",
+   "sequences": "profiles/human-actions.json"
+  },
+  {
+   "id": "body-666",
+   "title": "Gargoyle male base, body 666 (0x29A), UOP",
+   "profile": "profiles/body-666.json",
+   "skeleton": "skeletons/humanoid-20.json",
+   "sequences": "profiles/gargoyle-actions.json"
+  },
+  {
+   "id": "body-667",
+   "title": "Gargoyle female base, body 667 (0x29B), UOP",
+   "profile": "profiles/body-667.json",
+   "skeleton": "skeletons/humanoid-20.json",
+   "sequences": "profiles/gargoyle-actions.json"
+  },
+  {
+   "id": "body-2",
+   "title": "Ettin, body 2 (0x02), unarmed",
+   "profile": "profiles/body-2.json",
+   "skeleton": "skeletons/ettin-21.json",
+   "sequences": "profiles/monster-actions.json"
+  }
+ ]
+}

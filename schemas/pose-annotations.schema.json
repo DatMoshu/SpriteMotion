@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/pose-annotations.schema.json",
+  "title": "SpriteMotion pose annotations (one sequence, one layer)",
+  "description": "2D joint positions for sprite frames. The 'estimate' layer holds starting points; the 'correction' layer holds only poses a person edited, reviewed or annotated. The effective pose for a frame is its correction if one exists, otherwise its estimate. Coordinates are canvas pixels of the dataset: origin top-left, x right, y down.",
+  "type": "object",
+  "required": ["schema", "schema_version", "dataset_id", "sequence", "skeleton", "layer", "poses"],
+  "additionalProperties": false,
+  "$defs": {
+    "joint": {
+      "type": "object",
+      "required": ["x", "y"],
+      "additionalProperties": false,
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "visibility": { "enum": ["visible", "occluded", "outside", "unknown"] },
+        "status": { "enum": ["estimate", "corrected", "mirrored_correction"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["method", "independent"],
+      "additionalProperties": false,
+      "properties": {
+        "method": { "enum": ["manual", "mirrored", "rig_projection", "estimator", "interpolated", "imported"] },
+        "independent": {
+          "type": "boolean",
+          "description": "True only when the joints were read from the sprite itself (by a person or an image-based estimator). Poses projected from a 3D rig are NOT independent evidence and must not be used to validate a fit of that same rig."
+        },
+        "source_method": { "type": "string", "description": "For mirrored poses: the method of the pose that was mirrored." },
+        "mirrored_from": { "type": "integer", "description": "Direction the pose was mirrored from." },
+        "estimator": { "type": "string" },
+        "detail": { "type": "string" },
+        "parameters": { "type": "object" }
+      }
+    },
+    "pose": {
+      "type": "object",
+      "required": ["frame_id", "direction", "frame", "source_fingerprint", "joints"],
+      "additionalProperties": false,
+      "properties": {
+        "frame_id": { "type": "string" },
+        "direction": { "type": "integer", "minimum": 0 },
+        "frame": { "type": "integer", "minimum": 0 },
+        "source_fingerprint": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "review": {
+          "type": "object",
+          "required": ["status"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "enum": ["unreviewed", "in_progress", "approved", "rejected"] },
+            "notes": { "type": "string" },
+            "reviewer": { "type": "string" },
+            "updated_at": { "type": "string" }
+          }
+        },
+        "joints": { "type": "object", "additionalProperties": { "$ref": "#/$defs/joint" } }
+      }
+    }
+  },
+  "properties": {
+    "schema": { "const": "spritemotion.pose-annotations" },
+    "schema_version": { "const": 1 },
+    "dataset_id": { "type": "string" },
+    "sequence": { "type": "string" },
+    "skeleton": { "type": "string" },
+    "layer": { "enum": ["estimate", "correction"] },
+    "coordinate_space": { "const": "canvas-px" },
+    "limb_identity": { "type": "string", "description": "How limb chain names (e.g. A/B) relate to anatomical sides for this set." },
+    "notes": { "type": "string" },
+    "editor": { "type": "string" },
+    "saved_at_utc": { "type": "string" },
+    "migrated_from": { "type": "object" },
+    "poses": { "type": "array", "items": { "$ref": "#/$defs/pose" } }
+  }
+}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SpriteMotion · armature comparison</title>
+<style>
+:root{color-scheme:dark;font:15px system-ui;color:#e6edf5;background:#101720}body{margin:0;padding:28px;max-width:1500px;margin:auto}h1{font-size:27px;margin:0 0 8px}p{color:#adbac9;line-height:1.5;max-width:1000px}.bar{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:16px 0}select,button{font:inherit;background:#263746;color:white;border:1px solid #53687b;border-radius:6px;padding:8px}label{display:flex;gap:8px;align-items:center}input[type=range]{width:160px}.panels{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}article{background:#1b2836;border:1px solid #304253;border-radius:10px;overflow:hidden}h2{font-size:15px;margin:0;padding:14px 16px;border-bottom:1px solid #304253}canvas{display:block;width:100%;height:auto;aspect-ratio:1;image-rendering:pixelated}.legend{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0}.legend span{font-weight:650}#info{font-variant-numeric:tabular-nums}.note{font-size:13px}@media(max-width:850px){.panels{grid-template-columns:1fr}canvas{height:auto}body{padding:16px}}
+</style>
+<h1>SpriteMotion / armature pass</h1>
+<p>A connected 20-point skeleton fitted to the latest region masks for 34 actions. Action 22 retains the existing manual fall references after the new fit failed validation. Compare frame by frame or in motion.</p>
+<div class="bar"><label>Action <select id="action"></select></label><label>View <select id="direction"></select></label><button id="play">Play</button><button id="back" aria-label="Previous frame">←</button><label>Frame <input id="frame" type="range" min="0" value="0"><output id="number">0</output></label><button id="next" aria-label="Next frame">→</button><label><input type="checkbox" id="labels"> Joint labels</label><label>Mask <input id="opacity" type="range" min="0" max="100" value="25"></label></div>
+<div class="legend"><span style="color:#28d9ff">● Arm A</span><span style="color:#ff5edb">● Arm B</span><span style="color:#78ff6b">● Leg A</span><span style="color:#ff9a3b">● Leg B</span><span style="color:#ffe45e">● Head / neck</span><span style="color:#bca4ff">● Torso / pelvis</span><span>□ Hands</span></div>
+<div class="panels"><article><h2>Latest regions</h2><canvas id="mask"></canvas></article><article><h2>Previous joint-to-joint bones</h2><canvas id="old"></canvas></article><article><h2>New connected armature</h2><canvas id="new"></canvas></article></div>
+<p id="info"></p><p class="note">Hollow joints and dashed limbs have weak or missing mask support. A/B identities are inherited from existing pose estimates; they are not independently confirmed anatomical sides. All new poses are unapproved. This is a 2D pass, not a new Blender rig or a depth solution. The six approved fall corrections were kept unchanged.</p>
+<script>
+const data=__PAYLOAD__;
+const $=id=>document.getElementById(id), action=$('action'), direction=$('direction'), frame=$('frame');
+for(const [a,n] of Object.entries(data.names))action.add(new Option(`${a.padStart(2,'0')} · ${n}`,a));
+data.directions.forEach((n,i)=>direction.add(new Option(n,i)));direction.value=4;
+let subset=[],token=0,timer=null;
+function choose(){subset=data.frames.filter(r=>r.a===+action.value&&r.d===+direction.value).sort((a,b)=>a.f-b.f);frame.max=subset.length-1;frame.value=Math.min(+frame.value,+frame.max);render()}
+async function load(src){const im=new Image();im.src=src;await im.decode();return im}
+async function render(){const ticket=++token,r=subset[+frame.value];if(!r)return;$('number').textContent=r.f;const [sprite,mask]=await Promise.all([load(r.sprite),load(r.mask)]);if(ticket!==token)return;
+ const count=r.support.filter(Boolean).length;$('info').textContent=`${data.names[r.a]} · ${data.directions[r.d]} · frame ${r.f+1} / ${subset.length} · `+(r.manual?(r.approved?'Preserved approved manual pose':'Preserved manual estimate; unapproved'):`${count}/20 joints have nearby assigned mask evidence`);
+ for(const id of ['mask','old','new']){const canvas=$(id),ctx=canvas.getContext('2d');canvas.width=480;canvas.height=480;ctx.imageSmoothingEnabled=false;ctx.fillStyle='#263443';ctx.fillRect(0,0,480,480);
+ const vb=data.viewboxes[r.a],w=vb[2]-vb[0],h=vb[3]-vb[1],s=Math.min(7,420/w,420/h),ox=(480-w*s)/2,oy=(480-h*s)/2,ix=ox+(r.box[0]-vb[0])*s,iy=oy+(r.box[1]-vb[1])*s,iw=(r.box[2]-r.box[0])*s,ih=(r.box[3]-r.box[1])*s;
+ ctx.drawImage(sprite,ix,iy,iw,ih);ctx.globalAlpha=id==='mask'?1:+$('opacity').value/100;ctx.drawImage(mask,ix,iy,iw,ih);ctx.globalAlpha=1;
+ const xy=p=>[ox+(p[0]-vb[0]+.5)*s,oy+(p[1]-vb[1]+.5)*s];
+ const line=(a,b,color,dashed=false)=>{a=xy(a);b=xy(b);ctx.setLineDash([]);ctx.lineWidth=5;ctx.strokeStyle='#101720';ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();ctx.setLineDash(dashed?[5,5]:[]);ctx.lineWidth=2.5;ctx.strokeStyle=color;ctx.stroke();ctx.setLineDash([])};
+ if(id==='old')for(const [a,b,supported] of r.old)line(a,b,supported?'#82b4d9':'#d2d7dc',!supported);
+ if(id!=='new')continue;
+ const index=n=>data.joints.indexOf(n),pt=n=>r.j[index(n)],supported=n=>r.support[index(n)];
+ for(const [a,b] of [['head','neck'],['neck','chest'],['chest','pelvis']])line(pt(a),pt(b),a==='head'?data.colors.head:data.colors.torso);
+ for(const c of data.chains){const ns=c.joints;line(pt(c.name.startsWith('arm')?'neck':'pelvis'),pt(ns[0]),data.colors.torso,true);for(let i=0;i<3;i++)line(pt(ns[i]),pt(ns[i+1]),data.colors[c.name],!supported(ns[i])||!supported(ns[i+1]));}
+ data.joints.forEach((n,i)=>{const [x,y]=xy(r.j[i]),hand=n.endsWith('_hand'),color=['head','neck'].includes(n)?data.colors.head:['chest','pelvis'].includes(n)?data.colors.torso:data.colors[n.split('_').slice(0,2).join('_')];ctx.fillStyle=r.support[i]?color:'#152330';ctx.strokeStyle=hand?'white':color;ctx.lineWidth=hand?2:1.5;ctx.beginPath();if(hand)ctx.rect(x-4,y-4,8,8);else ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fill();ctx.stroke();if($('labels').checked){ctx.font='11px system-ui';ctx.lineWidth=3;ctx.strokeStyle='#101720';const label=n.replace('arm_','').replace('leg_','');ctx.strokeText(label,x+6,y-5);ctx.fillStyle='white';ctx.fillText(label,x+6,y-5)}});
+ }}
+function step(delta){frame.value=(+frame.value+delta+subset.length)%subset.length;render()}
+action.onchange=direction.onchange=choose;frame.oninput=$('opacity').oninput=$('labels').onchange=render;$('next').onclick=()=>step(1);$('back').onclick=()=>step(-1);
+$('play').onclick=()=>{if(timer){clearInterval(timer);timer=null;$('play').textContent='Play'}else{timer=setInterval(()=>step(1),160);$('play').textContent='Pause'}};
+document.addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1);if(e.code==='Space'){e.preventDefault();$('play').click()}});choose();
+</script></html>

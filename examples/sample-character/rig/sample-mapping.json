@@ -1,0 +1,85 @@
+{
+ "schema": "spritemotion.rig-mapping",
+ "schema_version": 1,
+ "skeleton": "stick-13",
+ "rig": "sample-rig",
+ "description": "Maps the sample skeleton onto the sample rig.",
+ "sides": {},
+ "joints": {
+  "head": {
+   "bone": "head",
+   "at": 0.5
+  },
+  "neck": {
+   "bone": "neck",
+   "at": 0
+  },
+  "pelvis": {
+   "bone": "hips",
+   "at": 0
+  },
+  "left_shoulder": {
+   "bone": "upper_arm.L",
+   "at": 0
+  },
+  "left_elbow": {
+   "bone": "forearm.L",
+   "at": 0
+  },
+  "left_hand": {
+   "bone": "forearm.L",
+   "at": 1
+  },
+  "right_shoulder": {
+   "bone": "upper_arm.R",
+   "at": 0
+  },
+  "right_elbow": {
+   "bone": "forearm.R",
+   "at": 0
+  },
+  "right_hand": {
+   "bone": "forearm.R",
+   "at": 1
+  },
+  "left_knee": {
+   "bone": "shin.L",
+   "at": 0
+  },
+  "left_foot": {
+   "bone": "shin.L",
+   "at": 1
+  },
+  "right_knee": {
+   "bone": "shin.R",
+   "at": 0
+  },
+  "right_foot": {
+   "bone": "shin.R",
+   "at": 1
+  }
+ },
+ "fit": {
+  "root_bone": "hips",
+  "bones": [
+   "hips",
+   "spine",
+   "neck",
+   "head",
+   "upper_arm.L",
+   "forearm.L",
+   "upper_arm.R",
+   "forearm.R",
+   "thigh.L",
+   "shin.L",
+   "thigh.R",
+   "shin.R"
+  ],
+  "limits_deg": {
+   "default": 170,
+   "spine": 45,
+   "neck": 45,
+   "head": 60
+  }
+ }
+}

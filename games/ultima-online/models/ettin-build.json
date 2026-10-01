@@ -1,0 +1,74 @@
+{
+ "description": "Ettin (body 2) built from the CC4 male base. Factors are measured from the hand-read idle marks through the character-depth-0447 camera (lateral 31.1 px/m, vertical 31.1 px/m): shoulder joints ~1.7 m apart, thigh ~1.1 m, shin ~0.65 m, forearm ~0.7 m, overall ~2.2x the 1.857 m base. 'length' scales a bone along itself, 'thickness' across it; both are relative to the uniform 'scale'. Iteration 2: lengths corrected by the median mark/model ratios of the first idle fit (torso x1.28, forearm x0.9, hand x0.86, thigh x0.89, shin x0.8, foot x0.75).",
+ "base_fbx": "workspace/ultima-online/cc4-base-models/uo_male_base/uo_male_base.fbx",
+ "armature": "ettin",
+ "scale": 2.2,
+ "head_extend_cm": 21.45,
+ "bones": {
+  "CC_Base_Hip": {
+   "length": 1.0,
+   "thickness": 1.6
+  },
+  "CC_Base_Pelvis": {
+   "length": 1.0,
+   "thickness": 1.6
+  },
+  "CC_Base_Waist": {
+   "length": 1.088,
+   "thickness": 1.6
+  },
+  "CC_Base_Spine01": {
+   "length": 1.088,
+   "thickness": 1.6
+  },
+  "CC_Base_Spine02": {
+   "length": 1.088,
+   "thickness": 1.5
+  },
+  "CC_Base_NeckTwist01": {
+   "length": 0.6,
+   "thickness": 1.5
+  },
+  "CC_Base_NeckTwist02": {
+   "length": 0.6,
+   "thickness": 1.5
+  },
+  "CC_Base_Head": {
+   "length": 1.5,
+   "thickness": 1.5
+  },
+  "CC_Base_{side}_Clavicle": {
+   "length": 1.7,
+   "thickness": 1.5
+  },
+  "CC_Base_{side}_Upperarm": {
+   "length": 1.17,
+   "thickness": 1.7
+  },
+  "CC_Base_{side}_Forearm": {
+   "length": 1.08,
+   "thickness": 1.8
+  },
+  "CC_Base_{side}_Hand": {
+   "length": 1.118,
+   "thickness": 1.3
+  },
+  "CC_Base_{side}_Thigh": {
+   "length": 0.979,
+   "thickness": 1.6
+  },
+  "CC_Base_{side}_Calf": {
+   "length": 0.544,
+   "thickness": 1.7
+  },
+  "CC_Base_{side}_Foot": {
+   "length": 1.05,
+   "thickness": 1.4
+  }
+ },
+ "second_head": {
+  "bone": "CC_Base_Head_B",
+  "offset_m": 0.33,
+  "note": "The original head moves +offset along +X (anatomical left, head A); a copy of the head region moves -offset (head B), rigid to CC_Base_Head_B and blended into the neck."
+ }
+}

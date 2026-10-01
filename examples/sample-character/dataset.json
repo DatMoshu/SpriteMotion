@@ -1,0 +1,722 @@
+{
+ "schema": "spritemotion.dataset",
+ "schema_version": 1,
+ "dataset_id": "examples/sample-character",
+ "title": "Sample character (procedural)",
+ "game": "examples",
+ "character": "sample-character",
+ "created_by": "examples/sample-character/make_sample.py",
+ "canvas": {
+  "width": 160,
+  "height": 192,
+  "anchor": [
+   80,
+   170
+  ],
+  "mirror_axis_x": 79.5
+ },
+ "directions": [
+  {
+   "id": 0,
+   "name": "south",
+   "facing": [
+    0,
+    -1
+   ]
+  },
+  {
+   "id": 1,
+   "name": "east",
+   "facing": [
+    1,
+    0
+   ]
+  },
+  {
+   "id": 2,
+   "name": "north",
+   "facing": [
+    0,
+    1
+   ]
+  },
+  {
+   "id": 3,
+   "name": "west",
+   "facing": [
+    -1,
+    0
+   ]
+  }
+ ],
+ "camera": {
+  "type": "affine_orthographic",
+  "matrix": [
+   [
+    70.0,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    -35.0,
+    -60.621778
+   ]
+  ],
+  "anchor": [
+   80,
+   170
+  ],
+  "notes": "70 px per unit, looking north and 30 degrees down."
+ },
+ "skeleton": "skeleton.json",
+ "annotations": {
+  "estimates": "annotations/estimates",
+  "corrections": "annotations/corrections"
+ },
+ "sequences": [
+  {
+   "id": "wave",
+   "name": "Wave (right hand)",
+   "index": 0,
+   "frame_count": 6,
+   "frame_duration_ms": 120,
+   "frames": [
+    {
+     "frame_id": "examples/sample-character/wave/d0/f00",
+     "direction": 0,
+     "frame": 0,
+     "image": "frames/wave/d0_f00.png",
+     "fingerprint": "sha256:acd2cf0c2f90f222ded2add14a98cd1e67b00402c232001cdec045a93f44a2c8",
+     "bounds": [
+      42,
+      52,
+      105,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d0/f01",
+     "direction": 0,
+     "frame": 1,
+     "image": "frames/wave/d0_f01.png",
+     "fingerprint": "sha256:13f1eb40212e56c07606e0ada6b2c16210dae0ed5fe2aea12b666702d8e4b638",
+     "bounds": [
+      51,
+      50,
+      106,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d0/f02",
+     "direction": 0,
+     "frame": 2,
+     "image": "frames/wave/d0_f02.png",
+     "fingerprint": "sha256:016148d6f65944b22711cba7b5e213fb20c30ad901eefd03416859450e425e27",
+     "bounds": [
+      51,
+      50,
+      106,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d0/f03",
+     "direction": 0,
+     "frame": 3,
+     "image": "frames/wave/d0_f03.png",
+     "fingerprint": "sha256:abd08c7b960a12e9342689060f19e3bfdb14e1588c2bd032064122a24c213c95",
+     "bounds": [
+      42,
+      52,
+      105,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d0/f04",
+     "direction": 0,
+     "frame": 4,
+     "image": "frames/wave/d0_f04.png",
+     "fingerprint": "sha256:bc111e4a7033db5ef10bbd90a15c823e8b0ecf6874f66bed6d6b9ce05fb799c4",
+     "bounds": [
+      36,
+      58,
+      104,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d0/f05",
+     "direction": 0,
+     "frame": 5,
+     "image": "frames/wave/d0_f05.png",
+     "fingerprint": "sha256:1412c8d5ed4bdf5a4a1f7e430e689ae1862a19c0329bc08e2fd4b989b084f58f",
+     "bounds": [
+      36,
+      58,
+      104,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d1/f00",
+     "direction": 1,
+     "frame": 0,
+     "image": "frames/wave/d1_f00.png",
+     "fingerprint": "sha256:4838c864b7defda9703e52a32674ec959845ecaa64d99e3c6c12db9e65339a6c",
+     "bounds": [
+      70,
+      60,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d1/f01",
+     "direction": 1,
+     "frame": 1,
+     "image": "frames/wave/d1_f01.png",
+     "fingerprint": "sha256:bd3ac92ba579442e89582959379cf4afdf6990526fe16f228317013edea45010",
+     "bounds": [
+      70,
+      61,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d1/f02",
+     "direction": 1,
+     "frame": 2,
+     "image": "frames/wave/d1_f02.png",
+     "fingerprint": "sha256:954fc99c2e8a650754f12d696c3e275c88ec0ceb0e487f44f25b9836a5c001d6",
+     "bounds": [
+      70,
+      61,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d1/f03",
+     "direction": 1,
+     "frame": 3,
+     "image": "frames/wave/d1_f03.png",
+     "fingerprint": "sha256:80dc0a82bb3d8e23d70f6560f01611ce52546e6625ab954174d550bde8f28d2c",
+     "bounds": [
+      70,
+      60,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d1/f04",
+     "direction": 1,
+     "frame": 4,
+     "image": "frames/wave/d1_f04.png",
+     "fingerprint": "sha256:ca95a0f890896dd6b6a70a1c71a37d1837cf705863f3d2c307802795b76a3a64",
+     "bounds": [
+      70,
+      58,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d1/f05",
+     "direction": 1,
+     "frame": 5,
+     "image": "frames/wave/d1_f05.png",
+     "fingerprint": "sha256:d4b077187905aa285b7b3910fc6a3e97fd2146e0e692f88102b9774f9f46584f",
+     "bounds": [
+      70,
+      58,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d2/f00",
+     "direction": 2,
+     "frame": 0,
+     "image": "frames/wave/d2_f00.png",
+     "fingerprint": "sha256:12e707833a11b8a08c27ed1c41fa04b35e552349fa14ff2b0b96dc11865b4da9",
+     "bounds": [
+      55,
+      52,
+      118,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d2/f01",
+     "direction": 2,
+     "frame": 1,
+     "image": "frames/wave/d2_f01.png",
+     "fingerprint": "sha256:eba15938f6ca42a606cfd108fbdbd217bbadd637f10d889a074a7c7ce22d2603",
+     "bounds": [
+      54,
+      50,
+      109,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d2/f02",
+     "direction": 2,
+     "frame": 2,
+     "image": "frames/wave/d2_f02.png",
+     "fingerprint": "sha256:ff1d4ebe4ce4892d3d6e941a2fbe4bcd9022ca0f948babcfa960eb950abb26a4",
+     "bounds": [
+      54,
+      50,
+      109,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d2/f03",
+     "direction": 2,
+     "frame": 3,
+     "image": "frames/wave/d2_f03.png",
+     "fingerprint": "sha256:5bb5fa1422443e522a2f44d7ca8faaaba61a7e65f528d050114be54d4b5de530",
+     "bounds": [
+      55,
+      52,
+      118,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d2/f04",
+     "direction": 2,
+     "frame": 4,
+     "image": "frames/wave/d2_f04.png",
+     "fingerprint": "sha256:ce1a24da207b58aa06761dd5bbeb6cedc7f371a37585c0ccbe64d8beb3537bb7",
+     "bounds": [
+      56,
+      58,
+      124,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d2/f05",
+     "direction": 2,
+     "frame": 5,
+     "image": "frames/wave/d2_f05.png",
+     "fingerprint": "sha256:5469a289b755bb9c9ff87139209f826aa0342d86e612252b2b00537dad082928",
+     "bounds": [
+      56,
+      58,
+      124,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d3/f00",
+     "direction": 3,
+     "frame": 0,
+     "image": "frames/wave/d3_f00.png",
+     "fingerprint": "sha256:fd2e7404352eb8aec98c83e5b2b159730dfc01f94708571bab64570469894f64",
+     "bounds": [
+      70,
+      34,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d3/f01",
+     "direction": 3,
+     "frame": 1,
+     "image": "frames/wave/d3_f01.png",
+     "fingerprint": "sha256:71914a7ee839dcff290c9b516bc17c125b53b8b7e06d520f2a2e8184768938c1",
+     "bounds": [
+      70,
+      37,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d3/f02",
+     "direction": 3,
+     "frame": 2,
+     "image": "frames/wave/d3_f02.png",
+     "fingerprint": "sha256:4bc9d024e8135763b9e1a6be4f85c07c5e2da2153dfee204ca0dd8558627000a",
+     "bounds": [
+      70,
+      37,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d3/f03",
+     "direction": 3,
+     "frame": 3,
+     "image": "frames/wave/d3_f03.png",
+     "fingerprint": "sha256:477c006a7b2ac0f7664837f48811ff93a12b574974fab006a9b75f36ca84fb02",
+     "bounds": [
+      70,
+      34,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d3/f04",
+     "direction": 3,
+     "frame": 4,
+     "image": "frames/wave/d3_f04.png",
+     "fingerprint": "sha256:18157a4d69f89c10a4dbd8c103b6b937bfcf278c44d666b775f424d66cf01e71",
+     "bounds": [
+      70,
+      38,
+      90,
+      173
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/wave/d3/f05",
+     "direction": 3,
+     "frame": 5,
+     "image": "frames/wave/d3_f05.png",
+     "fingerprint": "sha256:a68474ae09290b16edced4a8c63622c253f3bada97c616dedad1f8af999221ae",
+     "bounds": [
+      70,
+      38,
+      90,
+      173
+     ]
+    }
+   ]
+  },
+  {
+   "id": "walk",
+   "name": "Walk in place",
+   "index": 1,
+   "frame_count": 6,
+   "frame_duration_ms": 120,
+   "frames": [
+    {
+     "frame_id": "examples/sample-character/walk/d0/f00",
+     "direction": 0,
+     "frame": 0,
+     "image": "frames/walk/d0_f00.png",
+     "fingerprint": "sha256:8ecb3bb38ddec7fb3231b6070552868f7bd84912c28b3fc064f6df6b6b63350d",
+     "bounds": [
+      57,
+      59,
+      104,
+      168
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d0/f01",
+     "direction": 0,
+     "frame": 1,
+     "image": "frames/walk/d0_f01.png",
+     "fingerprint": "sha256:69d7c4829e92a174932978937ff9f8adf3b823504dd5ecde64e787737170b0f3",
+     "bounds": [
+      59,
+      60,
+      103,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d0/f02",
+     "direction": 0,
+     "frame": 2,
+     "image": "frames/walk/d0_f02.png",
+     "fingerprint": "sha256:06e46445c807f4e45bea8fcb929248fc3003aa8ce952b72362c6b1730ef60d09",
+     "bounds": [
+      59,
+      60,
+      103,
+      176
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d0/f03",
+     "direction": 0,
+     "frame": 3,
+     "image": "frames/walk/d0_f03.png",
+     "fingerprint": "sha256:c80f994c0c7575fb26e09379b833fe84ad6a44fde714cf96cc10a2a2e45b0a6b",
+     "bounds": [
+      57,
+      59,
+      104,
+      168
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d0/f04",
+     "direction": 0,
+     "frame": 4,
+     "image": "frames/walk/d0_f04.png",
+     "fingerprint": "sha256:423ab37bf03dac55997546249dc80cf3f77d9c4f409bbfcfbdb381bda39c5c90",
+     "bounds": [
+      58,
+      60,
+      101,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d0/f05",
+     "direction": 0,
+     "frame": 5,
+     "image": "frames/walk/d0_f05.png",
+     "fingerprint": "sha256:c7ce79c72ff75b5cf57100ba360edff6ee644f6d935790a14cb4f925bb378fd5",
+     "bounds": [
+      58,
+      60,
+      101,
+      176
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d1/f00",
+     "direction": 1,
+     "frame": 0,
+     "image": "frames/walk/d1_f00.png",
+     "fingerprint": "sha256:0bf477b94ae266ab68cd843a7af08cdfc20c09f7e6bae51218ae0f1ec571bff7",
+     "bounds": [
+      57,
+      58,
+      91,
+      171
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d1/f01",
+     "direction": 1,
+     "frame": 1,
+     "image": "frames/walk/d1_f01.png",
+     "fingerprint": "sha256:436046e4a3c4a851fc2118a85b8b41225e86efa1d5e74dd49fa18911d27c5434",
+     "bounds": [
+      51,
+      59,
+      103,
+      167
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d1/f02",
+     "direction": 1,
+     "frame": 2,
+     "image": "frames/walk/d1_f02.png",
+     "fingerprint": "sha256:54f992d07b580e03a00e639769dae8cbf255dc853b36e01d5c0c384cd1c3a8d7",
+     "bounds": [
+      48,
+      59,
+      110,
+      166
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d1/f03",
+     "direction": 1,
+     "frame": 3,
+     "image": "frames/walk/d1_f03.png",
+     "fingerprint": "sha256:c1569a788cd20619a0201b96b956105d1262ec456d2a3114a8a06fb8f0ea02a2",
+     "bounds": [
+      57,
+      58,
+      91,
+      166
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d1/f04",
+     "direction": 1,
+     "frame": 4,
+     "image": "frames/walk/d1_f04.png",
+     "fingerprint": "sha256:c3df05a7dfd2a5dda4e3cbec33b054a5e30f6f87d6d9603d126ea8d230b10df9",
+     "bounds": [
+      51,
+      59,
+      103,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d1/f05",
+     "direction": 1,
+     "frame": 5,
+     "image": "frames/walk/d1_f05.png",
+     "fingerprint": "sha256:c5da8b94d15b6d34ec85fba4884b0013ddd39313aa04760459ceeb0b72df7687",
+     "bounds": [
+      48,
+      59,
+      110,
+      167
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d2/f00",
+     "direction": 2,
+     "frame": 0,
+     "image": "frames/walk/d2_f00.png",
+     "fingerprint": "sha256:3c492d1f8b80508e66eb733431210c1f71034b97317751f8141278a464dea88d",
+     "bounds": [
+      57,
+      57,
+      104,
+      172
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d2/f01",
+     "direction": 2,
+     "frame": 1,
+     "image": "frames/walk/d2_f01.png",
+     "fingerprint": "sha256:0671482a022054fb105ef7bd0690879a87bb3f3bb905fdc61ebb672db92e4bd5",
+     "bounds": [
+      58,
+      58,
+      101,
+      176
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d2/f02",
+     "direction": 2,
+     "frame": 2,
+     "image": "frames/walk/d2_f02.png",
+     "fingerprint": "sha256:0b03176062dea70f0fffd9641fb49d414264b8c2545ac33e13caeceffcf3879e",
+     "bounds": [
+      58,
+      58,
+      101,
+      177
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d2/f03",
+     "direction": 2,
+     "frame": 3,
+     "image": "frames/walk/d2_f03.png",
+     "fingerprint": "sha256:7fe36e48bd0ae663d41a4be4da6d5799bbe246b6bd2821e347aadfc63d093e32",
+     "bounds": [
+      57,
+      57,
+      104,
+      172
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d2/f04",
+     "direction": 2,
+     "frame": 4,
+     "image": "frames/walk/d2_f04.png",
+     "fingerprint": "sha256:70441f50dee778e8d9e9bf126bb2a931d2524949033b52dd6f953bbfe677984b",
+     "bounds": [
+      59,
+      58,
+      103,
+      176
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d2/f05",
+     "direction": 2,
+     "frame": 5,
+     "image": "frames/walk/d2_f05.png",
+     "fingerprint": "sha256:5b1bf9a834d1b2c1e4e2d536a0bfe7da9118b2ec527d6d3032a04d98a1927f42",
+     "bounds": [
+      59,
+      58,
+      103,
+      177
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d3/f00",
+     "direction": 3,
+     "frame": 0,
+     "image": "frames/walk/d3_f00.png",
+     "fingerprint": "sha256:563a58128e012ea1184f9c622af5914d28ba542db6677445a8186882e5d0fe51",
+     "bounds": [
+      69,
+      58,
+      103,
+      166
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d3/f01",
+     "direction": 3,
+     "frame": 1,
+     "image": "frames/walk/d3_f01.png",
+     "fingerprint": "sha256:4d27abe590bd3de6dbc83198cd662416be5e0441e9f859295c4c86b2b43a327c",
+     "bounds": [
+      57,
+      59,
+      110,
+      170
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d3/f02",
+     "direction": 3,
+     "frame": 2,
+     "image": "frames/walk/d3_f02.png",
+     "fingerprint": "sha256:f103421ecb6fbdc3378a9231ef6fd346609e8505f44016c4b6a178909122b792",
+     "bounds": [
+      51,
+      59,
+      112,
+      167
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d3/f03",
+     "direction": 3,
+     "frame": 3,
+     "image": "frames/walk/d3_f03.png",
+     "fingerprint": "sha256:7b571496ea6aac7d513834a2946583bd5056e25f29c349b504be2e4e4183940f",
+     "bounds": [
+      69,
+      58,
+      103,
+      171
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d3/f04",
+     "direction": 3,
+     "frame": 4,
+     "image": "frames/walk/d3_f04.png",
+     "fingerprint": "sha256:9ebc2dba156753162d1ba321b4e8e41ffd34668711f35a1fb2b6ccfd0fba914f",
+     "bounds": [
+      57,
+      59,
+      110,
+      167
+     ]
+    },
+    {
+     "frame_id": "examples/sample-character/walk/d3/f05",
+     "direction": 3,
+     "frame": 5,
+     "image": "frames/walk/d3_f05.png",
+     "fingerprint": "sha256:debd674fce692d715160b1f01af06eb16994c29de23224ab7927a836eaa9fe4f",
+     "bounds": [
+      51,
+      59,
+      112,
+      166
+     ]
+    }
+   ]
+  }
+ ],
+ "notes": "Procedural art generated by make_sample.py; free to redistribute with this repository."
+}

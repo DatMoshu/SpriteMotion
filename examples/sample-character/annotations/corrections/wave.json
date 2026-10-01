@@ -1,0 +1,1332 @@
+{
+ "schema": "spritemotion.pose-annotations",
+ "schema_version": 1,
+ "dataset_id": "examples/sample-character",
+ "sequence": "wave",
+ "skeleton": "stick-13",
+ "layer": "correction",
+ "coordinate_space": "canvas-px",
+ "limb_identity": "anatomical",
+ "poses": [
+  {
+   "frame_id": "examples/sample-character/wave/d0/f00",
+   "direction": 0,
+   "frame": 0,
+   "source_fingerprint": "sha256:acd2cf0c2f90f222ded2add14a98cd1e67b00402c232001cdec045a93f44a2c8",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 80.0,
+     "y": 69.729,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 82.098,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 94.0,
+     "y": 83.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 98.309,
+     "y": 101.758,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 101.535,
+     "y": 117.282,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 66.0,
+     "y": 83.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 55.102,
+     "y": 68.324,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 45.236,
+     "y": 55.065,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 87.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 87.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 73.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 73.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f01",
+   "direction": 0,
+   "frame": 1,
+   "source_fingerprint": "sha256:13f1eb40212e56c07606e0ada6b2c16210dae0ed5fe2aea12b666702d8e4b638",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 77.021,
+     "y": 69.868,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 78.15,
+     "y": 82.159,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 92.269,
+     "y": 83.057,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 98.121,
+     "y": 100.565,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 102.691,
+     "y": 115.834,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 64.349,
+     "y": 84.888,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 54.278,
+     "y": 68.883,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 54.313,
+     "y": 53.11,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 87.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 87.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 73.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 73.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f02",
+   "direction": 0,
+   "frame": 2,
+   "source_fingerprint": "sha256:016148d6f65944b22711cba7b5e213fb20c30ad901eefd03416859450e425e27",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 77.014,
+     "y": 69.196,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 78.15,
+     "y": 82.159,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 92.269,
+     "y": 83.057,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 98.121,
+     "y": 100.565,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 102.691,
+     "y": 115.834,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 64.349,
+     "y": 84.888,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 54.278,
+     "y": 68.883,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 54.313,
+     "y": 53.11,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 87.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 87.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 73.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 73.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f03",
+   "direction": 0,
+   "frame": 3,
+   "source_fingerprint": "sha256:abd08c7b960a12e9342689060f19e3bfdb14e1588c2bd032064122a24c213c95",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 80.0,
+     "y": 68.551,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 82.098,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 94.0,
+     "y": 83.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 98.309,
+     "y": 101.758,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 101.535,
+     "y": 117.282,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 66.0,
+     "y": 83.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 55.102,
+     "y": 68.324,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 45.236,
+     "y": 55.065,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 87.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 87.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 73.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 73.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f04",
+   "direction": 0,
+   "frame": 4,
+   "source_fingerprint": "sha256:bc111e4a7033db5ef10bbd90a15c823e8b0ecf6874f66bed6d6b9ce05fb799c4",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 82.979,
+     "y": 68.624,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 81.85,
+     "y": 82.159,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 95.651,
+     "y": 84.888,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 98.393,
+     "y": 102.959,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 100.256,
+     "y": 118.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 67.731,
+     "y": 83.057,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 56.028,
+     "y": 67.908,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 39.427,
+     "y": 61.419,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 87.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 87.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 73.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 73.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d0/f05",
+   "direction": 0,
+   "frame": 5,
+   "source_fingerprint": "sha256:1412c8d5ed4bdf5a4a1f7e430e689ae1862a19c0329bc08e2fd4b989b084f58f",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 82.986,
+     "y": 69.13,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 81.85,
+     "y": 82.159,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 95.651,
+     "y": 84.888,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 98.393,
+     "y": 102.959,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 100.256,
+     "y": 118.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 67.731,
+     "y": 83.057,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 56.028,
+     "y": 67.908,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 39.427,
+     "y": 61.419,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 87.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 87.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 73.0,
+     "y": 138.477,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 73.0,
+     "y": 165.15,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f00",
+   "direction": 1,
+   "frame": 0,
+   "source_fingerprint": "sha256:4838c864b7defda9703e52a32674ec959845ecaa64d99e3c6c12db9e65339a6c",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 81.178,
+     "y": 69.14,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 82.098,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 80.0,
+     "y": 76.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 80.0,
+     "y": 92.603,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 80.0,
+     "y": 106.514,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 80.0,
+     "y": 90.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 80.0,
+     "y": 80.773,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 80.0,
+     "y": 72.447,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 80.0,
+     "y": 134.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 80.0,
+     "y": 161.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 80.0,
+     "y": 141.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 80.0,
+     "y": 168.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f01",
+   "direction": 1,
+   "frame": 1,
+   "source_fingerprint": "sha256:bd3ac92ba579442e89582959379cf4afdf6990526fe16f228317013edea45010",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 81.244,
+     "y": 70.735,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 83.084,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 80.0,
+     "y": 76.923,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 80.0,
+     "y": 91.505,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 80.0,
+     "y": 104.488,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 80.0,
+     "y": 92.714,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 80.0,
+     "y": 81.744,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 80.0,
+     "y": 65.953,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 80.0,
+     "y": 134.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 80.0,
+     "y": 161.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 80.0,
+     "y": 141.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 80.0,
+     "y": 168.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f02",
+   "direction": 1,
+   "frame": 2,
+   "source_fingerprint": "sha256:954fc99c2e8a650754f12d696c3e275c88ec0ceb0e487f44f25b9836a5c001d6",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 80.066,
+     "y": 70.656,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 83.084,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 80.0,
+     "y": 76.923,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 80.0,
+     "y": 91.505,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 80.0,
+     "y": 104.488,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 80.0,
+     "y": 92.714,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 80.0,
+     "y": 81.744,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 80.0,
+     "y": 65.953,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 80.0,
+     "y": 134.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 80.0,
+     "y": 161.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 80.0,
+     "y": 141.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 80.0,
+     "y": 168.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f03",
+   "direction": 1,
+   "frame": 3,
+   "source_fingerprint": "sha256:80dc0a82bb3d8e23d70f6560f01611ce52546e6625ab954174d550bde8f28d2c",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 78.822,
+     "y": 69.14,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 82.098,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 80.0,
+     "y": 76.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 80.0,
+     "y": 92.603,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 80.0,
+     "y": 106.514,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 80.0,
+     "y": 90.917,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 80.0,
+     "y": 80.773,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 80.0,
+     "y": 72.447,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 80.0,
+     "y": 134.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 80.0,
+     "y": 161.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 80.0,
+     "y": 141.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 80.0,
+     "y": 168.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f04",
+   "direction": 1,
+   "frame": 4,
+   "source_fingerprint": "sha256:ca95a0f890896dd6b6a70a1c71a37d1837cf705863f3d2c307802795b76a3a64",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 78.756,
+     "y": 67.757,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 81.234,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 80.0,
+     "y": 77.062,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 80.0,
+     "y": 93.763,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 80.0,
+     "y": 108.522,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 80.0,
+     "y": 89.191,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 80.0,
+     "y": 79.894,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 80.0,
+     "y": 81.705,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 80.0,
+     "y": 134.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 80.0,
+     "y": 161.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 80.0,
+     "y": 141.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 80.0,
+     "y": 168.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  },
+  {
+   "frame_id": "examples/sample-character/wave/d1/f05",
+   "direction": 1,
+   "frame": 5,
+   "source_fingerprint": "sha256:d4b077187905aa285b7b3910fc6a3e97fd2146e0e692f88102b9774f9f46584f",
+   "provenance": {
+    "method": "manual",
+    "independent": true,
+    "source_method": "estimator",
+    "detail": "Exact joints, standing in for a person's review."
+   },
+   "review": {
+    "status": "approved",
+    "reviewer": "make_sample.py",
+    "updated_at": "2026-09-25T00:00:00Z"
+   },
+   "joints": {
+    "head": {
+     "x": 79.934,
+     "y": 67.67,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "neck": {
+     "x": 80.0,
+     "y": 81.234,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "pelvis": {
+     "x": 80.0,
+     "y": 112.409,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_shoulder": {
+     "x": 80.0,
+     "y": 77.062,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_elbow": {
+     "x": 80.0,
+     "y": 93.763,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_hand": {
+     "x": 80.0,
+     "y": 108.522,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_shoulder": {
+     "x": 80.0,
+     "y": 89.191,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_elbow": {
+     "x": 80.0,
+     "y": 79.894,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_hand": {
+     "x": 80.0,
+     "y": 81.705,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_knee": {
+     "x": 80.0,
+     "y": 134.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "left_foot": {
+     "x": 80.0,
+     "y": 161.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_knee": {
+     "x": 80.0,
+     "y": 141.977,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    },
+    "right_foot": {
+     "x": 80.0,
+     "y": 168.65,
+     "confidence": 1.0,
+     "visibility": "visible",
+     "status": "corrected"
+    }
+   }
+  }
+ ]
+}

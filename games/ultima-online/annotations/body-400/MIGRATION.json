@@ -1,0 +1,223 @@
+{
+ "source": "UO Roto (UO Roto)",
+ "dataset_id": "ultima-online/body-400",
+ "actions": [
+  {
+   "sequence": "action-000",
+   "name": "walk",
+   "estimates": 80,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-001",
+   "name": "walkstaff",
+   "estimates": 80,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-002",
+   "name": "run",
+   "estimates": 80,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-003",
+   "name": "runstaff",
+   "estimates": 80,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-004",
+   "name": "idle",
+   "estimates": 8,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-005",
+   "name": "idle_anim",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-006",
+   "name": "yawn",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-007",
+   "name": "combat1",
+   "estimates": 8,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-008",
+   "name": "combat2",
+   "estimates": 8,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-009",
+   "name": "slash1h",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-010",
+   "name": "pierce1h",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-011",
+   "name": "bash1h",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-012",
+   "name": "bash2h",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-013",
+   "name": "slash2h",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-014",
+   "name": "pierce2h",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-015",
+   "name": "combatadvance",
+   "estimates": 80,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-016",
+   "name": "spell1",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-017",
+   "name": "spell2",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-018",
+   "name": "bow_attack",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-019",
+   "name": "crossbow_attack",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-020",
+   "name": "get_hit",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-021",
+   "name": "death_back",
+   "estimates": 48,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-022",
+   "name": "death_forward",
+   "estimates": 48,
+   "corrections": 6
+  },
+  {
+   "sequence": "action-023",
+   "name": "mounted_walk",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-024",
+   "name": "mounted_run",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-025",
+   "name": "mounted_idle",
+   "estimates": 8,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-026",
+   "name": "mounted_slash1h",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-027",
+   "name": "mounted_bow",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-028",
+   "name": "mounted_crossbow",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-029",
+   "name": "mounted_slash2h",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-030",
+   "name": "block",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-031",
+   "name": "punch",
+   "estimates": 56,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-032",
+   "name": "bow_gesture",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-033",
+   "name": "salute",
+   "estimates": 40,
+   "corrections": 0
+  },
+  {
+   "sequence": "action-034",
+   "name": "eat",
+   "estimates": 40,
+   "corrections": 0
+  }
+ ],
+ "checks": {
+  "poses_compared": 1680,
+  "approved": 6,
+  "max_coordinate_delta": 0.0,
+  "tolerance": 0.001,
+  "passed": true
+ }
+}
