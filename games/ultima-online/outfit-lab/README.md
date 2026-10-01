@@ -29,6 +29,8 @@ Source masks must already exist (see ../region-masks/README.md).
 `axisFit`, `axisImages`, `axisRatio`, `axisThickness` (constant px), `axisContinuity`, `axisTorsoRule`.
 The viewer and `verify.py` read the item list from the manifest. A UTF-8 BOM in the file is accepted.
 
+Reskinning single items and weapons, `.vd` export and paperdoll gumps: [ITEMS.md](ITEMS.md).
+
 ## Representation
 
 Each action/stored-facing atlas has frames across columns (256 px per frame).

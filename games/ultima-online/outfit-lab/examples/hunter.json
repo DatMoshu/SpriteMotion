@@ -1,0 +1,26 @@
+{
+  "title": "Monster Hunter",
+  "items": [
+    ["sword", "0xF5E"],
+    ["crossbow", "0x13FD"],
+    ["robe", "0x1F03"],
+    ["cap", "0x1543"],
+    ["hair", "0x203C"],
+    ["shirt", "0x1517"],
+    ["pants", "0x1539"],
+    ["shoes", "0x170F"],
+    ["gloves", "0x1414"],
+    ["backpack", "0xE75"],
+    ["familiar", "0xE2D"]
+  ],
+  "cells": {"sword": 0, "crossbow": 1, "robe": 2, "cap": 3, "hair": 4, "shirt": 5, "pants": 6,
+            "shoes": 7, "gloves": 8, "backpack": 9, "familiar": 10},
+  "props": ["familiar"],
+  "hide": {"robe": [1, 5], "shirt": [1, 5], "pants": [5], "hair": [5], "sword": [5], "crossbow": [5]},
+  "drawOrder": ["pants", "shoes", "shirt", "robe", "hair", "cap", "gloves", "sword", "crossbow"],
+  "defaultOff": ["crossbow", "robe", "cap"],
+  "exclusive": ["sword", "crossbow"],
+  "displayNames": {"sword": "Silver sword", "crossbow": "Heavy crossbow", "robe": "Hunter's coat",
+                   "cap": "Leather cap", "gloves": "Plate gloves", "backpack": "Backpack (anim 422)",
+                   "familiar": "Wolf-head medallion"}
+}

@@ -57,6 +57,7 @@ guessing. Details: [research/uo-conventions.md](research/uo-conventions.md#uop-a
 | `profiles/` | `body-400.json`, `body-401.json`, `body-666.json`, `body-667.json` (canvas, directions, camera, Blender timeline), `human-actions.json` / `gargoyle-actions.json` (action names), `cameras/` (camera candidates) |
 | `skeletons/` | `humanoid-20.json` (20 joints, A/B limb chains) and `rig-mappings/` for Rigify (FK) and Mixamo rigs |
 | `annotations/body-400/` | `estimates/` (35 files), `corrections/action-022.json`, `MIGRATION.json` |
+| `equipment/` | `layers.json`: the client's equipment layers (which animate, the rig bones and body regions each covers), used by [asset-pack mappings](../../docs/asset-packs.md) |
 | `migration/` | the script that converted the earlier UO Roto data ([notes](research/migration.md)) |
 | `blender/` | the *SpriteMotion Sheet Reference* Blender add-on ([README](blender/README.md)) |
 | `recipes/` | [reconstructing body 400](recipes/reconstruct-body-400.md), [annotation review](recipes/review-annotations.md) |

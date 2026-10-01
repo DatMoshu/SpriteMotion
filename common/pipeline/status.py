@@ -64,4 +64,9 @@ def validate_repository(games_dir: Path = GAMES_DIR) -> list[str]:
                     issues = [i for i in check_pose(pose, skeleton, 10 ** 9, 10 ** 9)]
                     if issues:
                         errors.append(f"{path} {key}: {'; '.join(issues)}")
+    # Equipment slots and asset-pack mappings are validated wherever they live in a game.
+    for kind, pattern in [("spritemotion.equipment-slots", "*/equipment/*.json"),
+                          ("spritemotion.asset-pack", "*/asset-packs/*.json")]:
+        for path in sorted(games_dir.glob(pattern)):
+            errors += [f"{path}: {e}" for e in validate(read_json(path), kind, required=True)]
     return errors

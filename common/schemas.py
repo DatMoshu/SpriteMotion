@@ -1,4 +1,4 @@
-"""Schema validation for the four SpriteMotion document types.
+"""Schema validation for the SpriteMotion document types.
 
 jsonschema is optional at runtime: without it only the structural checks in
 each loader run. Tests install it and validate every bundled document.
@@ -16,6 +16,8 @@ SCHEMA_FILES = {
     "spritemotion.dataset": "sprite-sequence.schema.json",
     "spritemotion.skeleton": "skeleton.schema.json",
     "spritemotion.pose-annotations": "pose-annotations.schema.json",
+    "spritemotion.equipment-slots": "equipment-slots.schema.json",
+    "spritemotion.asset-pack": "asset-pack.schema.json",
 }
 
 

@@ -81,7 +81,7 @@ def canvas_np(f):
 def load_candidate(args):
     frames = {}
     if args.vd:
-        sys.path.insert(0, str(REPO / 'workspace/levy-review/source/vdtool'))
+        sys.path.insert(0, str(REPO / 'tools/vd'))
         import vdtool
         _, blocks = vdtool.read_vd(args.vd)
         for b in blocks:

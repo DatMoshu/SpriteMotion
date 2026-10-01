@@ -1,0 +1,38 @@
+{
+ "schema": "spritemotion.asset-pack",
+ "schema_version": 1,
+ "id": "example-modular",
+ "title": "Example modular outfit pack",
+ "description": "A minimal mapping showing the format: a Mixamo-named skeleton and three outfit parts. Real pack mappings live outside the repository when the pack's licence forbids redistribution (docs/asset-packs.md).",
+ "game": "ultima-online",
+ "slots": "games/ultima-online/equipment/layers.json",
+ "target_rig": "uo-model3d-v13",
+ "source": {"env": "SPRITEMOTION_EXAMPLE_PACK", "root_hint": "ExamplePack/", "license": "Fictional example.",
+            "files": {"outfits": "Outfits/<name>_<code>.fbx", "palette": "Textures/palette.png"}},
+ "units": {"import_scale": 0.01, "up": "Z after the Blender FBX import", "forward": "-Y", "rest_pose": "T-pose"},
+ "fit": {"scale_clamp": [0.5, 1.8], "missing_end_offset": [0, -0.07, 0], "unmapped": "nearest_mapped_ancestor"},
+ "bones": {
+  "mixamorig:Hips":         {"parent": null, "role": "deform", "target": "pelvis", "end": "mixamorig:Spine", "keep_orientation": true},
+  "mixamorig:Spine":        {"parent": "mixamorig:Hips", "role": "deform", "target": "spine", "end": "mixamorig:Spine2", "keep_orientation": true},
+  "mixamorig:Spine2":       {"parent": "mixamorig:Spine", "role": "deform", "target": "chest", "end": "mixamorig:Neck", "keep_orientation": true},
+  "mixamorig:Neck":         {"parent": "mixamorig:Spine2", "role": "deform", "target": "neck", "end": "mixamorig:Head", "keep_orientation": true},
+  "mixamorig:Head":         {"parent": "mixamorig:Neck", "role": "deform", "target": "head", "end": "mixamorig:HeadTop_End", "keep_orientation": true},
+  "mixamorig:HeadTop_End":  {"parent": "mixamorig:Head", "role": "attach", "target": "head", "follows": "mixamorig:Head"},
+  "mixamorig:LeftArm":      {"parent": "mixamorig:Spine2", "role": "deform", "target": "upper_arm.L", "end": "mixamorig:LeftForeArm"},
+  "mixamorig:LeftForeArm":  {"parent": "mixamorig:LeftArm", "role": "deform", "target": "forearm.L", "end": "mixamorig:LeftHand"},
+  "mixamorig:LeftHand":     {"parent": "mixamorig:LeftForeArm", "role": "deform", "target": "hand.L", "end": null},
+  "mixamorig:RightArm":     {"parent": "mixamorig:Spine2", "role": "deform", "target": "upper_arm.R", "end": "mixamorig:RightForeArm"},
+  "mixamorig:RightForeArm": {"parent": "mixamorig:RightArm", "role": "deform", "target": "forearm.R", "end": "mixamorig:RightHand"},
+  "mixamorig:RightHand":    {"parent": "mixamorig:RightForeArm", "role": "deform", "target": "hand.R", "end": null}
+ },
+ "attach_points": {
+  "mixamorig:RightHand": {"target": "hand.R", "use": "weapon grip", "uo_layers": [1, 2]}
+ },
+ "parts": [
+  {"code": "HELM", "name": "Helmet", "status": "uo", "uo_layer": 6, "studio_part": "helm", "bind": "rigid", "offset": [0, 0, 0.02]},
+  {"code": "CHEST", "name": "Chest armour", "status": "uo", "uo_layer": 13, "alternatives": [5, 17], "studio_part": "chest", "bind": "skinned"},
+  {"code": "PAULDRONS", "name": "Shoulder pads", "status": "extra", "uo_layer": null, "alternatives": [19], "bind": "rigid",
+   "candidate_slot": {"name": "Pauldrons", "reason": "UO draws shoulder armour inside the Arms item."}}
+ ],
+ "uncovered_layers": [3, 4, 7, 19, 20, 22, 23, 24]
+}

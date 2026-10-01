@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/asset-pack.schema.json",
+  "title": "SpriteMotion asset-pack mapping",
+  "description": "How one third-party 3D asset pack maps onto a game: its bones onto the target rig (with the rest-pose fit), and its parts onto the game's equipment slots. One file per pack; the pack's own files are never copied, only located through an environment variable.",
+  "type": "object",
+  "required": ["schema", "schema_version", "id", "title", "source", "target_rig", "bones", "parts"],
+  "additionalProperties": false,
+  "$defs": {
+    "vec3": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+    "layer": { "type": ["integer", "null"], "minimum": 0 }
+  },
+  "properties": {
+    "schema": { "const": "spritemotion.asset-pack" },
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "pack_version": { "type": "string" },
+    "game": { "type": "string" },
+    "slots": { "type": "string", "description": "Repository path of the game's spritemotion.equipment-slots document." },
+    "target_rig": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["env"],
+      "additionalProperties": false,
+      "properties": {
+        "env": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$", "description": "Environment variable holding the pack folder on this machine." },
+        "root_hint": { "type": "string", "description": "What the folder looks like inside the vendor's distribution." },
+        "license": { "type": "string" },
+        "files": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import_scale": { "type": "number" },
+        "up": { "type": "string" },
+        "forward": { "type": "string" },
+        "rest_pose": { "type": "string" }
+      }
+    },
+    "fit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scale_clamp": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "missing_end_offset": { "$ref": "#/$defs/vec3", "description": "Bone direction used when an aligned bone has no end bone (metres)." },
+        "unmapped": { "enum": ["nearest_mapped_ancestor"] }
+      }
+    },
+    "bones": {
+      "type": "object",
+      "description": "Every source bone. Bones with 'end' are aligned: their chain direction is rotated onto the target bone and the chain is scaled. Every other bone follows its nearest aligned ancestor.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["role"],
+        "additionalProperties": false,
+        "properties": {
+          "parent": { "type": ["string", "null"] },
+          "role": { "enum": ["root", "deform", "twist", "finger", "attach", "face", "dynamic", "ik", "prop"] },
+          "target": { "type": "string", "description": "Target-rig bone that receives this bone's weights." },
+          "end": { "type": ["string", "null"], "description": "Source bone at the far end of the aligned chain (null: use missing_end_offset)." },
+          "keep_orientation": { "type": "boolean", "description": "Translate only; keep the source orientation and scale (spine and head)." },
+          "follows": { "type": "string", "description": "Aligned ancestor this bone moves with (informational, derived)." },
+          "proposed_target": { "type": "string", "description": "A better target the rig offers that the fitter does not use yet." },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "dynamic_chains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["prefix", "follows"],
+        "additionalProperties": false,
+        "properties": {
+          "prefix": { "type": "string" },
+          "parts": { "type": "array", "items": { "type": "string" } },
+          "follows": { "type": "string" },
+          "proposed_target": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "attach_points": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["target"],
+        "additionalProperties": false,
+        "properties": {
+          "target": { "type": "string" },
+          "use": { "type": "string" },
+          "uo_layers": { "type": "array", "items": { "type": "integer" } },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "name", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "group": { "type": "string" },
+          "count": { "type": "integer", "minimum": 0, "description": "How many parts of this type the pack has." },
+          "pair": { "type": "string", "description": "Code of the mirrored part; a pair becomes one item." },
+          "weighted_bones": { "type": "array", "items": { "type": "string" } },
+          "status": { "enum": ["uo", "merge", "extra", "body", "skip"], "description": "uo: maps to an existing layer; merge: folded into another part's layer; extra: no fitting layer, candidate new slot; body: part of the base body; skip: never used." },
+          "uo_layer": { "$ref": "#/$defs/layer" },
+          "alternatives": { "type": "array", "items": { "type": "integer" } },
+          "studio_part": { "type": "string" },
+          "bind": { "enum": ["skinned", "rigid"] },
+          "offset": { "$ref": "#/$defs/vec3", "description": "Rest-pose offset in metres applied before binding." },
+          "candidate_slot": {
+            "type": "object",
+            "required": ["name", "reason"],
+            "additionalProperties": false,
+            "properties": { "name": { "type": "string" }, "reason": { "type": "string" } }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "uncovered_layers": { "type": "array", "items": { "type": "integer" }, "description": "Animated game layers this pack has no source for." }
+  }
+}

@@ -5,6 +5,15 @@ MIT license in [LICENSE](LICENSE). The repository does not bundle any
 third-party software or content. The items below are dependencies you install
 yourself, or software the tools talk to.
 
+## Contributed code
+
+The outfit-lab `--config` item lists, the `Bodyconv.def` reader in
+`games/ultima-online/region-masks/uo.py`, the `.vd` export and paperdoll gump
+scripts in `games/ultima-online/outfit-lab/` (`atlas_to_vd.py`,
+`build_item.py`, `merge_items.py`, `make_gump.py`, `make_gump_cloak.py`,
+`uo_vd_writer.py`, `vd.py`) and `tools/vd/` were contributed by Levy and are
+included with his permission.
+
 ## Runtime dependencies (installed by pip)
 
 | Package | Use | License |
