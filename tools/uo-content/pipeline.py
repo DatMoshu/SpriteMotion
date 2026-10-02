@@ -70,7 +70,16 @@ def normalize(spec):
     if mode not in ('preview', 'full'):
         raise ValueError('Build mode must be preview or full.')
     spec['mode'] = mode
-    spec['actions'] = [0, 4, 9, 22, 25] if mode == 'preview' else list(range(35))
+    spec.setdefault('actions', [0, 4, 9, 22, 25] if mode == 'preview' else list(range(35)))
+    if not isinstance(spec['actions'], list) or not spec['actions'] or any(type(a) is not int or not 0 <= a <= 34 for a in spec['actions']) or len(set(spec['actions'])) != len(spec['actions']):
+        raise ValueError('Actions must be unique IDs from 0 to 34.')
+    if 'blocks' in spec:
+        blocks = spec['blocks']
+        if not isinstance(blocks, list) or not blocks or any(not isinstance(b, list) or len(b)!=2 or
+                type(b[0]) is not int or b[0] not in spec['actions'] or type(b[1]) is not int or not 0<=b[1]<=4 for b in blocks):
+            raise ValueError('Blocks must be action/stored-direction pairs within the selected actions.')
+        if len(set(map(tuple,blocks))) != len(blocks): raise ValueError('Duplicate blocks.')
+    if spec.get('occlusion', 'clothing') not in ('clothing','body','none'): raise ValueError('Invalid occlusion mode.')
     for field, default, low, high in [('scale', 1., .01, 100.), ('offset_x', 0., -3., 3.),
             ('offset_y', 0., -3., 3.), ('offset_z', 0., -3., 3.), ('rotate_x', 0., -360., 360.),
             ('rotate_y', 0., -360., 360.), ('rotate_z', 0., -360., 360.)]:
@@ -92,12 +101,44 @@ def normalize(spec):
     spec['color'] = color
     return spec
 
+def snapshot_fit(spec):
+    """Freeze local adjustments at job creation, never let a running job read changing UI saves."""
+    sys.path.insert(0, str(ROOT / 'tools/fit-lab'))
+    from adjustments import validate
+    if 'fit_adjustments' in spec:
+        validate(spec['fit_adjustments'])
+    elif spec.get('pack_mapping'):
+        saved = Path(spec['pack_mapping']).parent / 'lab-adjustments.json'
+        if saved.exists(): spec['fit_adjustments'] = validate(json.loads(saved.read_text()))
+    document = spec.get('fit_adjustments', {'parts':{},'items':{}})
+    if 'fit_item' not in spec and spec.get('pack_mapping'):
+        sources = {str(Path(p).resolve()).casefold() for p in spec.get('source_files', [])}
+        matches = []
+        for path in (ROOT / 'workspace/ultima-online/fit-lab').glob('*/lab-items.json'):
+            catalog = json.loads(path.read_text())
+            if Path(catalog.get('mapping','')).resolve() != Path(spec['pack_mapping']).resolve(): continue
+            matches.extend(i for i in catalog['items'] if sources and sources == {str(Path(p).resolve()).casefold() for p in i['files']})
+        if len(matches) == 1: spec['fit_item'] = {k: matches[0][k] for k in ('id','slot','part')}
+    item = spec.get('fit_item')
+    if item is not None and (not isinstance(item,dict) or any(not isinstance(item.get(k),str) or not item[k] for k in ('id','slot','part'))):
+        raise ValueError('fit_item requires id, slot and part strings.')
+    # Zero item offsets are left behind by the lab's item sliders; only real per-item/slot data needs an identity.
+    item_offsets = any(any(v.get('offset', [0, 0, 0])) for v in document.get('items', {}).values())
+    if item is None and (item_offsets or any(r['target']!='pack' for r in document.get('corrections',[]))):
+        raise ValueError('Provide fit_item so item/group/slot corrections can be applied reliably.')
+
+
 def create_job(spec, asset=None):
     spec = normalize(spec)
+    snapshot_fit(spec)
     if not (BACKEND / 'provenance.json').exists():
         raise ValueError('Install the v13 backend first: pipeline.py setup --source <UO_Model3D folder>')
     job = HOME / 'jobs' / uuid.uuid4().hex[:12]
     job.mkdir(parents=True)
+    if spec.get('pack_mapping'):
+        frozen = job / 'pack-mapping.json'
+        shutil.copy2(spec['pack_mapping'], frozen)
+        spec['pack_mapping'] = str(frozen)
     if asset:
         asset = Path(asset).resolve()
         if asset.suffix.lower() not in MODELS | IMAGES:
@@ -155,7 +196,7 @@ def finish(job):
     vd = job / 'item.vd'
     counts = inspect_vd(vd)
     expected = json.loads((job / 'scene-report.json').read_text(encoding='utf-8'))['actions']
-    intended = {(a, d): expected[str(a)] for a in spec['actions'] for d in range(5)}
+    intended = {(a, d): expected[str(a)] for a,d in spec.get('blocks', [(a,d) for a in spec['actions'] for d in range(5)])}
     actual = {(b['action'], b['dir']): len(b['frames']) for b in meta['blocks'] if b['frames']}
     if actual != intended or counts != intended:
         raise ValueError('Animation identities/frame counts differ between scene, PNGs and VD.')
@@ -265,11 +306,16 @@ def main():
     s = sub.add_parser('setup'); s.add_argument('--source', required=True)
     b = sub.add_parser('build'); b.add_argument('--spec', required=True); b.add_argument('--asset')
     f = sub.add_parser('finish'); f.add_argument('job')
+    r = sub.add_parser('rebuild'); r.add_argument('job'); r.add_argument('--adjustments',required=True)
     args = p.parse_args()
     if args.command == 'setup':
         print(setup(args.source))
     elif args.command == 'finish':
         finish(Path(args.job).resolve())
+    elif args.command == 'rebuild':
+        sys.path.insert(0,str(ROOT/'tools/fit-lab'))
+        from rebuild import rebuild_job
+        print(rebuild_job(args.job,json.loads(Path(args.adjustments).read_text())),flush=True)
     else:
         job = create_job(json.loads(Path(args.spec).read_text(encoding='utf-8')), args.asset)
         print(job, flush=True)

@@ -19,6 +19,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from adjustments import AdjustmentStore, ConflictError
 from assets import import_directory
+from builds import Builds
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
@@ -51,6 +52,7 @@ def serve(args):
     d = data_dir(args.pack)
     adjust = sidecar() / 'packs' / args.pack / 'lab-adjustments.json'
     store = AdjustmentStore(adjust)
+    builds = Builds(d,store)
 
     class Handler(http.server.SimpleHTTPRequestHandler):
         extensions_map = {**http.server.SimpleHTTPRequestHandler.extensions_map, '.mjs': 'text/javascript'}
@@ -62,11 +64,15 @@ def serve(args):
             path = unquote(urlsplit(path).path)
             root = d if path.startswith('/data/') else HERE / 'web'
             relative = path[6:] if path.startswith('/data/') else path.lstrip('/') or 'index.html'
+            if path.startswith('/builds/'):
+                root = REPO/'workspace/ultima-online/content-studio/jobs'
+                relative = path.removeprefix('/builds/')
             target = (root / relative).resolve()
             return str(target) if target.is_relative_to(root.resolve()) else str(root / '__not_found__')
 
         def do_GET(self):
             path = urlsplit(self.path).path
+            if path == '/api/build': return self.reply(200,json.dumps(builds.state()).encode())
             if path == '/api/mapping':
                 manifest = json.loads((d / 'manifest.json').read_text())
                 mapping = Path(manifest.get('mapping') or '')
@@ -86,7 +92,7 @@ def serve(args):
 
         def do_POST(self):
             path = urlsplit(self.path).path
-            if path not in ('/api/adjustments', '/api/assets'): return self.reply(404, b'{}')
+            if path not in ('/api/adjustments', '/api/assets', '/api/build'): return self.reply(404, b'{}')
             # JSON-only requests prevent cross-origin forms from changing local fits.
             if self.headers.get_content_type() != 'application/json':
                 return self.reply(415, b'{"error":"Reload the lab before saving."}')
@@ -94,6 +100,7 @@ def serve(args):
                 size = int(self.headers.get('Content-Length', '0'))
                 if not 0 < size <= 2_000_000: raise ValueError('Invalid request size.')
                 data = json.loads(self.rfile.read(size))
+                if path == '/api/build': return self.reply(202,json.dumps(builds.start(data)).encode())
                 if path == '/api/assets':
                     if not isinstance(data, dict) or set(data) != {'directory', 'slot', 'part'} or not all(isinstance(v, str) for v in data.values()):
                         raise ValueError('Expected directory, slot and part strings')

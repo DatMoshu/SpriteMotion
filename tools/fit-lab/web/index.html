@@ -62,10 +62,23 @@
   <div id="recovery" hidden><p>Disk and recovered edits differ. Choose which to keep; neither is overwritten until you choose.</p><button id="useDisk">Use disk version</button><button id="useLocal">Keep my recovered edits</button></div>
   <details><summary>Last three saved versions</summary><label>Backup <select id="backups"></select></label><button id="restoreBackup" disabled>Restore backup</button></details>
   <h2>Slot fit <span class="sub" id="partCode"></span></h2>
+  <p class="sub">Base fit: applies to every animation and direction.</p>
   <div id="fit"></div>
   <h2>Hide body under clothes</h2>
   <p class="sub">Like CC4's hide-mesh: body faces this close to the item are hidden, so they can't poke through or hold out holes in the sprite.</p>
   <div id="hide"></div>
+  <h2>Scoped correction</h2>
+  <label>Apply to <select id="scopeTarget"><option value="item">This item</option><option value="slot">This slot</option><option value="group">Named group</option><option value="pack">Entire pack</option></select></label>
+  <label>When <select id="scopeWhen"><option value="all">All poses</option><option value="action">This animation</option><option value="direction">This direction</option><option value="pose">This animation + direction</option></select></label>
+  <label>Group <select id="scopeGroup"></select></label>
+  <label>New group name <input id="groupName" type="text"></label>
+  <button id="makeGroup">Group checked items</button>
+  <p class="sub" id="scopeLabel"></p><div id="scopeFit"></div>
+  <button id="removeCorrection">Remove this correction</button>
+  <h2>Render selected item</h2>
+  <label>Build coverage <select id="buildCoverage"><option value="preview">Preview: 5 actions</option><option value="action">Current animation</option><option value="full">All 35 animations</option></select></label>
+  <button id="buildItem">Build item</button><button id="rebuildItem">Rebuild changed blocks</button>
+  <p id="buildStatus" role="status"></p><a id="buildReview" hidden target="_blank" rel="noopener">Open rendered review</a>
   <h2>Measure</h2>
   <p class="sub">Poke pixels = pixels where body limb/head faces that lie under the item (within 5 cm outside / 3 cm inside it at rest) show in front of it: the holes the renderer's body holdout would cut. Counted in every frame of the checked actions × 5 directions. The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so counts run high.</p>
   <div id="measureActions"></div>

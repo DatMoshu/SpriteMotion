@@ -30,6 +30,35 @@ pixels: eight items improved, six worsened, forty unchanged. Two runs reproduced
 sheet chooses each item's largest content-pixel difference and labels the pose. These results use the saved fits
 at run time (included in the JSON); they are not final Blender render validation or a reason to change rig defaults.
 
+## Scoped corrections, body masking and lab builds
+
+`lab-adjustments.json` gained optional `groups` and `corrections` (pack/slot/group/item, optionally per action and/or
+stored direction; mirrored directions share). Lab and build resolve them with the same rules
+(`tools/fit-lab/fit_rules.py`, `web/fit-rules.mjs`, parity-tested). `occlusion` (clothing/body/none) picks which body
+parts hide an item; back/quiver default to whole-body. The lab can **Build item** and **Rebuild changed blocks**
+(`tools/uo-content/rebuild.py`); see `tools/fit-lab/README.md` and `tools/uo-content/README.md`. The preview's Euler
+order now matches Blender (XYZ), so saved multi-axis rotations preview differently than before — correctly.
+
+Verified 2026-10-02 against a scratch copy of the adjustments: item+pose correction, Ctrl+Z / Ctrl+Shift+Z (undo
+removes it from disk, redo restores it), mirrored direction 5 showing direction 3's correction and 4 not, a named
+group from checked items with a per-action group correction. Lab build of the Elven back item, action 9: the scene
+report shows +5 cm only in direction 3 and the group's +2 cm in all five; item-only frames keep just the parts outside
+the body except in the back view. Changing only the direction-3 correction and rebuilding re-rendered block (9,3)
+alone; the other four VD blocks were byte-identical and the revision validated.
+
+Not verified: a full 35-action lab build, a rebuild whose base slot fit changed, slot/pack-scoped corrections in a
+Blender build. Each rebuild leaves its patch job in `jobs/` (listed as a partial job by the studio). Studio pack
+jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
+corrections.
+
+## UO_Model3D v2 (not yet integrated)
+
+The upstream v2 archive (unpacked locally under `workspace/uo-model-review/v2/`) changes the body `.blend`,
+`render_uo_layer.py`, `uo_bind_item.py`, `vdtool.py`, and adds body shape/pose fitting, lighting and weapon tooling.
+Its renderer has a native 256x256 canvas with anchor (128,192), so `blender_build.py`'s `Canvas` padding must not run
+on it, and its holdout uses `HIDER_TRIS` (plus `TORSO_TRIS` for cloaks) where v13 used `OCCLUDER_TRIS`; the
+`occlusion` hook in `fit_runtime.py` must set the v2 names.
+
 ## Verified in the takeover check
 
 - **Studio build with pack fit.** `blender_build.py` reads `pack_mapping` + `pack_part` from job settings, applies the
@@ -45,8 +74,8 @@ at run time (included in the JSON); they are not final Blender render validation
 
 ## Not yet used by builds
 
-- **Lab → mapping.** The sidecar's mapping generator merges `lab-adjustments.json` slot fits. Item overrides
-  (`items` in that file) are saved by the lab but not used by builds.
+- **Lab → mapping.** The sidecar's mapping generator merges `lab-adjustments.json` slot fits. Item overrides and
+  scoped corrections are used by fit-aware builds (lab builds, or studio jobs with `fit_item`), not by the generator.
 
 ## Known gaps
 

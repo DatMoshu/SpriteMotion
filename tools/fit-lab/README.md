@@ -40,6 +40,33 @@ frame. These are live fit-lab camera renders, not final Blender output; the same
 
 ## In the lab
 
+### Scoped corrections and masking
+
+The optional `groups` and `corrections` fields extend the adjustment document without changing old saves.
+Groups map names to item IDs. Each correction has `target` (pack/slot/group/item), `key` (except pack), optional
+`action` (0–34), optional stored `direction` (0–4), and `fit`. Missing filters mean all poses. Offsets and Euler
+angles add to the base fit; scales multiply. Resolution order is pack, slot, named groups, individual item;
+within each target: all poses, action, direction, action+direction. Groups at equal specificity use name order.
+Each selector is unique. Directions 5/6/7 share stored corrections with 3/2/1 respectively.
+Corrections are applied to rest geometry before animation, in Blender XYZ coordinates (metres/degrees).
+Use **Scoped correction** to edit deltas; the original **Slot fit** remains the base for every pose.
+Choosing a pose scope pauses playback/cycling. Groups are created from checked visible items in the current slot.
+
+`occlusion` is clothing (limbs/head only), body (also torso), or none. Back/quiver slots default to body.
+Preview overlays use a depth-tested body mask with a 1 cm margin, clipped to the original sprite alpha when present.
+Content-only mode uses the same cutout; the 3D view remains a geometry inspection view. The preview still lacks
+the final renderer's push-out and exact-outline edge correction, so validate final rendered frames as well.
+
+**Build item** renders the selected mapped source with a snapshot of saved adjustments, using preview, current-action
+or full coverage. **Rebuild changed blocks** compares against that item's last successful lab build and produces a
+new validated revision. Only blocks present in that build are considered; use Build item for wider coverage.
+Neither operation changes the source build. Group corrections affect each member's next build; this button builds
+one selected item, not an entire group. Directory-only imports are not build sources.
+`POST /api/build` takes `{item, mode: build|rebuild, coverage: preview|action|full, action}`. `GET /api/build`
+returns idle/building/complete/failed status, with item, job/review on success, or error on failure. `unchanged`
+marks a rebuild with no changed existing blocks. `lab-builds.json` maps item IDs to last-successful job IDs.
+Both contracts are described in `schemas/fit-lab-build.schema.json`. Successful reviews are served at `/builds/`.
+
 Preview **Base** selects the original UO sprite, the animated 3D body, or transparent content only.
 The original is extracted from the canonical model's embedded original frames; it is a visual reference,
 not a final holdout render. `reference.json` follows `schemas/fit-reference.schema.json`, indexes

@@ -19,9 +19,9 @@ def validate(data):
     def number(value):
         return type(value) in (int, float) and math.isfinite(value)
 
-    if not isinstance(data, dict) or set(data) != {'parts', 'items'}:
+    if not isinstance(data, dict) or not {'parts', 'items'} <= set(data) or not set(data) <= {'parts', 'items', 'groups', 'corrections'}:
         raise ValueError('Adjustments need parts and items objects.')
-    for section, allowed in [('parts', {'offset', 'rotate', 'scale', 'bind', 'hide_body'}), ('items', {'offset'})]:
+    for section, allowed in [('parts', {'offset', 'rotate', 'scale', 'bind', 'hide_body', 'occlusion'}), ('items', {'offset'})]:
         if not isinstance(data[section], dict):
             raise ValueError(f'{section} must be an object.')
         for name, fit in data[section].items():
@@ -34,12 +34,39 @@ def validate(data):
                     valid = number(value) and value > 0
                 elif key == 'bind':
                     valid = value in ('skinned', 'rigid')
+                elif key == 'occlusion':
+                    valid = value in ('clothing', 'body', 'none')
                 else:
                     valid = (isinstance(value, dict) and set(value) == {'enabled', 'outward', 'inward'}
                              and type(value['enabled']) is bool
                              and all(number(value[k]) and value[k] >= 0 for k in ('outward', 'inward')))
                 if not valid:
                     raise ValueError(f'Invalid {key} value.')
+    groups = data.get('groups', {})
+    if not isinstance(groups, dict) or any(not isinstance(k, str) or not isinstance(v, list) or
+            any(not isinstance(i, str) for i in v) or len(v) != len(set(v)) for k, v in groups.items()):
+        raise ValueError('Groups must contain unique item IDs.')
+    rules = data.get('corrections', [])
+    if not isinstance(rules, list): raise ValueError('Corrections must be a list.')
+    seen = set()
+    for rule in rules:
+        if not isinstance(rule, dict) or not {'target', 'fit'} <= set(rule) or not set(rule) <= {'target','key','action','direction','fit'}:
+            raise ValueError('Invalid correction fields.')
+        if rule['target'] not in ('pack','slot','group','item'): raise ValueError('Invalid correction target.')
+        if rule['target'] != 'pack' and (not isinstance(rule.get('key'), str) or not rule['key']):
+            raise ValueError('Correction target requires a key.')
+        if rule['target'] == 'group' and rule['key'] not in groups: raise ValueError('Unknown correction group.')
+        if rule['target'] == 'pack' and 'key' in rule: raise ValueError('Pack corrections do not have a key.')
+        for field, maximum in [('action',34),('direction',4)]:
+            if field in rule and (type(rule[field]) is not int or not 0 <= rule[field] <= maximum):
+                raise ValueError('Invalid correction ' + field)
+        identity = (rule['target'], rule.get('key'), rule.get('action'), rule.get('direction'))
+        if identity in seen: raise ValueError('Duplicate correction selector.')
+        seen.add(identity)
+        fit = rule['fit']
+        if not isinstance(fit, dict) or not set(fit) <= {'offset','rotate','scale','occlusion'}:
+            raise ValueError('Invalid correction fit.')
+        validate({'parts': {'correction': fit}, 'items': {}})
     return data
 
 

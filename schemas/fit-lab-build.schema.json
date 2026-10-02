@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Local lab build state",
+  "type":"object", "required":["state"],
+  "properties":{
+    "state":{"enum":["idle","building","complete","failed"]},"item":{"type":"string"},
+    "job":{"type":"string"},"review":{"type":"string"},"error":{"type":"string"},"unchanged":{"type":"boolean"}
+  },"additionalProperties":false,
+  "$defs":{
+    "request":{"type":"object","required":["item","mode","coverage","action"],"additionalProperties":false,"properties":{
+      "item":{"type":"string"},"mode":{"enum":["build","rebuild"]},"coverage":{"enum":["preview","action","full"]},"action":{"type":"integer","minimum":0,"maximum":34}
+    }},
+    "latest":{"type":"object","additionalProperties":{"type":"string","pattern":"^[a-zA-Z0-9]+$"}}
+  }
+}
