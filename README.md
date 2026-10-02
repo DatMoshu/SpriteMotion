@@ -2,6 +2,9 @@
 
 **Create new UO content:** the [Content studio](tools/uo-content/README.md) accepts text-configured item templates, pictures and 3D models, mounts equipment on the shared **UO_Model3D v13** rig, renders animations and exports VD plus classic-client import packages. Start with `launchers/editor/content-studio.bat`. This is the active item-authoring workflow; the reconstruction tools documented below remain available as historical research and annotation utilities.
 
+**Development status:** the tools are public; UO equipment rendering is still undergoing broader animation and
+in-game validation. See the [render acceptance and release roadmap](docs/render-release-roadmap.md).
+
 Reconstruct editable 3D characters and animations from existing 2D sprites, so
 artists can create compatible new animation frames, clothing, and equipment.
 

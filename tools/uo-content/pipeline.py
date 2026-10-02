@@ -30,6 +30,13 @@ def sha(path):
             h.update(b)
     return h.hexdigest()
 
+
+def render_fingerprint():
+    paths = [HERE/name for name in ('blender_build.py','fit_runtime.py','pack_fit.py')]
+    paths += [ROOT/'tools/fit-lab/fit_rules.py']
+    paths += [BACKEND/'pipeline'/name for name in ('render_uo_layer.py','uo_bind_item.py','uo_vd_writer.py')]
+    return hashlib.sha256(''.join(sha(path) for path in paths).encode()).hexdigest()
+
 def setup(source):
     source = Path(source).resolve()
     files = ['model/UO_Body_0x190.blend', 'pipeline/uo_bind_item.py',
@@ -161,6 +168,9 @@ def create_job(spec, asset=None):
         'procedural item template configured by text and controls')
     spec['backend'] = str(BACKEND)
     spec['backend_sha256'] = sha(BACKEND / 'model/UO_Body_0x190.blend')
+    spec['render_fingerprint'] = render_fingerprint()
+    spec['source_fingerprints'] = {str(Path(path).resolve()):sha(path) for path in
+        [*spec.get('source_files',[]), *([spec['palette']] if spec.get('palette') else [])]}
     spec['job'] = str(job)
     write_json(job / 'job.json', spec)
     write_json(job / 'status.json', dict(state='queued', name=spec['name']))

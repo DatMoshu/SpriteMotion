@@ -40,6 +40,12 @@ def rebuild_job(source, adjustments, selected=None):
     from adjustments import validate
     source = Path(source).resolve()
     spec = json.loads((source/'job.json').read_text())
+    if spec.get('backend_sha256') != pipeline.sha(pipeline.BACKEND/'model/UO_Body_0x190.blend'):
+        raise ValueError('The canonical model changed. Make a fresh build before rebuilding individual blocks.')
+    if spec.get('render_fingerprint') != pipeline.render_fingerprint():
+        raise ValueError('The renderer changed or this job predates renderer tracking. Make a fresh build first.')
+    if any(not Path(path).is_file() or pipeline.sha(path)!=digest for path,digest in spec.get('source_fingerprints',{}).items()):
+        raise ValueError('Source meshes or palette changed. Make a fresh build first.')
     document = validate(adjustments)
     original_blocks = vd_blocks(source/'item.vd')
     changed = changed_blocks(spec,document,original_blocks)

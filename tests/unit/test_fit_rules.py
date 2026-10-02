@@ -48,6 +48,9 @@ def test_browser_resolver_matches_build_resolver(tmp_path):
                         for target,key,filters in [('pack',None,{}),('slot','back',{'direction':3}),('group','g',{'action':9}),('item','i',{'action':9,'direction':3})]]}
     cases=[{'document':doc,'mapping':{'offset':[.01,0,0]},'item':{'id':item,'part':'P','slot':'back'},'action':a,'direction':d}
            for item in ('i','other') for a in (0,9) for d in range(8)]
+    doc['groups'].update({'Z':['i'],'a':['i']})
+    doc['corrections'].extend([{'target':'group','key':'Z','fit':{'occlusion':'none'}},
+                               {'target':'group','key':'a','fit':{'occlusion':'body'}}])
     fixture=tmp_path/'cases.json';fixture.write_text(json.dumps(cases))
     runner=tmp_path/'run.mjs'
     runner.write_text("import fs from 'node:fs'; import {resolveFit} from "+json.dumps((ROOT/'tools/fit-lab/web/fit-rules.mjs').as_uri())+"; console.log(JSON.stringify(JSON.parse(fs.readFileSync(process.argv[2],'utf8')).map(c=>resolveFit(c.document,c.mapping,c.item,c.action,c.direction))));")

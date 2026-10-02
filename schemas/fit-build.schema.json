@@ -3,6 +3,8 @@
   "title":"Fit-aware build settings extension",
   "type":"object",
   "properties":{
+    "render_fingerprint":{"type":"string"},
+    "source_fingerprints":{"type":"object","additionalProperties":{"type":"string"}},
     "rebuild":{"type":"object","required":["source_job","patch_job","blocks","unchanged_vd_blocks"],"properties":{
       "source_job":{"type":"string"},"patch_job":{"type":"string"},"blocks":{"type":"array"},
       "unchanged_vd_blocks":{"type":"object","additionalProperties":{"type":"string"}}

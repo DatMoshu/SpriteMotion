@@ -45,6 +45,10 @@ undergo the usual independent alpha/anchor validation. A failed revision stays u
 Job `rebuild` provenance records source/patch IDs, replaced blocks and hashes of untouched VD blocks. Mapping
 files are frozen in each new job so a partial rebuild cannot pick up unrelated mapping changes. The editable
 scene carries the latest base/bindings; job settings record the per-block corrections.
+Rebuilding refuses to mix versions when the canonical model, renderer code, source meshes or palette has changed;
+make a fresh build in that case. Jobs record `render_fingerprint` and `source_fingerprints` for this check.
+Rigid bindings do not receive the mesh-deforming push-out solver. Masking policy changes do not change the solver's
+collision regions for skinned clothes; newer renderers retain their separate worn-part holdout policy.
 
 ## Outputs and importing
 

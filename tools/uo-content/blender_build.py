@@ -343,7 +343,7 @@ execute_external('render_uo_layer.py', {
     'ONLY':[a.name for a in acts if int(a['uo_action']) in spec['actions']],
     'OUT_DIR':str(job/'render')+'/', 'VD_FILE':str(job/'%s.vd'),
     'ANCHOR':(128,192),
-    'BODY_GAP':0.0 if part in ('helm','weapon','shield','bow','quiver') else .006,
+    'BODY_GAP':0.0 if spec.get('rigid') or part in ('helm','weapon','shield','bow','quiver') else .006,
     'DESPECKLE':0, 'FILL_HOLES':0, 'MIN_PIECE':0,
 }, {'writer':writer, '_fit_pose':block_fit,
     '_selected_blocks':set(map(tuple,spec['blocks'])) if 'blocks' in spec else None})

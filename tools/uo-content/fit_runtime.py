@@ -56,10 +56,22 @@ class BlockFit:
         elif mode == 'none': bones = set()
         # Hidden body faces change the triangle count, so every cached triangle mask is rebuilt.
         mask = env['body_part_mask']
-        env['OCCLUDER_TRIS'] = mask(bones)
         if 'HIDER_TRIS' in env:
+            # Hiding must not alter the deformation solver's collision regions.
+            env['OCCLUDER_TRIS'] = mask(set(env['OCCLUDERS']))
             # Newer renderer: the holdout has its own mask, without the parts the item is skinned to.
             # An attachment is hidden by the torso even when it is bound to it.
-            env['HIDER_TRIS'] = mask(bones - env.get('WORN', set()) | (torso if mode == 'body' else set()))
-            if env.get('TORSO_TRIS') is not None: env['TORSO_TRIS'] = mask(torso)
+            env['HIDER_TRIS'] = mask(bones if mode == 'body' else bones - env.get('WORN', set()))
+            env.setdefault('_native_torso_enabled', env.get('TORSO_TRIS') is not None)
+            env['TORSO_TRIS'] = mask(torso) if mode != 'none' and env['_native_torso_enabled'] else None
+        else:
+            env['OCCLUDER_TRIS'] = mask(bones)
+            if '_unscoped_body_fix' not in env:
+                env['_unscoped_body_fix'] = env['body_fix']
+                def body_fix(a, i):
+                    saved = env['OCCLUDER_TRIS']
+                    env['OCCLUDER_TRIS'] = env['body_part_mask'](set(env['OCCLUDERS']))
+                    try: return env['_unscoped_body_fix'](a,i)
+                    finally: env['OCCLUDER_TRIS'] = saved
+                env['body_fix'] = body_fix
         self.report[f'{action},{direction}'] = {'fit':fit, 'occlusion':mode, 'hidden_body_faces':hidden}

@@ -39,6 +39,8 @@ button:disabled { opacity: .45; cursor: default; }
 #backups { max-width: 100%; }
 details { margin: 10px 0; } summary { cursor: pointer; color: var(--dim); }
 #assetDirectory { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); padding: 6px; }
+#groupName { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); padding: 6px; }
+#scopeLabel, #buildStatus { overflow-wrap: anywhere; }
 #assetStatus { overflow-wrap: anywhere; }
 #abJSON { max-height: 250px; overflow: auto; font-size: 11px; }
 #abImages { overflow: auto; max-height: 500px; }

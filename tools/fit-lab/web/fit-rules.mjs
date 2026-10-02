@@ -1,4 +1,9 @@
 export const storedDirection = direction => direction <= 4 ? direction : 8 - direction;
+function compareKeys(a,b) {
+  const left=Array.from(a, c=>c.codePointAt(0)), right=Array.from(b, c=>c.codePointAt(0));
+  for(let i=0;i<Math.min(left.length,right.length);i++) if(left[i]!==right[i]) return left[i]-right[i];
+  return left.length-right.length;
+}
 export function resolveFit(document, mapping, item, action = null, direction = null) {
   const base = {...mapping, ...(document.parts?.[item.part] || {})};
   const result = {offset: [...(base.offset || [0,0,0])], rotate: [...(base.rotate || [0,0,0])],
@@ -9,7 +14,7 @@ export function resolveFit(document, mapping, item, action = null, direction = n
   const ranks = {pack:0, slot:1, group:2, item:3};
   const rules = [...(document.corrections || [])].sort((a,b) => ranks[a.target]-ranks[b.target] ||
     (('action' in a)+('direction' in a))-(('action' in b)+('direction' in b)) ||
-    ('direction' in a)-('direction' in b) || (a.key || '').localeCompare(b.key || ''));
+    ('direction' in a)-('direction' in b) || compareKeys(a.key || '',b.key || ''));
   for (const rule of rules) {
     if (rule.target === 'slot' && rule.key !== item.slot) continue;
     if (rule.target === 'item' && rule.key !== item.id) continue;

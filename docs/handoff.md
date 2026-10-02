@@ -32,6 +32,19 @@ at run time (included in the JSON); they are not final Blender render validation
 
 ## Scoped corrections, body masking and lab builds
 
+Latest finish checks (2026-10-02): backpack masking off/on rendered 125 frames each across actions 0/4/9/22/25
+and five stored directions on the updated renderer. Both exports passed alpha/anchor validation with no clipped
+or empty frames. After separating holdout policy from push-out, the masked render only removes covered pixels
+(zero newly visible pixels). Rigid items no longer receive mesh-deforming push-out. Evidence:
+`workspace/back-occlusion-jobs.json`, `workspace/back-occlusion-stats.json`, `workspace/back-occlusion-comparison.png`.
+A skinned chest run (actions 4/9) exercised pack, slot, group, legacy item offset and pose-specific rotation together
+with body hiding; see `workspace/scoped-chest-job.txt`. A current-renderer two-block rebuild changed only (4,3), kept
+(4,0) byte-identical and left the original job untouched; see `workspace/scoped-rebuild-result.txt`.
+Partial rebuilds now track renderer/source fingerprints and refuse a mixed-version rebuild after model, renderer,
+mesh or palette changes. The release/acceptance plan is [render-release-roadmap.md](render-release-roadmap.md).
+Final regression run: 86 pytest tests passed, one client-dependent test skipped; 15 outfit-lab tests and two Node
+history tests passed. The production adjustment file's hash was unchanged across the final lab restart.
+
 `lab-adjustments.json` gained optional `groups` and `corrections` (pack/slot/group/item, optionally per action and/or
 stored direction; mirrored directions share). Lab and build resolve them with the same rules
 (`tools/fit-lab/fit_rules.py`, `web/fit-rules.mjs`, parity-tested). `occlusion` (clothing/body/none) picks which body
@@ -46,8 +59,8 @@ report shows +5 cm only in direction 3 and the group's +2 cm in all five; item-o
 the body except in the back view. Changing only the direction-3 correction and rebuilding re-rendered block (9,3)
 alone; the other four VD blocks were byte-identical and the revision validated.
 
-Not verified: a full 35-action lab build, a rebuild whose base slot fit changed, slot/pack-scoped corrections in a
-Blender build. Each rebuild leaves its patch job in `jobs/` (listed as a partial job by the studio). Studio pack
+Not verified: a full 35-action lab build or a rebuild whose base slot fit changed. Each rebuild leaves its patch job
+in `jobs/` (listed as a partial job by the studio). Studio pack
 jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
 corrections.
 

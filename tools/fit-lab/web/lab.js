@@ -370,7 +370,7 @@ function buildScopedPanel() {
   const label = `${selector.target}: ${selector.key || 'all items'} · animation ${selector.action ?? 'all'} · direction ${selector.direction ?? 'all'}`;
   $('scopeLabel').textContent = label + ('direction' in selector ? ' (mirrored partner shares this correction)' : '') + ' · deltas from base fit';
   box.replaceChildren(); box.inert = selector.target === 'group' && !selector.key;
-  const commit = () => persistence.commit(state.adjust, label);
+  const commit = () => { persistence.commit(state.adjust, label); $('removeCorrection').disabled=!selectedCorrection(); };
   const addSlider = (name,value,min,max,step,unit,update) => {
     slider(box,name,value,min,max,step,unit,v => { const rule=selectedCorrection(true); if(rule) {update(rule.fit,v); changed();} });
     box.lastElementChild.querySelector('input').onchange = commit;
