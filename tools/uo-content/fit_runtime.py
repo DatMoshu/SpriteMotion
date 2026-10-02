@@ -50,8 +50,16 @@ class BlockFit:
             hidden = pack_fit.hide_body_under(self.body,self.objects,hide.get('outward',.02),hide.get('inward',.01))
         self.rig.data.pose_position=old_pose; self.rig['uo_direction']=old_dir; self.rig.update_tag()
         bpy.context.view_layer.update()
+        torso = {'pelvis','spine','chest','neck','clavicle'}
         bones = set(env['OCCLUDERS'])
-        if mode == 'body': bones |= {'pelvis','spine','chest','neck'}
+        if mode == 'body': bones |= torso
         elif mode == 'none': bones = set()
-        env['OCCLUDER_TRIS'] = env['body_part_mask'](bones)
+        # Hidden body faces change the triangle count, so every cached triangle mask is rebuilt.
+        mask = env['body_part_mask']
+        env['OCCLUDER_TRIS'] = mask(bones)
+        if 'HIDER_TRIS' in env:
+            # Newer renderer: the holdout has its own mask, without the parts the item is skinned to.
+            # An attachment is hidden by the torso even when it is bound to it.
+            env['HIDER_TRIS'] = mask(bones - env.get('WORN', set()) | (torso if mode == 'body' else set()))
+            if env.get('TORSO_TRIS') is not None: env['TORSO_TRIS'] = mask(torso)
         self.report[f'{action},{direction}'] = {'fit':fit, 'occlusion':mode, 'hidden_body_faces':hidden}

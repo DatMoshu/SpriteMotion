@@ -51,13 +51,24 @@ Blender build. Each rebuild leaves its patch job in `jobs/` (listed as a partial
 jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
 corrections.
 
-## UO_Model3D v2 (not yet integrated)
+## UO_Model3D 2026-10 update (installed)
 
-The upstream v2 archive (unpacked locally under `workspace/uo-model-review/v2/`) changes the body `.blend`,
-`render_uo_layer.py`, `uo_bind_item.py`, `vdtool.py`, and adds body shape/pose fitting, lighting and weapon tooling.
-Its renderer has a native 256x256 canvas with anchor (128,192), so `blender_build.py`'s `Canvas` padding must not run
-on it, and its holdout uses `HIDER_TRIS` (plus `TORSO_TRIS` for cloaks) where v13 used `OCCLUDER_TRIS`; the
-`occlusion` hook in `fit_runtime.py` must set the v2 names.
+The upstream update (unpacked under `workspace/uo-model-review/v2/`, installed with `pipeline.py setup`) changes the
+body `.blend` (same 13,380-vertex topology, four new weapon bones under the hands: 112 bones), `render_uo_layer.py`,
+`uo_bind_item.py`, `vdtool.py`, and adds body shape/pose fitting, lighting and weapon tooling. Its renderer has a
+native 256x256 canvas with anchor (128,192) and cuts items along the original body outline itself.
+`blender_build.py` now skips its canvas padding when the renderer defines `CANVAS` and accepts 108 or 112 bones;
+`fit_runtime.py` rebuilds `HIDER_TRIS` (the holdout mask, minus parts the item is skinned to) and `TORSO_TRIS` as
+well as `OCCLUDER_TRIS` per block, because hidden body faces change the triangle count. Body masking now includes
+the clavicles in the torso set. The fit lab was re-exported from the new model (reference, body, 72 items).
+
+Verified 2026-10-02 on the new model: the Elven back item (action 9, scoped test corrections) built and validated with
+the same canvas/anchor and per-block fits as on v13, frames within two pixels of the v13 build; the Elven torso
+(actions 0/4, saved fits, hide-body on) hid 655 faces per block and validated, frames within ±2% pixels of a v13
+build of the same job (shading differs: new lighting); a non-pack template chest (actions 4/9) built and validated.
+Not verified: full 35-action builds, mounted actions, cloaks (`TORSO_TRIS`), weapons on the new weapon bones.
+Rollback: `pipeline.py setup --source workspace/uo-model-review/main`, and restore the lab export from
+`workspace/uo-model-review/fitlab-synty-sidekick-v13/`.
 
 ## Verified in the takeover check
 

@@ -14,8 +14,9 @@ backend, job = Path(spec['backend']), Path(spec['job'])
 bpy.ops.wm.open_mainfile(filepath=str(backend / 'model/UO_Body_0x190.blend'), load_ui=False, use_scripts=False)
 bpy.context.preferences.filepaths.save_version = 0
 rig, body = bpy.data.objects['UO_Rig'], bpy.data.objects['UO_Body']
-if len(rig.data.bones) != 108 or body.data.shape_keys:
-    raise ValueError('Expected the v13 108-bone model without corrective shape keys.')
+# v13 has 108 bones; the 2026-10 update adds four weapon bones under the hands.
+if len(rig.data.bones) not in (108, 112) or body.data.shape_keys:
+    raise ValueError('Expected the v13 108/112-bone model without corrective shape keys.')
 rig.animation_data.action = None
 rig['uo_direction'] = 0
 rig.rotation_euler = (0, 0, 0)
@@ -46,6 +47,8 @@ def execute_external(name, overrides=None, injected=None):
                             break
                 return node
         tree = Blocks().visit(tree)
+        # The 2026-10 renderer has its own 256x256 CANVAS with anchor (128,192); only older ones are padded here.
+        native = any(isinstance(n, ast.Assign) and ast.unparse(n.targets[0]) == 'CANVAS' for n in tree.body)
         # Pad the native viewport, without changing pixels/metre or perspective.
         # Keep compressed source image decoding at its original 136x120 dimensions.
         class Canvas(ast.NodeTransformer):
@@ -53,7 +56,7 @@ def execute_external(name, overrides=None, injected=None):
                 if type(node.value) is int and node.value in (120,136):
                     return ast.copy_location(ast.Constant(256),node)
                 return node
-        for node in tree.body:
+        for node in [] if native else tree.body:
             if isinstance(node,ast.FunctionDef) and node.name in ('raster','body_occlusion'):
                 Canvas().visit(node)
             if isinstance(node,ast.Assign):
@@ -68,7 +71,7 @@ def execute_external(name, overrides=None, injected=None):
                     if isinstance(child,ast.Assign) and any(isinstance(t,ast.Subscript) and
                         isinstance(t.value,ast.Name) and t.value.id=='HORSE_MASKS' for t in child.targets):
                         child.value=ast.parse('np.pad(bits.reshape(120,136).astype(bool), ((106,30),(60,60)))',mode='eval').body
-        for node in tree.body:
+        for node in [] if native else tree.body:
             if isinstance(node,ast.FunctionDef) and node.name=='original':
                 for child in ast.walk(node):
                     if isinstance(child,ast.Return) and isinstance(child.value,ast.Call):
