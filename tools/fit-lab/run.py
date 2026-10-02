@@ -16,6 +16,8 @@ import subprocess
 import sys
 import webbrowser
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
+from adjustments import AdjustmentStore, ConflictError
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
@@ -47,29 +49,59 @@ def export(args):
 def serve(args):
     d = data_dir(args.pack)
     adjust = sidecar() / 'packs' / args.pack / 'lab-adjustments.json'
+    store = AdjustmentStore(adjust)
 
     class Handler(http.server.SimpleHTTPRequestHandler):
+        extensions_map = {**http.server.SimpleHTTPRequestHandler.extensions_map, '.mjs': 'text/javascript'}
+
+        def end_headers(self):
+            self.send_header('Cache-Control', 'no-store')
+            super().end_headers()
         def translate_path(self, path):
-            path = path.split('?')[0]
-            if path.startswith('/data/'): return str(d / path[6:])
-            return str(HERE / 'web' / (path.lstrip('/') or 'index.html'))
+            path = unquote(urlsplit(path).path)
+            root = d if path.startswith('/data/') else HERE / 'web'
+            relative = path[6:] if path.startswith('/data/') else path.lstrip('/') or 'index.html'
+            target = (root / relative).resolve()
+            return str(target) if target.is_relative_to(root.resolve()) else str(root / '__not_found__')
 
         def do_GET(self):
-            if self.path.startswith('/api/mapping'):
+            path = urlsplit(self.path).path
+            if path == '/api/mapping':
                 manifest = json.loads((d / 'manifest.json').read_text())
                 mapping = Path(manifest.get('mapping') or '')
                 return self.reply(200, mapping.read_bytes()) if mapping.is_file() else self.reply(404, b'{}')
-            if self.path.startswith('/api/adjustments'):
-                body = adjust.read_bytes() if adjust.exists() else b'{"parts": {}, "items": {}}'
-                return self.reply(200, body)
+            try:
+                if path == '/api/state':
+                    return self.reply(200, json.dumps(store.state()).encode())
+                if path == '/api/adjustments':
+                    return self.reply(200, json.dumps(store.state()['adjustments']).encode())
+                if path.startswith('/api/backups/'):
+                    return self.reply(200, json.dumps(store.backup(path.removeprefix('/api/backups/'))).encode())
+            except FileNotFoundError as e:
+                return self.reply(404, json.dumps({'error': str(e)}).encode())
+            except (OSError, ValueError) as e:
+                return self.reply(500, json.dumps({'error': str(e)}).encode())
             return super().do_GET()
 
         def do_POST(self):
-            if not self.path.startswith('/api/adjustments'): return self.reply(404, b'{}')
-            data = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
-            adjust.parent.mkdir(parents=True, exist_ok=True)
-            adjust.write_text(json.dumps(data, indent=1) + '\n', encoding='utf-8')
-            self.reply(200, json.dumps({'saved': str(adjust)}).encode())
+            if urlsplit(self.path).path != '/api/adjustments': return self.reply(404, b'{}')
+            # JSON-only requests prevent cross-origin forms from changing local fits.
+            if self.headers.get_content_type() != 'application/json':
+                return self.reply(415, b'{"error":"Reload the lab before saving."}')
+            try:
+                size = int(self.headers.get('Content-Length', '0'))
+                if not 0 < size <= 2_000_000: raise ValueError('Invalid request size.')
+                data = json.loads(self.rfile.read(size))
+                if not isinstance(data, dict) or set(data) != {'adjustments', 'base_revision'}:
+                    raise ValueError('Expected adjustments and base_revision; reload the lab.')
+                result = store.save(data['adjustments'], data['base_revision'])
+                self.reply(200, json.dumps(result).encode())
+            except ConflictError as e:
+                self.reply(409, json.dumps({'error': str(e)}).encode())
+            except (ValueError, TypeError) as e:
+                self.reply(400, json.dumps({'error': str(e)}).encode())
+            except OSError as e:
+                self.reply(500, json.dumps({'error': str(e)}).encode())
 
         def reply(self, code, body):
             self.send_response(code); self.send_header('Content-Type', 'application/json')

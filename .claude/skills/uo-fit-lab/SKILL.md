@@ -10,5 +10,8 @@ live in the local sidecar (`SPRITEMOTION_SIDECAR`, default `../SpriteMotion-Side
    `python tools/fit-lab/run.py export --pack <pack>` and `python tools/fit-lab/run.py serve --pack <pack>`.
 2. In the lab, change one slot at a time. Run **Measure slot** before and after: keep a change only when the slot
    total of poke pixels drops without the contact sheet looking worse. Check several actions and directions.
-3. **Save adjustments**, regenerate the mapping (`make_mapping.py` merges `lab-adjustments.json`), then rebuild a
+3. Adjustments autosave; confirm **Saved to disk** (or click **Save adjustments**). Undo/redo and the History list
+   recover earlier edits; **Last three saved versions** restores disk backups as undoable edits. Larger previews can
+   animate and cycle directions independently of the main viewport; pause them to compare the exact same pose.
+   Regenerate the mapping (`make_mapping.py` merges `lab-adjustments.json`), then rebuild a
    preview job and compare its contact sheet. Report numbers, not impressions.

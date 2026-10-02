@@ -12,12 +12,38 @@ python tools/fit-lab/run.py serve --pack <pack>            # http://127.0.0.1:87
 Or `launchers\editor\fit-lab.bat <pack>` (or set `SPRITEMOTION_FIT_PACK`). Data goes to `workspace/ultima-online/fit-lab/<pack>/`. Exports are reused;
 `--force` redoes them.
 
+## History, recovery and previews
+
+Adjustments autosave after 800 ms of inactivity; **Save adjustments** saves immediately. Each edit is also cached in
+this browser for crash recovery. A slider drag is one history step. **Ctrl+Z** undoes; **Ctrl+Y** or **Ctrl+Shift+Z**
+redoes (Command also works on macOS). The History list jumps to any of the last 100 steps. Editing after undo discards
+the redo branch. Selection, playback and camera changes are not fit edits. Browser history is scoped to this pack and
+server; it survives reloads unless browser storage is cleared or unavailable.
+
+Disk saves atomically replace `lab-adjustments.json` and retain the previous three saved states in
+`lab-adjustments-backups/`. **Restore backup** adds an undoable edit and autosaves it. Backups use the same
+`schemas/fit-adjustments.schema.json` format as the current file. Unchanged saves do not rotate backups.
+Failed writes leave the current file intact.
+If another tab or tool changes the disk file, saving pauses: choose **Use disk version** or **Keep my recovered edits**.
+The latter deliberately replaces the latest disk version, which is backed up first. The save status reports disk
+failures and unavailable browser recovery; do not close with pending changes if browser storage is unavailable.
+
+The local API exposes `GET /api/state` as `{adjustments, revision, backups}`; each backup has `id` and `saved_at`.
+`GET /api/backups/<id>` reads one backup. `POST /api/adjustments` takes `{adjustments, base_revision}` and returns
+the new state; a stale revision returns HTTP 409 without writing. Revisions hash the canonical JSON content.
+The existing `GET /api/adjustments` still returns the plain adjustment document.
+
+Preview cards default to 2× native size with pixelated scaling (up to 4×). **Animate previews** plays their frames
+independently of the main viewport; **Cycle directions** advances every two seconds. Pause either control separately.
+Choosing a direction stops cycling and selects it for both views. Scrubbing the main frame also positions the preview
+frame. These are live fit-lab camera renders, not final Blender output; the same holdout-metric limitations apply.
+
 ## In the lab
 
 - **Left:** slot and its items. Tick items to show them in 3D; click one to edit its slot.
 - **Centre:** the body through the UO camera (drag to orbit, **UO camera** resets), action, direction 0–7
-  (5–7 mirrored like the client), frame, play. Below it, every item of the slot rendered at UO size, 136×120, for the
-  current pose. Magenta marks body pixels poking through.
+  (5–7 mirrored like the client), frame, play. Below it, scroll across enlarged 136×120 previews of every item in the
+  slot, with independent animation and direction cycling. Magenta marks body pixels poking through.
 - **Right:**
   - Slot fit: offset, rotation, scale, skinned or rigid binding, plus an offset for one item only.
   - Hide body under clothes: on/off, outward and inward distance.

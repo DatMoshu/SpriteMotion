@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fit lab adjustments (also used by each backup)",
+  "type": "object",
+  "required": ["parts", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "parts": {"type": "object", "additionalProperties": {"$ref": "#/$defs/fit"}},
+    "items": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "properties": {"offset": {"$ref": "#/$defs/vector"}}}}
+  },
+  "$defs": {
+    "vector": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+    "fit": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "offset": {"$ref": "#/$defs/vector"}, "rotate": {"$ref": "#/$defs/vector"},
+        "scale": {"type": "number", "exclusiveMinimum": 0},
+        "bind": {"enum": ["skinned", "rigid"]},
+        "hide_body": {"type": "object", "additionalProperties": false, "required": ["enabled", "outward", "inward"], "properties": {
+          "enabled": {"type": "boolean"}, "outward": {"type": "number", "minimum": 0}, "inward": {"type": "number", "minimum": 0}
+        }}
+      }
+    }
+  }
+}

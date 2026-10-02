@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { computeBoundsTree } from 'three-mesh-bvh';
+import { FitPersistence } from './persistence.js';
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 
 const $ = id => document.getElementById(id);
@@ -19,6 +20,8 @@ const state = { manifest: null, mapping: null, adjust: { parts: {}, items: {} },
 const items = new Map();                                   // id -> loaded item
 const hiddenCache = new Map();
 const loader = new GLTFLoader();
+let persistence, measuring = false, slotRequest = 0;
+const preview = { frame: 0, dir: 3, playing: true, cycling: true, dirty: true, lastFrame: 0, lastDir: 0 };
 
 // ---------- scene ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
@@ -32,6 +35,7 @@ const view = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
 const uoCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
 const controls = new OrbitControls(view, renderer.domElement);
 const target = new THREE.WebGLRenderTarget(W, H);
+target.texture.colorSpace = THREE.SRGBColorSpace; // readback pixels should match the visible viewport's brightness
 const pixels = new Uint8Array(W * H * 4);
 const flat = c => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide });
 const RED = flat(0xff0000), GREEN = flat(0x00ff00);
@@ -228,6 +232,7 @@ function noScale(m) { const p = new THREE.Vector3(), q = new THREE.Quaternion(),
 // ---------- offscreen UO-camera renders ----------
 function renderTarget() { renderer.setRenderTarget(target); renderer.clear(); renderer.render(scene, uoCam); renderer.readRenderTargetPixels(target, 0, 0, W, H, pixels); renderer.setRenderTarget(null); return pixels; }
 function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
+  const bodyIndexBefore = bodyMesh.geometry.index;
   const keep = []; scene.traverse(o => { if (o.isMesh) { keep.push([o, o.visible, o.material]); o.visible = false; } });
   const rigid = fitFor(item.info).bind === 'rigid', meshes = rigid ? item.rigid : item.skinned;
   meshes.forEach(m => { m.visible = true; if (mode !== 'look') m.material = GREEN; });
@@ -237,6 +242,7 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   for (const [o, v, m] of keep) { o.visible = v; o.material = m; }
   meshes.forEach((m, k) => m.material = item.parts[k].material);
   bodyMeasure.visible = false;
+  bodyMesh.geometry.setIndex(bodyIndexBefore);
   return out;
 }
 function pokeCount(item) {
@@ -250,15 +256,19 @@ function slider(parent, label, value, min, max, step, unit, onChange) {
   const row = document.createElement('div'); row.className = 'slider';
   row.innerHTML = `<label>${label}</label><input type="range" min="${min}" max="${max}" step="${step}" value="${value}"><span>${(+value).toFixed(step < 1 ? 1 : 0)}${unit}</span>`;
   const input = row.querySelector('input'), out = row.querySelector('span');
+  input.setAttribute('aria-label', label);
   input.oninput = () => { out.textContent = (+input.value).toFixed(step < 1 ? 1 : 0) + unit; onChange(+input.value); };
+  input.onchange = () => record(label);
   parent.appendChild(row);
 }
 function part() { return state.adjust.parts[state.selected.part] ??= {}; }
+function record(label) { persistence?.commit(state.adjust, `${state.slot}: ${label}`); }
 function changed() {
   hiddenCache.clear();
-  for (const it of items.values()) if (it.info.part === state.selected?.part) applyFit(it);
+  for (const it of items.values()) applyFit(it);
   for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
   updateBody(); drawSheet();
+  persistence?.edit(state.adjust);
 }
 function buildPanels() {
   const info = state.selected; if (!info) return;
@@ -270,25 +280,28 @@ function buildPanels() {
   slider(fit, 'Scale', f.scale * 100, 80, 125, 1, '%', v => { part().scale = v / 100; changed(); });
   const bind = document.createElement('label');
   bind.innerHTML = `Binding <select><option value="skinned">skinned (deforms)</option><option value="rigid">rigid (follows one bone)</option></select>`;
-  bind.querySelector('select').value = f.bind; bind.querySelector('select').onchange = e => { part().bind = e.target.value; changed(); };
+  bind.querySelector('select').value = f.bind; bind.querySelector('select').onchange = e => { part().bind = e.target.value; changed(); record('Binding'); };
   fit.appendChild(bind);
   const sub = document.createElement('p'); sub.className = 'sub'; sub.textContent = `This item only (${info.id}):`; fit.appendChild(sub);
   ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Item ' + ax, f.itemOffset[i] * 100, -5, 5, 0.1, ' cm', v => {
     const o = [...fitFor(info).itemOffset]; o[i] = v / 100; (state.adjust.items[info.id] ??= {}).offset = o; changed(); }));
   const on = document.createElement('label');
   on.innerHTML = `<input type="checkbox" ${f.hide.enabled ? 'checked' : ''}> Hide body under this slot`;
-  on.querySelector('input').onchange = e => { part().hide_body = { ...fitFor(info).hide, enabled: e.target.checked }; changed(); };
+  on.querySelector('input').onchange = e => { part().hide_body = { ...fitFor(info).hide, enabled: e.target.checked }; changed(); record('Hide body'); };
   hide.appendChild(on);
   slider(hide, 'Outward', f.hide.outward * 100, 0, 8, 0.1, ' cm', v => { part().hide_body = { ...fitFor(info).hide, outward: v / 100 }; changed(); });
   slider(hide, 'Inward', f.hide.inward * 100, 0, 5, 0.1, ' cm', v => { part().hide_body = { ...fitFor(info).hide, inward: v / 100 }; changed(); });
 }
 async function selectSlot(slot) {
-  state.slot = slot; const list = state.manifest.items.filter(i => i.slot === slot);
+  const request = ++slotRequest;
+  const list = state.manifest.items.filter(i => i.slot === slot);
   $('slotInfo').textContent = `${list.length} items · part ${list[0]?.part}`;
   await Promise.all(list.map(loadItem));
+  if (request !== slotRequest) return;
+  state.slot = slot;
   state.shown = new Set([list[0].id]); state.selected = list[0];
   renderItems(); for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
-  buildPanels(); updateBody(); drawSheet(); renderMeasureTable();
+  buildPanels(); updateBody(); buildSheet(); drawSheet(); renderMeasureTable();
 }
 function renderItems() {
   const box = $('items'); box.innerHTML = '';
@@ -300,27 +313,41 @@ function renderItems() {
     box.appendChild(row);
   }
 }
-let sheetTimer;
-function drawSheet() {
-  clearTimeout(sheetTimer);
-  sheetTimer = setTimeout(() => {
-    const mirror = setPose(state.action, state.frame, state.dir), sheet = $('sheet'); sheet.innerHTML = '';
-    for (const info of state.manifest.items.filter(i => i.slot === state.slot)) {
+function drawSheet() { preview.dirty = true; }
+const previewCards = new Map();
+function buildSheet() {
+  previewCards.clear(); $('sheet').replaceChildren();
+  for (const info of state.manifest.items.filter(i => i.slot === state.slot)) {
+    const figure = document.createElement('figure'), canvas = document.createElement('canvas'), caption = document.createElement('figcaption');
+    canvas.width = W; canvas.height = H; canvas.setAttribute('aria-label', info.id + ' live preview');
+    figure.title = info.id; figure.append(canvas, caption); $('sheet').appendChild(figure);
+    caption.textContent = info.family || info.id;
+    previewCards.set(info.id, { canvas, caption, info });
+  }
+}
+function renderSheet() {
+    const mirror = setPose(state.action, preview.frame, preview.dir);
+    const bounds = $('sheet').getBoundingClientRect();
+    for (const { info, canvas: cv, caption } of previewCards.values()) {
+      const rect = cv.getBoundingClientRect();
+      if (rect.right < bounds.left || rect.left > bounds.right) continue;
       const it = items.get(info.id); if (!it) continue;
       const look = soloRender(it, 'look'), { n, where } = pokeCount(it);
       for (const i of where) look.set([255, 61, 242, 255], 4 * i);
-      const cv = document.createElement('canvas'); cv.width = W; cv.height = H; if (mirror) cv.classList.add('mirror');
+      cv.classList.toggle('mirror', mirror);
       const img = new ImageData(W, H);
       for (let y = 0; y < H; y++) img.data.set(look.subarray((H - 1 - y) * W * 4, (H - y) * W * 4), y * W * 4);
       cv.getContext('2d').putImageData(img, 0, 0);
-      const fig = document.createElement('figure'); fig.appendChild(cv);
-      fig.insertAdjacentHTML('beforeend', `<figcaption>${info.family || info.id}<br>${n} poke px</figcaption>`);
-      sheet.appendChild(fig);
+      caption.textContent = `${info.family || info.id} · ${n} poke px`;
     }
-    updateBody(); setPose(state.action, state.frame, state.dir);
-  }, 120);
+    $('previewPose').textContent = `Direction ${preview.dir} · frame ${preview.frame + 1}/${state.manifest.actions[state.action].frames}`;
+    setPose(state.action, state.frame, state.dir); preview.dirty = false;
 }
 async function measure() {
+  if (measuring) return;
+  measuring = true; persistence.suspended = true;
+  const panels = ['left', 'right', 'bar', 'previewBar']; panels.forEach(id => $(id).inert = true);
+  try {
   const acts = [...document.querySelectorAll('#measureActions input:checked')].map(i => +i.value);
   const list = state.manifest.items.filter(i => i.slot === state.slot).map(i => items.get(i.id));
   const totals = Object.fromEntries(list.map(it => [it.info.id, 0]));
@@ -333,6 +360,11 @@ async function measure() {
   for (const id in totals) { state.baseline[id] ??= totals[id]; state.results[id] = totals[id]; }
   $('status').textContent = `measured ${jobs} poses × ${list.length} items`;
   renderMeasureTable(); setPose(state.action, state.frame, state.dir);
+  } catch (error) { $('status').textContent = 'Measurement failed: ' + error.message; }
+  finally {
+    measuring = false; persistence.suspended = false; panels.forEach(id => $(id).inert = false);
+    updateBody(); setPose(state.action, state.frame, state.dir); drawSheet();
+  }
 }
 function renderMeasureTable() {
   const rows = state.manifest.items.filter(i => i.slot === state.slot && i.id in state.results);
@@ -353,27 +385,51 @@ function frameUI() {
 async function main() {
   state.manifest = await getJSON('data/manifest.json');
   state.mapping = await getJSON('api/mapping').catch(() => null);
-  state.adjust = await getJSON('api/adjustments');
-  state.adjust.parts ??= {}; state.adjust.items ??= {};
+  const saved = await getJSON('api/state');
+  persistence = new FitPersistence(`fit-lab:${location.origin}:${state.manifest.pack}`, saved, value => {
+    state.adjust = value; buildPanels(); changed();
+  });
+  state.adjust = persistence.value;
   $('packName').textContent = `${state.manifest.pack} · ${state.manifest.items.length} items · ${state.manifest.model}`;
   setupCameras(); await loadBody();
   const slots = [...new Set(state.manifest.items.map(i => i.slot))];
   $('slot').innerHTML = slots.map(s => `<option>${s}</option>`).join(''); $('slot').onchange = e => selectSlot(e.target.value);
   $('action').innerHTML = state.manifest.actions.map((a, i) => `<option value="${i}">${a.id} ${a.name.replace(/^\d+_/, '')}</option>`).join('');
-  $('action').onchange = e => { state.action = +e.target.value; frameUI(); };
+  $('action').onchange = e => { state.action = +e.target.value; preview.frame = 0; frameUI(); };
   $('dirs').innerHTML = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].map((n, d) => `<button title="direction ${d}">${d}</button>`).join('');
-  [...$('dirs').children].forEach((b, d) => b.onclick = () => { state.dir = d; frameUI(); });
-  $('frame').oninput = e => { state.frame = +e.target.value; frameUI(); };
+  [...$('dirs').children].forEach((b, d) => b.onclick = () => {
+    state.dir = preview.dir = d; preview.cycling = false; $('previewCycle').checked = false; frameUI();
+  });
+  $('frame').setAttribute('aria-label', 'Main frame');
+  $('frame').oninput = e => { state.frame = preview.frame = +e.target.value; frameUI(); };
   $('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; };
   $('uoView').onclick = resetView; $('showHidden').onchange = updateBody;
   $('measureActions').innerHTML = state.manifest.actions.map((a, i) => `<label><input type="checkbox" value="${i}" ${[0, 2, 4, 9, 16].includes(a.id) ? 'checked' : ''}>${a.id}</label>`).join('');
   $('measure').onclick = measure;
-  $('save').onclick = async () => { const r = await fetch('api/adjustments', { method: 'POST', body: JSON.stringify(state.adjust) }); $('status').textContent = 'saved ' + (await r.json()).saved; };
-  $('reset').onclick = () => { delete state.adjust.parts[state.selected.part]; buildPanels(); changed(); };
+  $('save').onclick = () => persistence.save();
+  $('reset').onclick = () => { delete state.adjust.parts[state.selected.part]; buildPanels(); changed(); record('Reset slot'); };
+  $('undo').onclick = () => persistence.undo(); $('redo').onclick = () => persistence.redo();
+  document.addEventListener('keydown', e => {
+    if (!(e.ctrlKey || e.metaKey) || e.altKey || measuring) return;
+    if (e.target.isContentEditable || e.target.matches('textarea,input:not([type=range]):not([type=checkbox])')) return;
+    const key = e.key.toLowerCase();
+    if (key === 'z' || key === 'y') { e.preventDefault(); key === 'y' || e.shiftKey ? persistence.redo() : persistence.undo(); }
+  });
+  $('previewPlay').onchange = e => { preview.playing = e.target.checked; preview.lastFrame = performance.now(); };
+  $('previewCycle').onchange = e => { preview.cycling = e.target.checked; preview.lastDir = performance.now(); };
+  $('previewSize').onchange = e => { $('sheet').style.setProperty('--preview-scale', e.target.value); drawSheet(); };
+  $('sheet').onscroll = drawSheet;
+  new ResizeObserver(() => { resize(); drawSheet(); }).observe($('view'));
   await selectSlot(slots[0]); frameUI();
+  ['left', 'right', 'bar', 'previewBar'].forEach(id => $(id).inert = false);
   let last = 0;
   renderer.setAnimationLoop(t => {
+    if (measuring || document.hidden) return;
+    const count = state.manifest.actions[state.action].frames;
+    if (preview.playing && t - preview.lastFrame >= 125) { preview.lastFrame = t; preview.frame = (preview.frame + 1) % count; preview.dirty = true; }
+    if (preview.cycling && t - preview.lastDir >= 2000) { preview.lastDir = t; preview.dir = (preview.dir + 1) % 8; preview.dirty = true; }
     if (state.playing && t - last > 125) { last = t; state.frame = (state.frame + 1) % state.manifest.actions[state.action].frames; $('frame').value = state.frame; $('frameLabel').textContent = `${state.frame + 1}/${state.manifest.actions[state.action].frames}`; setPose(state.action, state.frame, state.dir); }
+    if (preview.dirty) renderSheet();
     renderer.render(scene, view);
   });
 }

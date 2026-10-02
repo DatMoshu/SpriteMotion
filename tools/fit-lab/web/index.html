@@ -14,7 +14,7 @@
 </script>
 </head>
 <body>
-<aside id="left">
+<aside id="left" inert>
   <h1>Fit Lab</h1>
   <p class="sub" id="packName"></p>
   <label>Slot <select id="slot"></select></label>
@@ -23,7 +23,7 @@
 </aside>
 <main>
   <div id="view"></div>
-  <div id="bar">
+  <div id="bar" inert>
     <label>Action <select id="action"></select></label>
     <span id="dirs"></span>
     <input id="frame" type="range" min="0" max="0" value="0">
@@ -32,9 +32,25 @@
     <button id="uoView" title="Reset to the UO camera">UO camera</button>
     <label><input id="showHidden" type="checkbox"> show hidden faces</label>
   </div>
-  <div id="sheetWrap"><h2>Across the slot <span class="sub">(UO camera, 136×120, magenta = body pokes through)</span></h2><div id="sheet"></div></div>
+  <div id="sheetWrap">
+    <h2>Live slot previews</h2>
+    <div id="previewBar" inert>
+      <label><input id="previewPlay" type="checkbox" checked> Animate previews</label>
+      <label><input id="previewCycle" type="checkbox" checked> Cycle directions</label>
+      <label>Preview size <select id="previewSize"><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option></select></label>
+      <span id="previewPose" class="sub"></span>
+    </div>
+    <p class="sub">Live UO-camera fit preview · magenta = body poke pixels · final Blender rendering may differ</p>
+    <div id="sheet"></div>
+  </div>
 </main>
-<aside id="right">
+<aside id="right" inert>
+  <h2>History <span class="sub" id="historyCount"></span></h2>
+  <div class="row"><button id="undo" title="Ctrl+Z" disabled>Undo</button><button id="redo" title="Ctrl+Y / Ctrl+Shift+Z" disabled>Redo</button></div>
+  <details><summary>Change history</summary><div id="history" aria-label="Change history"></div></details>
+  <p id="saveStatus" role="status" aria-live="polite">Loading saved adjustments…</p>
+  <div id="recovery" hidden><p>Disk and recovered edits differ. Choose which to keep; neither is overwritten until you choose.</p><button id="useDisk">Use disk version</button><button id="useLocal">Keep my recovered edits</button></div>
+  <details><summary>Last three saved versions</summary><label>Backup <select id="backups"></select></label><button id="restoreBackup" disabled>Restore backup</button></details>
   <h2>Slot fit <span class="sub" id="partCode"></span></h2>
   <div id="fit"></div>
   <h2>Hide body under clothes</h2>
@@ -48,6 +64,21 @@
   <div class="row"><button id="save">Save adjustments</button><button id="reset">Reset slot</button></div>
   <p class="sub" id="status"></p>
 </aside>
-<script type="module" src="lab.js"></script>
+<script type="module">
+const status = document.getElementById('saveStatus');
+for (const [name, module] of [
+  ['3D renderer', 'three'], ['mesh support', 'three-mesh-bvh'],
+  ['model loader', 'three/addons/loaders/GLTFLoader.js'], ['camera controls', 'three/addons/controls/OrbitControls.js'],
+  ['edit history', './history.mjs'], ['autosave', './persistence.js'], ['fit lab', './lab.js']
+]) {
+  status.textContent = 'Loading ' + name + '…';
+  try { await import(module); }
+  catch (error) {
+    status.textContent = name + ' failed to load: ' + error.message;
+    document.getElementById('status').textContent = 'Check the connection to the JavaScript CDN, then reload.';
+    console.error(error); break;
+  }
+}
+</script>
 </body>
 </html>

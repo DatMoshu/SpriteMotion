@@ -3,6 +3,18 @@
 State after the fit-lab / body-hiding / agent-router work. Any agent (Claude, Codex, Cursor, Copilot) can pick this up.
 Rules and layout are in `CLAUDE.md`; workflows are the skills in `.claude/skills/`.
 
+## Fit lab editing and recovery
+
+The lab now has Ctrl+Z undo, Ctrl+Y / Ctrl+Shift+Z redo and a 100-step history list. Slider drags form one step.
+It caches edits and history in the browser immediately, autosaves after 800 ms idle, and keeps three prior disk saves.
+Backups can be restored as undoable edits. Atomic file replacement protects against partial writes; revision checks
+pause conflicting saves from other tabs. The UI reports failed saves and offers explicit disk/recovered-version choices.
+See `tools/fit-lab/README.md` for storage format, API and limitations.
+
+Preview cards support 2×–4× pixel scaling, independent animation and direction cycling every two seconds. Measurements
+pause rendering and editing to keep their pose samples stable. Preview readback uses sRGB to match viewport brightness.
+These remain approximate live lab renders, not final Blender sprites.
+
 ## Verified in the takeover check
 
 - **Studio build with pack fit.** `blender_build.py` reads `pack_mapping` + `pack_part` from job settings, applies the
@@ -49,9 +61,13 @@ Rules and layout are in `CLAUDE.md`; workflows are the skills in `.claude/skills
 
 ## Checks
 
-Takeover verification: 59 pytest tests passed, one client-dependent test skipped; 15 outfit-lab unittest tests passed;
-agent routers are current. The outfit-lab tests emit existing unclosed-file ResourceWarnings. The fit lab was restarted
-from its saved export, and both its page and mapping endpoint returned HTTP 200.
+Verification after the editing/recovery changes: 68 pytest tests passed, one client-dependent test skipped; 15 outfit-lab
+unittest tests and two Node history tests passed; agent routers are current. Disk tests cover failed replacement,
+backup retention/restore, malformed data and concurrent saves. Live browser checks used a separate copy of adjustments
+and verified keyboard undo/redo, history jumps, reload recovery, server-outage recovery, conflict resolution, backup
+restore/undo, independent playback and repeatable slot measurements. Headless Blender reused the 72-item export
+successfully. The normal lab was restarted after saving the open session; the adjustment file's hash was unchanged
+across the upgrade. The outfit-lab tests still emit existing unclosed-file ResourceWarnings.
 
 ```
 python -m pytest -q
