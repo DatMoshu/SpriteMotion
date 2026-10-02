@@ -15,6 +15,21 @@ Preview cards support 2×–4× pixel scaling, independent animation and directi
 pause rendering and editing to keep their pose samples stable. Preview readback uses sRGB to match viewport brightness.
 These remain approximate live lab renders, not final Blender sprites.
 
+Preview Base now switches between original UO pixels, the 3D body and transparent content only; poke highlights
+are optional. Export extracts the original sprite atlas from the canonical model's embedded frame document.
+Directory loading supports fitted, self-contained GLBs with canonical bone names, including weighted dominant-bone
+selection for rigid binding. Imports are copied locally and added to the selected slot for the session; raw pack
+FBX still requires the existing fitting/export workflow.
+
+Head stabilization is an optional preview experiment, off by default: hold the head's local position/rotation at
+the action's first frame, retaining inherited neck/body movement. Inspection found essentially constant local head
+translation but substantial local rotation; this is not proof of erroneous noise. A/B on three items in each of
+18 slots, all 125 poses across actions 0/4/9/22/25 and five directions, produced 58,964 → 58,652 estimated poke
+pixels: eight items improved, six worsened, forty unchanged. Two runs reproduced those counts. Local evidence:
+`workspace/head-ab-report.json`, `workspace/head-ab.png`, `workspace/head-motion-inspection.json`. The contact
+sheet chooses each item's largest content-pixel difference and labels the pose. These results use the saved fits
+at run time (included in the JSON); they are not final Blender render validation or a reason to change rig defaults.
+
 ## Verified in the takeover check
 
 - **Studio build with pack fit.** `blender_build.py` reads `pack_mapping` + `pack_part` from job settings, applies the
@@ -60,6 +75,12 @@ These remain approximate live lab renders, not final Blender sprites.
   exhaustive secret audit.
 
 ## Checks
+
+After the preview/reference/import changes: 72 pytest tests passed, one skipped; 15 outfit-lab tests and two Node
+history tests passed; routers remain current. Headless Blender exported the original reference and reused the
+72 fitted items. Browser checks covered original/model/content-only modes, directory import, stabilization,
+full A/B completion, cancellation and return to editing. Reference tests verify exact RGBA pixels and orientation;
+import tests verify weighted binding, skeleton mismatch, malformed GLBs and rejection of external resources.
 
 Verification after the editing/recovery changes: 68 pytest tests passed, one client-dependent test skipped; 15 outfit-lab
 unittest tests and two Node history tests passed; agent routers are current. Disk tests cover failed replacement,

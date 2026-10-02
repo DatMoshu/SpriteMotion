@@ -16,6 +16,8 @@ from mathutils import Matrix
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
+sys.path.insert(0, str(HERE))
+from reference import write_reference
 sys.path.insert(0, str(REPO / 'tools' / 'uo-content'))
 import pack_fit  # noqa: E402
 
@@ -27,6 +29,10 @@ MODEL = Path(items_doc.get('model', REPO / 'workspace/ultima-online/canonical-mo
 STEP = 3
 
 bpy.ops.wm.open_mainfile(filepath=str(MODEL), load_ui=False, use_scripts=False)
+original = bpy.data.texts.get('uo_original_frames.json')
+if original:
+    write_reference(json.loads(original.as_string()), OUT)
+    print('FITLAB original sprite reference exported', flush=True)
 rig, body = bpy.data.objects['UO_Rig'], bpy.data.objects['UO_Body']
 cam = bpy.data.objects['UO_Camera']
 CAMERA = {'matrix_world': [list(r) for r in cam.matrix_world], 'ortho_scale': cam.data.ortho_scale}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Head stabilization preview comparison",
+  "type": "object", "required": ["created", "complete", "actions", "adjustments", "items"],
+  "properties": {
+    "created": {"type": "string"}, "complete": {"type": "boolean"},
+    "actions": {"type": "array", "items": {"type": "integer"}},
+    "adjustments": {"$ref": "fit-adjustments.schema.json"},
+    "items": {"type": "array", "items": {"type": "object", "required": ["id", "slot", "before", "after", "poses"], "properties": {
+      "id": {"type": "string"}, "slot": {"type": "string"},
+      "before": {"type": "integer", "minimum": 0}, "after": {"type": "integer", "minimum": 0},
+      "poses": {"type": "integer", "minimum": 0},
+      "comparison": {"type": "object", "required": ["action", "frame", "direction", "changed_pixels"], "properties": {
+        "action": {"type": "integer"}, "frame": {"type": "integer", "minimum": 0},
+        "direction": {"type": "integer", "minimum": 0, "maximum": 4}, "changed_pixels": {"type": "integer", "minimum": 0}
+      }, "additionalProperties": false}
+    }, "additionalProperties": false}}
+  }, "additionalProperties": false
+}

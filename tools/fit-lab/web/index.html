@@ -20,6 +20,11 @@
   <label>Slot <select id="slot"></select></label>
   <p class="sub" id="slotInfo"></p>
   <div id="items"></div>
+  <details><summary>Load asset directory</summary>
+    <p class="sub">Fitted UO GLBs only; added to the selected slot for this session. Raw FBX must be fitted/exported first.</p>
+    <label>Directory <input id="assetDirectory" type="text" placeholder="Local folder path"></label>
+    <button id="loadAssets">Load directory</button><p id="assetStatus" role="status"></p>
+  </details>
 </aside>
 <main>
   <div id="view"></div>
@@ -39,7 +44,12 @@
       <label><input id="previewCycle" type="checkbox" checked> Cycle directions</label>
       <label>Preview size <select id="previewSize"><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option></select></label>
       <span id="previewPose" class="sub"></span>
+      <label>Base <select id="previewBase"><option value="original">Original UO sprite</option><option value="model" selected>3D body</option><option value="none">None — content only</option></select></label>
+      <label><input id="previewPokes" type="checkbox"> Show poke pixels</label>
+      <label><input id="stabilizeHead" type="checkbox"> Stabilize head</label>
     </div>
+    <p class="sub" id="referenceStatus"></p>
+    <p class="sub">Head stabilization holds its local first-frame pose; neck/body motion remains. Preview only.</p>
     <p class="sub">Live UO-camera fit preview · magenta = body poke pixels · final Blender rendering may differ</p>
     <div id="sheet"></div>
   </div>
@@ -60,6 +70,12 @@
   <p class="sub">Poke pixels = pixels where body limb/head faces that lie under the item (within 5 cm outside / 3 cm inside it at rest) show in front of it: the holes the renderer's body holdout would cut. Counted in every frame of the checked actions × 5 directions. The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so counts run high.</p>
   <div id="measureActions"></div>
   <button id="measure">Measure slot</button>
+  <button id="headAB">Head A/B: 3 per slot</button>
+  <button id="cancelAB" hidden>Stop A/B</button>
+  <p id="abStatus" role="status"></p><a id="abDownload" hidden download="head-ab.json">Download A/B report</a>
+  <details><summary>A/B counts</summary><table id="abResults"></table></details>
+  <details><summary>A/B contact sheet</summary><p class="sub">Three items per slot; each pair is original motion then stabilized. Largest content-pixel change per item, with original UO underneath when available.</p><a id="abImageDownload" hidden download="head-ab.png">Download contact sheet</a><div id="abImages"></div></details>
+  <details><summary>A/B report JSON</summary><pre id="abJSON"></pre></details>
   <table id="results"></table>
   <div class="row"><button id="save">Save adjustments</button><button id="reset">Reset slot</button></div>
   <p class="sub" id="status"></p>

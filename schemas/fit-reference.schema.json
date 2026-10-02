@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local fit-lab original sprite atlas",
+  "type": "object",
+  "required": ["image", "tile", "tiles"],
+  "properties": {
+    "image": {"type": "string"},
+    "tile": {"type": "array", "prefixItems": [{"const": 136}, {"const": 120}], "minItems": 2, "maxItems": 2},
+    "tiles": {"type": "object", "patternProperties": {"^[0-9]+,[0-9]+,[0-4]$": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 2, "maxItems": 2}}, "additionalProperties": false}
+  },
+  "additionalProperties": false
+}

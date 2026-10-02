@@ -11,6 +11,7 @@ const $ = id => document.getElementById(id);
 const OCCLUDERS = new Set(['head', 'upper_arm', 'forearm', 'hand', 'thigh', 'shin', 'foot']);   // render_uo_layer.py
 const W = 136, H = 120;
 const clean = n => n.replace(/[\[\].:\/]/g, '');          // GLTFLoader's node-name sanitising
+const html = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 // Blender (Z up) -> glTF (Y up): (x, y, z) -> (x, z, -y)
 const C = new THREE.Matrix4().set(1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1);
 const Cinv = C.clone().invert();
@@ -24,7 +25,7 @@ let persistence, measuring = false, slotRequest = 0;
 const preview = { frame: 0, dir: 3, playing: true, cycling: true, dirty: true, lastFrame: 0, lastDir: 0 };
 
 // ---------- scene ----------
-const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(devicePixelRatio);
 $('view').appendChild(renderer.domElement);
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0b0e11);
@@ -40,6 +41,8 @@ const pixels = new Uint8Array(W * H * 4);
 const flat = c => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide });
 const RED = flat(0xff0000), GREEN = flat(0x00ff00);
 let body, bodyMesh, mixer, clips = {}, bodyBase, bodyTris, occluderTri, hiddenOverlay, bodyMeasure;
+let reference, referenceImage, stabilizeHead = false, headBone;
+const headPoses = new Map();
 
 function setupCameras() {
   const cam = state.manifest.camera;
@@ -76,6 +79,14 @@ async function loadBody() {
   bodyMesh.material = new THREE.MeshStandardMaterial({ color: 0x9c8f86, roughness: 0.8 });
   mixer = new THREE.AnimationMixer(body);
   for (const c of g.animations) clips[c.name] = c;
+  headBone = bodyMesh.skeleton.bones.find(b => b.name.toLowerCase() === 'head');
+  for (const clip of g.animations) {
+    mixer.stopAllAction();
+    const action = mixer.clipAction(clip); action.play(); action.paused = true;
+    action.time = Math.min(...clip.tracks.map(t => t.times[0])); mixer.update(0);
+    if (headBone) headPoses.set(clip.name, {position: headBone.position.clone(), quaternion: headBone.quaternion.clone()});
+  }
+  mixer.stopAllAction();
   // bind-pose positions in the glTF scene space, and triangles with their dominant bone
   const geo = bodyMesh.geometry, pos = geo.attributes.position;
   bodyBase = []; const v = new THREE.Vector3();
@@ -213,6 +224,10 @@ function setPose(actionIdx, frame, dir) {
     const t0 = Math.min(...clip.tracks.map(t => t.times[0]));
     a.time = Math.min(clip.duration, t0 + frame * state.manifest.frame_step / state.manifest.fps); mixer.update(0);
   }
+  if (stabilizeHead && headBone && headPoses.has(act.name)) {
+    const pose = headPoses.get(act.name);
+    headBone.position.copy(pose.position); headBone.quaternion.copy(pose.quaternion);
+  }
   const stored = dir <= 4 ? dir : 8 - dir;
   charRoot.rotation.y = -stored * Math.PI / 4;
   charRoot.updateMatrixWorld(true);
@@ -232,17 +247,20 @@ function noScale(m) { const p = new THREE.Vector3(), q = new THREE.Quaternion(),
 // ---------- offscreen UO-camera renders ----------
 function renderTarget() { renderer.setRenderTarget(target); renderer.clear(); renderer.render(scene, uoCam); renderer.readRenderTargetPixels(target, 0, 0, W, H, pixels); renderer.setRenderTarget(null); return pixels; }
 function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
+  const background = scene.background;
+  if (mode === 'look') scene.background = null;
   const bodyIndexBefore = bodyMesh.geometry.index;
   const keep = []; scene.traverse(o => { if (o.isMesh) { keep.push([o, o.visible, o.material]); o.visible = false; } });
   const rigid = fitFor(item.info).bind === 'rigid', meshes = rigid ? item.rigid : item.skinned;
   meshes.forEach(m => { m.visible = true; if (mode !== 'look') m.material = GREEN; });
   if (mode === 'poke') { bodyMeasure.geometry.setIndex(bodyIndex(hiddenFor(item), coveredFor(item))); bodyMeasure.visible = true; }
-  if (mode === 'look') { bodyMesh.geometry.setIndex(bodyIndex(hiddenFor(item), null)); bodyMesh.visible = true; }
+  if (mode === 'look' && $('previewBase').value === 'model') { bodyMesh.geometry.setIndex(bodyIndex(hiddenFor(item), null)); bodyMesh.visible = true; }
   const out = renderTarget().slice();
   for (const [o, v, m] of keep) { o.visible = v; o.material = m; }
   meshes.forEach((m, k) => m.material = item.parts[k].material);
   bodyMeasure.visible = false;
   bodyMesh.geometry.setIndex(bodyIndexBefore);
+  scene.background = background;
   return out;
 }
 function pokeCount(item) {
@@ -307,7 +325,7 @@ function renderItems() {
   const box = $('items'); box.innerHTML = '';
   for (const info of state.manifest.items.filter(i => i.slot === state.slot)) {
     const row = document.createElement('div'); row.className = 'item' + (state.selected?.id === info.id ? ' on' : '');
-    row.innerHTML = `<input type="checkbox" ${state.shown.has(info.id) ? 'checked' : ''}><div>${info.id}<div class="fam">${info.family || ''}</div></div>`;
+    row.innerHTML = `<input type="checkbox" ${state.shown.has(info.id) ? 'checked' : ''}><div>${html(info.id)}<div class="fam">${html(info.family || '')}</div></div>`;
     row.querySelector('input').onclick = e => { e.stopPropagation(); e.target.checked ? state.shown.add(info.id) : state.shown.delete(info.id); changed(); };
     row.onclick = () => { state.selected = info; renderItems(); buildPanels(); };
     box.appendChild(row);
@@ -332,13 +350,17 @@ function renderSheet() {
       const rect = cv.getBoundingClientRect();
       if (rect.right < bounds.left || rect.left > bounds.right) continue;
       const it = items.get(info.id); if (!it) continue;
-      const look = soloRender(it, 'look'), { n, where } = pokeCount(it);
+      const look = soloRender(it, 'look'), { n, where } = $('previewPokes').checked ? pokeCount(it) : {n: null, where: []};
       for (const i of where) look.set([255, 61, 242, 255], 4 * i);
       cv.classList.toggle('mirror', mirror);
       const img = new ImageData(W, H);
       for (let y = 0; y < H; y++) img.data.set(look.subarray((H - 1 - y) * W * 4, (H - y) * W * 4), y * W * 4);
-      cv.getContext('2d').putImageData(img, 0, 0);
-      caption.textContent = `${info.family || info.id} · ${n} poke px`;
+      const ctx = cv.getContext('2d'); ctx.clearRect(0, 0, W, H);
+      const tile = reference?.tiles[`${state.manifest.actions[state.action].id},${preview.frame},${preview.dir > 4 ? 8 - preview.dir : preview.dir}`];
+      if ($('previewBase').value === 'original' && tile && referenceImage) ctx.drawImage(referenceImage, tile[0] * W, tile[1] * H, W, H, 0, 0, W, H);
+      const layer = document.createElement('canvas'); layer.width = W; layer.height = H;
+      layer.getContext('2d').putImageData(img, 0, 0); ctx.drawImage(layer, 0, 0);
+      caption.textContent = `${info.family || info.id}${n === null ? '' : ` · ${n} poke px`}`;
     }
     $('previewPose').textContent = `Direction ${preview.dir} · frame ${preview.frame + 1}/${state.manifest.actions[state.action].frames}`;
     setPose(state.action, state.frame, state.dir); preview.dirty = false;
@@ -370,7 +392,7 @@ function renderMeasureTable() {
   const rows = state.manifest.items.filter(i => i.slot === state.slot && i.id in state.results);
   let sumB = 0, sumN = 0;
   const body = rows.map(i => { const b = state.baseline[i.id], n = state.results[i.id]; sumB += b; sumN += n;
-    return `<tr><td title="${i.id}">${i.family || i.id}</td><td>${b}</td><td>${n}</td><td class="${n < b ? 'better' : n > b ? 'worse' : ''}">${n - b}</td></tr>`; }).join('');
+    return `<tr><td title="${html(i.id)}">${html(i.family || i.id)}</td><td>${b}</td><td>${n}</td><td class="${n < b ? 'better' : n > b ? 'worse' : ''}">${n - b}</td></tr>`; }).join('');
   $('results').innerHTML = rows.length ? `<tr><th>item</th><th>first</th><th>now</th><th>Δ</th></tr>${body}<tr><th>slot</th><th>${sumB}</th><th>${sumN}</th><th class="${sumN < sumB ? 'better' : sumN > sumB ? 'worse' : ''}">${sumN - sumB}</th></tr>` : '';
 }
 function frameUI() {
@@ -380,6 +402,110 @@ function frameUI() {
   [...$('dirs').children].forEach((b, d) => b.classList.toggle('on', d === state.dir));
   renderer.domElement.style.transform = state.dir > 4 ? 'scaleX(-1)' : '';
   setPose(state.action, state.frame, state.dir); drawSheet();
+}
+
+async function loadAssets() {
+  $('loadAssets').disabled = true;
+  try {
+    const response = await fetch('api/assets', {method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({directory: $('assetDirectory').value, slot: state.slot, part: state.selected.part})});
+    const result = await response.json(); if (!response.ok) throw new Error(result.error);
+    for (const info of result.items) if (!state.manifest.items.some(i => i.id === info.id)) state.manifest.items.push(info);
+    await selectSlot(state.slot);
+    $('packName').textContent = `${state.manifest.pack} · ${state.manifest.items.length} items · ${state.manifest.model}`;
+    $('assetStatus').textContent = `${result.items.length} compatible GLBs loaded. ` + result.skipped.map(i => `${i.file}: ${i.reason}`).join('; ');
+    if (!result.items.length && !result.skipped.length) $('assetStatus').textContent = 'No GLBs found. Export fitted models as GLB first.';
+  } catch (error) { $('assetStatus').textContent = error.message; }
+  finally { $('loadAssets').disabled = false; }
+}
+
+let cancelAB = false, reportURL;
+function paintComparison(ctx, pixels, action, frame, dir, x, y) {
+  const tile = reference?.tiles[`${state.manifest.actions[action].id},${frame},${dir}`];
+  if (tile && referenceImage) ctx.drawImage(referenceImage, tile[0] * W, tile[1] * H, W, H, x, y, W, H);
+  const image = new ImageData(W, H), layer = document.createElement('canvas'); layer.width = W; layer.height = H;
+  for (let line = 0; line < H; line++) image.data.set(pixels.subarray((H - 1 - line) * W * 4, (H - line) * W * 4), line * W * 4);
+  layer.getContext('2d').putImageData(image, 0, 0); ctx.drawImage(layer, x, y);
+}
+async function headAB() {
+  if (measuring) return;
+  const actions = [...document.querySelectorAll('#measureActions input:checked')].map(i => +i.value);
+  if (!actions.length) { $('abStatus').textContent = 'Select at least one action.'; return; }
+  measuring = true; cancelAB = false; persistence.suspended = true;
+  const previous = stabilizeHead;
+  const previousBase = $('previewBase').value; $('previewBase').value = 'none';
+  const slotNames = [...new Set(state.manifest.items.map(i => i.slot))].sort();
+  const contact = document.createElement('canvas'); contact.width = W * 6; contact.height = slotNames.length * (H + 55);
+  const context = contact.getContext('2d'); context.fillStyle = '#14181d'; context.fillRect(0, 0, contact.width, contact.height);
+  context.font = '10px sans-serif'; context.fillStyle = '#dfe5ec';
+  $('abImages').replaceChildren(contact); $('abImageDownload').hidden = true;
+  const panels = ['left', 'bar', 'previewBar']; panels.forEach(id => $(id).inert = true);
+  const disabled = [...$('right').querySelectorAll('button,input,select')].map(el => [el, el.disabled]);
+  disabled.forEach(([el]) => el.disabled = el.id !== 'cancelAB'); $('cancelAB').hidden = false;
+  const report = {created: new Date().toISOString(), complete: false, actions: actions.map(a => state.manifest.actions[a].id),
+    adjustments: structuredClone(state.adjust), items: []};
+  $('abResults').innerHTML = '<tr><th>Slot / item</th><th>Before</th><th>After</th><th>Δ</th></tr>';
+  try {
+    for (const slot of slotNames) {
+      const list = state.manifest.items.filter(i => i.slot === slot).sort((a, b) => a.id.localeCompare(b.id)).slice(0, 3);
+      for (const info of list) {
+        if (cancelAB) break;
+        const item = await loadItem(info), row = {id: info.id, slot, before: 0, after: 0, poses: 0};
+        let largest = -1, pair;
+        for (const action of actions) {
+          for (let frame = 0; frame < state.manifest.actions[action].frames && !cancelAB; frame++) {
+            for (let dir = 0; dir < 5; dir++) {
+              stabilizeHead = false; setPose(action, frame, dir); row.before += pokeCount(item).n;
+              const beforePixels = soloRender(item, 'look');
+              stabilizeHead = true; setPose(action, frame, dir); row.after += pokeCount(item).n;
+              const afterPixels = soloRender(item, 'look');
+              let changedPixels = 0;
+              for (let pixel = 0; pixel < beforePixels.length; pixel += 4) {
+                if (beforePixels[pixel + 3] !== afterPixels[pixel + 3] ||
+                    ((beforePixels[pixel + 3] || afterPixels[pixel + 3]) &&
+                     (beforePixels[pixel] !== afterPixels[pixel] || beforePixels[pixel + 1] !== afterPixels[pixel + 1] || beforePixels[pixel + 2] !== afterPixels[pixel + 2]))) changedPixels++;
+              }
+              if (changedPixels > largest) { largest = changedPixels; pair = {beforePixels, afterPixels, action, frame, dir}; }
+              row.poses++;
+            }
+            $('abStatus').textContent = `A/B ${slot} · ${info.family || info.id} · action ${state.manifest.actions[action].id}, frame ${frame + 1} · ${report.items.length} items finished`;
+            await new Promise(resolve => setTimeout(resolve, 0));
+          }
+          if (cancelAB) break;
+        }
+        report.items.push(row);
+        if (pair) {
+          row.comparison = {action: state.manifest.actions[pair.action].id, frame: pair.frame, direction: pair.dir, changed_pixels: largest};
+          const x = list.indexOf(info) * W * 2, y = slotNames.indexOf(slot) * (H + 55);
+          context.fillText(`${slot}: ${info.family || info.id}`, x + 2, y + 12, W * 2 - 4);
+          context.fillText(`Action ${state.manifest.actions[pair.action].id}, frame ${pair.frame + 1}, dir ${pair.dir} · ${largest} changed px`, x + 2, y + 25, W * 2 - 4);
+          context.fillText('Before', x + 2, y + 40); context.fillText('Stabilized', x + W + 2, y + 40);
+          paintComparison(context, pair.beforePixels, pair.action, pair.frame, pair.dir, x, y + 45);
+          paintComparison(context, pair.afterPixels, pair.action, pair.frame, pair.dir, x + W, y + 45);
+        }
+        const tr = document.createElement('tr');
+        for (const value of [`${slot}: ${info.family || info.id}`, row.before, row.after, row.after - row.before]) {
+          const td = document.createElement('td'); td.textContent = value; tr.appendChild(td);
+        }
+        $('abResults').appendChild(tr);
+      }
+      if (cancelAB) break;
+    }
+    report.complete = !cancelAB;
+    $('abStatus').textContent = `${cancelAB ? 'Stopped (partial)' : 'Complete'}: ${report.items.length} items. Before = original motion; after = local head stabilized. Counts are preview estimates.`;
+  } catch (error) { $('abStatus').textContent = 'A/B failed: ' + error.message; }
+  finally {
+    if (reportURL) URL.revokeObjectURL(reportURL);
+    reportURL = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type: 'application/json'}));
+    $('abDownload').href = reportURL; $('abDownload').hidden = false;
+    // A visible report also lets the result be copied without depending on a browser download.
+    $('abJSON').textContent = JSON.stringify(report, null, 2);
+    $('abImageDownload').href = contact.toDataURL('image/png'); $('abImageDownload').hidden = false;
+    $('previewBase').value = previousBase;
+    stabilizeHead = previous; measuring = false; persistence.suspended = false;
+    panels.forEach(id => $(id).inert = false); disabled.forEach(([el, value]) => el.disabled = value);
+    $('cancelAB').hidden = true; updateBody(); frameUI();
+  }
 }
 
 async function main() {
@@ -392,6 +518,14 @@ async function main() {
   state.adjust = persistence.value;
   $('packName').textContent = `${state.manifest.pack} · ${state.manifest.items.length} items · ${state.manifest.model}`;
   setupCameras(); await loadBody();
+  try {
+    reference = await getJSON('data/reference.json'); referenceImage = new Image();
+    referenceImage.src = 'data/' + reference.image; await referenceImage.decode();
+    $('referenceStatus').textContent = 'Original UO reference loaded. Composites are preview overlays, not final holdout renders.';
+  } catch {
+    $('previewBase').querySelector('[value=original]').disabled = true;
+    $('referenceStatus').textContent = 'Original sprite unavailable. Run the pack export again to extract the canonical reference.';
+  }
   const slots = [...new Set(state.manifest.items.map(i => i.slot))];
   $('slot').innerHTML = slots.map(s => `<option>${s}</option>`).join(''); $('slot').onchange = e => selectSlot(e.target.value);
   $('action').innerHTML = state.manifest.actions.map((a, i) => `<option value="${i}">${a.id} ${a.name.replace(/^\d+_/, '')}</option>`).join('');
@@ -406,6 +540,11 @@ async function main() {
   $('uoView').onclick = resetView; $('showHidden').onchange = updateBody;
   $('measureActions').innerHTML = state.manifest.actions.map((a, i) => `<label><input type="checkbox" value="${i}" ${[0, 2, 4, 9, 16].includes(a.id) ? 'checked' : ''}>${a.id}</label>`).join('');
   $('measure').onclick = measure;
+  $('headAB').onclick = headAB;
+  $('cancelAB').onclick = () => { cancelAB = true; };
+  $('loadAssets').onclick = loadAssets;
+  $('previewBase').onchange = drawSheet; $('previewPokes').onchange = drawSheet;
+  $('stabilizeHead').onchange = e => { stabilizeHead = e.target.checked; frameUI(); };
   $('save').onclick = () => persistence.save();
   $('reset').onclick = () => { delete state.adjust.parts[state.selected.part]; buildPanels(); changed(); record('Reset slot'); };
   $('undo').onclick = () => persistence.undo(); $('redo').onclick = () => persistence.redo();

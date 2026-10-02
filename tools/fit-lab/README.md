@@ -40,6 +40,28 @@ frame. These are live fit-lab camera renders, not final Blender output; the same
 
 ## In the lab
 
+Preview **Base** selects the original UO sprite, the animated 3D body, or transparent content only.
+The original is extracted from the canonical model's embedded original frames; it is a visual reference,
+not a final holdout render. `reference.json` follows `schemas/fit-reference.schema.json`, indexes
+`reference.png` by `action,frame,stored-direction`, and stays in ignored workspace data. Mirroring applies
+to the complete composite. Poke highlighting is separately switchable.
+
+**Stabilize head** holds the head's local rotation and position at the selected action's first frame.
+Neck and body movement remains. This preview-only experiment defaults off and does not change saved fits,
+the canonical rig, or builds. **Head A/B: 3 per slot** compares the first three item IDs in each slot,
+over every frame of checked actions and all five stored directions. The table reports poke counts;
+lower counts alone do not establish a better match to original artwork. Download the report for provenance.
+The downloadable contact sheet shows the pose with the largest content-pixel change for each item (before/after
+pairs); original reference pixels are composited underneath when available. JSON frame indices are zero-based,
+and printed contact-sheet frame numbers are one-based. Reports follow `schemas/fit-head-ab.schema.json`.
+
+**Load asset directory** accepts a local directory of already fitted, self-contained GLBs. Select the
+destination slot first. Files must have skin weights using the canonical body's bone names; raw FBX and
+unrigged objects must go through the pack export/fitting workflow first. Files are copied into an ignored
+local import cache; source files are never changed. Imports are session-only and must be loaded again
+after reload. `POST /api/assets` takes `{directory, slot, part}` and returns `{items, skipped}` using the
+existing manifest item format; `file` paths point into the cache. Limits: 100 GLBs and 50 MB each.
+
 - **Left:** slot and its items. Tick items to show them in 3D; click one to edit its slot.
 - **Centre:** the body through the UO camera (drag to orbit, **UO camera** resets), action, direction 0–7
   (5–7 mirrored like the client), frame, play. Below it, scroll across enlarged 136×120 previews of every item in the

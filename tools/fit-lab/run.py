@@ -18,6 +18,7 @@ import webbrowser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from adjustments import AdjustmentStore, ConflictError
+from assets import import_directory
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
@@ -84,7 +85,8 @@ def serve(args):
             return super().do_GET()
 
         def do_POST(self):
-            if urlsplit(self.path).path != '/api/adjustments': return self.reply(404, b'{}')
+            path = urlsplit(self.path).path
+            if path not in ('/api/adjustments', '/api/assets'): return self.reply(404, b'{}')
             # JSON-only requests prevent cross-origin forms from changing local fits.
             if self.headers.get_content_type() != 'application/json':
                 return self.reply(415, b'{"error":"Reload the lab before saving."}')
@@ -92,6 +94,14 @@ def serve(args):
                 size = int(self.headers.get('Content-Length', '0'))
                 if not 0 < size <= 2_000_000: raise ValueError('Invalid request size.')
                 data = json.loads(self.rfile.read(size))
+                if path == '/api/assets':
+                    if not isinstance(data, dict) or set(data) != {'directory', 'slot', 'part'} or not all(isinstance(v, str) for v in data.values()):
+                        raise ValueError('Expected directory, slot and part strings')
+                    manifest = json.loads((d / 'manifest.json').read_text())
+                    if not any(i['slot'] == data['slot'] and i['part'] == data['part'] for i in manifest['items']):
+                        raise ValueError('Select a known slot first')
+                    result = import_directory(data['directory'], d, data['slot'], data['part'])
+                    return self.reply(200, json.dumps(result).encode())
                 if not isinstance(data, dict) or set(data) != {'adjustments', 'base_revision'}:
                     raise ValueError('Expected adjustments and base_revision; reload the lab.')
                 result = store.save(data['adjustments'], data['base_revision'])

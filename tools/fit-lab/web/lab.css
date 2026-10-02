@@ -38,6 +38,11 @@ button:disabled { opacity: .45; cursor: default; }
 #recovery { border: 1px solid #dfa956; padding: 8px; }
 #backups { max-width: 100%; }
 details { margin: 10px 0; } summary { cursor: pointer; color: var(--dim); }
+#assetDirectory { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); padding: 6px; }
+#assetStatus { overflow-wrap: anywhere; }
+#abJSON { max-height: 250px; overflow: auto; font-size: 11px; }
+#abImages { overflow: auto; max-height: 500px; }
+#abImages canvas { image-rendering: pixelated; }
 #items .item { overflow-wrap: anywhere; }
 @media (max-width: 1050px) { body { grid-template-columns: 185px minmax(0, 1fr) 275px; } }
 @media (max-width: 760px) {
