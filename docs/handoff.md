@@ -50,9 +50,9 @@ These remain approximate live lab renders, not final Blender sprites.
 ## Housekeeping
 
 - Local branch `backup/pre-sidekick-removal` holds the pre-rewrite history; delete it once the rewrite is accepted.
-- No remote is configured; nothing has been pushed. Licensed-pack material lives only in the local sidecar repo
-  (`SPRITEMOTION_SIDECAR`), which must never be pushed.
-- Publication destination is still needed. Publish only the reviewed `main` branch, never all branches or a mirror.
+- Public repository: [DatMoshu/SpriteMotion](https://github.com/DatMoshu/SpriteMotion), configured as `origin`.
+  Licensed-pack material lives only in the local sidecar repo (`SPRITEMOTION_SIDECAR`), which must never be pushed.
+- Publish only the reviewed `main` branch, never all branches or a mirror.
   The takeover scan of all four commits reachable from `main` found no licensed-pack file paths or prohibited asset
   extensions. It found a generic drive-letter game-folder example in the studio HTML; the current file now uses a
   path-neutral placeholder, and repository checks also scan HTML, JavaScript, CSS, YAML and text files. Older commits
