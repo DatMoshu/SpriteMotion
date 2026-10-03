@@ -9,6 +9,7 @@ from pathlib import Path
 import tempfile
 from urllib.parse import urlparse
 import pipeline
+import starters
 
 pool=ThreadPoolExecutor(max_workers=1)
 
@@ -31,6 +32,16 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if not self.local(): return self.reply({'error':'Local requests only.'},403)
         path=urlparse(self.path).path
+        if path=='/api/starters': return self.reply(starters.catalog())
+        if path.startswith('/starter-assets/'):
+            try:
+                item=starters.entry(path.removeprefix('/starter-assets/'))
+                if 'asset' not in item: raise ValueError('This layer has no wearable model.')
+                raw=(starters.ASSETS/item['asset']).read_bytes()
+            except ValueError as error: return self.reply({'error':str(error)},404)
+            self.send_response(200); self.send_header('Content-Type','model/gltf-binary')
+            self.send_header('Content-Disposition',f'attachment; filename="{item["asset"]}"')
+            self.send_header('Content-Length',str(len(raw))); self.end_headers(); self.wfile.write(raw); return
         if path=='/api/config':
             return self.reply(dict(ready=(pipeline.BACKEND/'provenance.json').exists(),parts=pipeline.PARTS))
         if path=='/api/jobs':
@@ -65,8 +76,14 @@ class Handler(SimpleHTTPRequestHandler):
             data=json.loads(self.rfile.read(size))
             path=urlparse(self.path).path
             if path=='/api/build':
+                starter=data.pop('starter',None)
                 upload=data.pop('upload',None)
-                if upload:
+                if starter:
+                    if upload or data.get('reuse'):
+                        raise ValueError('Choose one source asset.')
+                    settings,asset=starters.settings(starter,data)
+                    job=pipeline.create_job(settings,asset)
+                elif upload:
                     name=Path(upload['name']).name
                     ext=Path(name).suffix.lower()
                     if ext not in pipeline.MODELS|pipeline.IMAGES: raise ValueError('Unsupported asset format.')

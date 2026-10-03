@@ -7,6 +7,8 @@ import { computeBoundsTree } from 'three-mesh-bvh';
 import { FitPersistence } from './persistence.js';
 import { same } from './history.mjs';
 import { resolveFit, storedDirection } from './fit-rules.mjs';
+import { RenderPanel } from './render-panel.js';
+import { dominantJoint } from './rigid-binding.mjs';
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 
 const $ = id => document.getElementById(id);
@@ -23,7 +25,7 @@ const state = { manifest: null, mapping: null, adjust: { parts: {}, items: {} },
 const items = new Map();                                   // id -> loaded item
 const hiddenCache = new Map();
 const loader = new GLTFLoader();
-let persistence, measuring = false, slotRequest = 0;
+let persistence, renderPanel, measuring = false, slotRequest = 0, lastEdit = 0;
 const preview = { frame: 0, dir: 3, playing: true, cycling: true, dirty: true, lastFrame: 0, lastDir: 0 };
 
 // ---------- scene ----------
@@ -131,10 +133,25 @@ async function loadItem(info) {
       const si = geo.attributes.skinIndex;
       for (let i = 0; i < si.count; i++) for (let j = 0; j < 4; j++) si.setComponent(i, j, index[o.skeleton.bones[si.getComponent(i, j)].name] ?? 0);
     }
-    parts.push({ geo, base, normals, material: o.material });
+    // Blender rigid binding chooses an anchor separately for each source mesh.
+    // A paired item must not attach its right piece to the left piece's bone.
+    const anchor = o.isSkinnedMesh ? dominantJoint(geo.attributes.skinIndex, geo.attributes.skinWeight) : undefined;
+    const sideWeights = base.map((_, i) => {
+      const weights = [0,0]; let total = 0;
+      if (o.isSkinnedMesh) for (let j=0;j<4;j++) {
+        const weight=geo.attributes.skinWeight.getComponent(i,j);
+        const name=bodyMesh.skeleton.bones[geo.attributes.skinIndex.getComponent(i,j)]?.name || '';
+        total+=weight;
+        if (name.endsWith('L')) weights[0]+=weight;
+        if (name.endsWith('R')) weights[1]+=weight;
+      }
+      return weights.map(w => total ? w/total : 0);
+    });
+    parts.push({ geo, base, normals, sideWeights, material: o.material,
+      bone: bodyMesh.skeleton.bones[anchor ?? index[clean(info.dominant_bone)]] });
   });
   const center = new THREE.Box3().setFromPoints(parts.flatMap(p => p.base)).getCenter(new THREE.Vector3());
-  const item = { info, parts, center, skinned: [], rigid: [], bone: bodyMesh.skeleton.bones[index[clean(info.dominant_bone)]] };
+  const item = { info, parts, center, skinned: [], rigid: [] };
   for (const p of parts) {
     const s = new THREE.SkinnedMesh(p.geo, p.material); bodyMesh.parent.add(s);
     s.position.copy(bodyMesh.position); s.quaternion.copy(bodyMesh.quaternion); s.bind(bodyMesh.skeleton, bodyMesh.bindMatrix);
@@ -154,7 +171,8 @@ function fitFor(info) {
 function baseFor(info) {
   const m = partOf(info), a = state.adjust.parts[info.part] || {};
   return {offset:a.offset ?? m.offset ?? [0,0,0], rotate:a.rotate ?? m.rotate ?? [0,0,0], scale:a.scale ?? m.scale ?? 1,
-    bind:a.bind ?? m.bind ?? 'skinned', hide:a.hide_body ?? m.hide_body ?? {enabled:false,outward:.02,inward:.01},
+    depth_scale:a.depth_scale ?? m.depth_scale ?? 1,
+    bind:a.bind ?? m.bind ?? 'skinned', hide:a.hide_body ?? m.hide_body ?? {enabled:true,outward:.02,inward:.01},
     itemOffset:state.adjust.items[info.id]?.offset ?? [0,0,0]};
 }
 function fitMatrix(item) {
@@ -163,16 +181,20 @@ function fitMatrix(item) {
   const R = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(...f.rotate.map(THREE.MathUtils.degToRad), 'ZYX'));
   const Rg = C.clone().multiply(R).multiply(Cinv);
   return new THREE.Matrix4().makeTranslation(item.center.x + off.x, item.center.y + off.y, item.center.z + off.z)
-    .multiply(Rg).multiply(new THREE.Matrix4().makeScale(f.scale, f.scale, f.scale))
+    .multiply(Rg).multiply(C.clone().multiply(new THREE.Matrix4().makeScale(f.scale, f.scale*f.depth_scale, f.scale)).multiply(Cinv))
     .multiply(new THREE.Matrix4().makeTranslation(-item.center.x, -item.center.y, -item.center.z));
 }
 function applyFit(item) {
   const M = fitMatrix(item), N = new THREE.Matrix3().getNormalMatrix(M), toBody = bodyMesh.bindMatrix.clone().invert();
+  const sides = fitFor(item.info).sides;
+  const offsets = ['left','right'].map(side => new THREE.Vector3(...(sides[side] || [0,0,0])).applyMatrix4(C));
   item.world = [];
   item.parts.forEach((p, k) => {
     const pos = p.geo.attributes.position, nrm = p.geo.attributes.normal, w = [];
     for (let i = 0; i < pos.count; i++) {
-      const v = p.base[i].clone().applyMatrix4(M); w.push(v);
+      const v = p.base[i].clone().applyMatrix4(M);
+      offsets.forEach((offset, side) => v.addScaledVector(offset, p.sideWeights[i][side]));
+      w.push(v);
       const l = v.clone().applyMatrix4(toBody); pos.setXYZ(i, l.x, l.y, l.z);
       if (nrm && p.normals[i]) { const n = p.normals[i].clone().applyMatrix3(N).normalize(); nrm.setXYZ(i, n.x, n.y, n.z); }
     }
@@ -252,11 +274,12 @@ function setPose(actionIdx, frame, dir) {
   charRoot.updateMatrixWorld(true);
   const inv = body.matrixWorld.clone().invert();
   for (const it of items.values()) {               // rigid items: bone location + rotation, no animated scale
-    if (!it.bone) continue;
-    const rest = bodyMesh.skeleton.boneInverses[bodyMesh.skeleton.bones.indexOf(it.bone)].clone().invert();
-    const now = inv.clone().multiply(it.bone.matrixWorld);
-    const M = noScale(now).multiply(noScale(rest).invert());
-    it.rigid.forEach(m => m.matrix.copy(M));
+    it.parts.forEach((part, k) => {
+      if (!part.bone) return;
+      const rest = bodyMesh.skeleton.boneInverses[bodyMesh.skeleton.bones.indexOf(part.bone)].clone().invert();
+      const now = inv.clone().multiply(part.bone.matrixWorld);
+      it.rigid[k].matrix.copy(noScale(now).multiply(noScale(rest).invert()));
+    });
   }
   scene.updateMatrixWorld(true);
   return dir > 4;
@@ -318,7 +341,7 @@ function slider(parent, label, value, min, max, step, unit, onChange) {
 function part() { return state.adjust.parts[state.selected.part] ??= {}; }
 function record(label) { persistence?.commit(state.adjust, `${state.slot}: ${label}`); }
 function changed() {
-  hiddenCache.clear();
+  hiddenCache.clear(); lastEdit = performance.now();
   for (const it of items.values()) applyFit(it);
   for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
   updateBody(); drawSheet();
@@ -332,13 +355,25 @@ function buildPanels() {
   ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Offset ' + ax, f.offset[i] * 100, -10, 10, 0.1, ' cm', v => { const o = [...baseFor(info).offset]; o[i] = v / 100; part().offset = o; changed(); }));
   ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Rotate ' + ax, f.rotate[i], -30, 30, 1, '°', v => { const r = [...baseFor(info).rotate]; r[i] = v; part().rotate = r; changed(); }));
   slider(fit, 'Scale', f.scale * 100, 80, 125, 1, '%', v => { part().scale = v / 100; changed(); });
+  slider(fit, 'Front/back depth', f.depth_scale * 100, 50, 250, 1, '%', v => { part().depth_scale = v / 100; changed(); });
   const bind = document.createElement('label');
   bind.innerHTML = `Binding <select><option value="skinned">skinned (deforms)</option><option value="rigid">rigid (follows one bone)</option></select>`;
   bind.querySelector('select').value = f.bind; bind.querySelector('select').onchange = e => { part().bind = e.target.value; changed(); record('Binding'); };
   fit.appendChild(bind);
-  const sub = document.createElement('p'); sub.className = 'sub'; sub.textContent = `This item only (${info.id}):`; fit.appendChild(sub);
+  const sub = document.createElement('p'); sub.className = 'hint'; sub.textContent = `This item only (${info.id}):`; fit.appendChild(sub);
   ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Item ' + ax, f.itemOffset[i] * 100, -5, 5, 0.1, ' cm', v => {
     const o = [...baseFor(info).itemOffset]; o[i] = v / 100; (state.adjust.items[info.id] ??= {}).offset = o; changed(); }));
+  const sideHint = document.createElement('p'); sideHint.className='hint';
+  sideHint.textContent='Separate sides for this item (character left/right, before animation). Shared fit still applies to both.'; fit.appendChild(sideHint);
+  for (const side of ['left','right']) {
+    const values=state.adjust.items[info.id]?.sides?.[side] || [0,0,0];
+    ['X','Y','Z'].forEach((axis,i) => slider(fit, `${side === 'left' ? 'Left' : 'Right'} ${axis}`, values[i]*100,-15,15,.1,' cm', value => {
+      const entry=state.adjust.items[info.id] ??= {}; const sides=entry.sides ??= {};
+      const offset=[...(sides[side] || [0,0,0])]; offset[i]=value/100; sides[side]=offset; changed();
+    }));
+    const reset=document.createElement('button'); reset.textContent=`Reset ${side} offset`;
+    reset.onclick=() => { if(state.adjust.items[info.id]?.sides) delete state.adjust.items[info.id].sides[side]; changed(); record(`Reset ${side}`); buildPanels(); }; fit.appendChild(reset);
+  }
   const on = document.createElement('label');
   on.innerHTML = `<input type="checkbox" ${f.hide.enabled ? 'checked' : ''}> Hide body under this slot`;
   on.querySelector('input').onchange = e => { part().hide_body = { ...baseFor(info).hide, enabled: e.target.checked }; changed(); record('Hide body'); };
@@ -378,6 +413,7 @@ function buildScopedPanel() {
   ['X','Y','Z'].forEach((axis,i) => addSlider('Correction '+axis,(fit.offset?.[i] || 0)*100,-30,30,.1,' cm',(f,v) => {(f.offset ??= [0,0,0])[i]=v/100;}));
   ['X','Y','Z'].forEach((axis,i) => addSlider('Correction rotate '+axis,fit.rotate?.[i] || 0,-90,90,1,'°',(f,v) => {(f.rotate ??= [0,0,0])[i]=v;}));
   addSlider('Correction scale',(fit.scale ?? 1)*100,50,150,1,'%',(f,v) => {f.scale=v/100;});
+  addSlider('Correction depth',(fit.depth_scale ?? 1)*100,50,250,1,'%',(f,v) => {f.depth_scale=v/100;});
   const labelEl=document.createElement('label'), select=document.createElement('select'); labelEl.textContent='Body masking ';
   for(const [value,text] of [['','Inherit'],['clothing','Clothing: limbs/head'],['body','Attachment: whole body'],['none','No body masking']]) select.add(new Option(text,value));
   select.value=fit.occlusion || ''; select.onchange=() => {const rule=selectedCorrection(true); if(!rule)return; if(select.value)rule.fit.occlusion=select.value; else delete rule.fit.occlusion; changed();commit();};
@@ -400,17 +436,22 @@ async function selectSlot(slot) {
   state.slot = slot;
   state.shown = new Set([list[0].id]); state.selected = list[0];
   renderItems(); for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
-  buildPanels(); updateBody(); buildSheet(); drawSheet(); renderMeasureTable();
+  buildPanels(); updateBody(); buildSheet(); drawSheet(); renderMeasureTable(); renderPanel?.sync();
 }
 function renderItems() {
   const box = $('items'); box.innerHTML = '';
   for (const info of state.manifest.items.filter(i => i.slot === state.slot)) {
     const row = document.createElement('div'); row.className = 'item' + (state.selected?.id === info.id ? ' on' : '');
-    row.innerHTML = `<input type="checkbox" ${state.shown.has(info.id) ? 'checked' : ''}><div>${html(info.id)}<div class="fam">${html(info.family || '')}</div></div>`;
+    row.innerHTML = `<input type="checkbox" title="Show in the 3D view" aria-label="Show ${html(info.id)} in 3D" ${state.shown.has(info.id) ? 'checked' : ''}><div><div class="name">${html(info.family || info.id)}</div><div class="code">${html(info.id)}</div></div>`;
     row.querySelector('input').onclick = e => { e.stopPropagation(); e.target.checked ? state.shown.add(info.id) : state.shown.delete(info.id); changed(); };
-    row.onclick = () => { state.selected = info; renderItems(); buildPanels(); };
+    row.onclick = () => selectItem(info);
     box.appendChild(row);
   }
+}
+function selectItem(info) {
+  state.selected = info; renderItems(); buildPanels();
+  for (const [id, card] of previewCards) card.canvas.parentElement.classList.toggle('on', id === info.id);
+  renderPanel?.sync();
 }
 function drawSheet() { preview.dirty = true; }
 const previewCards = new Map();
@@ -420,6 +461,7 @@ function buildSheet() {
     const figure = document.createElement('figure'), canvas = document.createElement('canvas'), caption = document.createElement('figcaption');
     canvas.width = W; canvas.height = H; canvas.setAttribute('aria-label', info.id + ' live preview');
     figure.title = info.id; figure.append(canvas, caption); $('sheet').appendChild(figure);
+    figure.classList.toggle('on', state.selected?.id === info.id); canvas.onclick = () => selectItem(info);
     caption.textContent = info.family || info.id;
     previewCards.set(info.id, { canvas, caption, info });
   }
@@ -449,7 +491,7 @@ function renderSheet() {
 async function measure() {
   if (measuring) return;
   measuring = true; persistence.suspended = true;
-  const panels = ['left', 'right', 'bar', 'previewBar']; panels.forEach(id => $(id).inert = true);
+  const panels = ['left', 'right', 'bar', 'previewBar', 'topActions']; panels.forEach(id => $(id).inert = true);
   try {
   const acts = [...document.querySelectorAll('#measureActions input:checked')].map(i => +i.value);
   const list = state.manifest.items.filter(i => i.slot === state.slot).map(i => items.get(i.id));
@@ -483,7 +525,7 @@ function frameUI() {
   [...$('dirs').children].forEach((b, d) => b.classList.toggle('on', d === state.dir));
   renderer.domElement.style.transform = state.dir > 4 ? 'scaleX(-1)' : '';
   setPose(state.action, state.frame, state.dir); drawSheet();
-  buildScopedPanel();
+  buildScopedPanel(); renderPanel?.sync();
 }
 
 async function loadAssets() {
@@ -500,27 +542,6 @@ async function loadAssets() {
   } catch (error) { $('assetStatus').textContent = error.message; }
   finally { $('loadAssets').disabled = false; }
 }
-async function pollBuild() {
-  const status = await getJSON('api/build');
-  $('buildStatus').textContent = status.state === 'failed' ? status.error : status.state === 'complete' ?
-    `${status.item}: ${status.unchanged ? 'No changed blocks' : 'Build validated'} · ${status.job}` :
-    status.state === 'building' ? `Rendering ${status.item}…` : '';
-  $('buildItem').disabled = $('rebuildItem').disabled = status.state === 'building';
-  if (status.review) { $('buildReview').href=status.review;$('buildReview').hidden=false; }
-  if (status.state === 'building') setTimeout(() => pollBuild().catch(e => {$('buildStatus').textContent=e.message;}),2000);
-}
-async function buildItem(mode) {
-  try {
-    await persistence.save();
-    if (persistence.conflict || persistence.saving || !same(persistence.disk,state.adjust))
-      throw new Error('Wait for Saved to disk before building.');
-    const response = await fetch('api/build',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      item:state.selected.id, mode, coverage:$('buildCoverage').value, action:state.manifest.actions[state.action].id})});
-    const result=await response.json();if(!response.ok)throw new Error(result.error);
-    $('buildReview').hidden=true;await pollBuild();
-  } catch(error) { $('buildStatus').textContent=error.message; }
-}
-
 let cancelAB = false, reportURL;
 function paintComparison(ctx, pixels, action, frame, dir, x, y) {
   const tile = reference?.tiles[`${state.manifest.actions[action].id},${frame},${dir}`];
@@ -541,7 +562,7 @@ async function headAB() {
   const context = contact.getContext('2d'); context.fillStyle = '#14181d'; context.fillRect(0, 0, contact.width, contact.height);
   context.font = '10px sans-serif'; context.fillStyle = '#dfe5ec';
   $('abImages').replaceChildren(contact); $('abImageDownload').hidden = true;
-  const panels = ['left', 'bar', 'previewBar']; panels.forEach(id => $(id).inert = true);
+  const panels = ['left', 'bar', 'previewBar', 'topActions']; panels.forEach(id => $(id).inert = true);
   const disabled = [...$('right').querySelectorAll('button,input,select')].map(el => [el, el.disabled]);
   disabled.forEach(([el]) => el.disabled = el.id !== 'cancelAB'); $('cancelAB').hidden = false;
   const report = {created: new Date().toISOString(), complete: false, actions: actions.map(a => state.manifest.actions[a].id),
@@ -610,6 +631,18 @@ async function headAB() {
   }
 }
 
+function setupTabs() {
+  const tabs = [...document.querySelectorAll('#tabs button')];
+  const show = name => {
+    for (const tab of tabs) tab.setAttribute('aria-selected', tab.dataset.tab === name);
+    for (const panel of document.querySelectorAll('#right .tab')) panel.hidden = panel.dataset.tab !== name;
+    try { localStorage.setItem('fit-lab:tab', name); } catch {}
+  };
+  tabs.forEach(tab => tab.onclick = () => show(tab.dataset.tab));
+  let saved = 'fit'; try { saved = localStorage.getItem('fit-lab:tab') || 'fit'; } catch {}
+  show(tabs.some(t => t.dataset.tab === saved) ? saved : 'fit');
+}
+
 async function main() {
   state.manifest = await getJSON('data/manifest.json');
   state.mapping = await getJSON('api/mapping').catch(() => null);
@@ -634,21 +667,20 @@ async function main() {
   $('slot').innerHTML = slots.map(s => `<option>${s}</option>`).join(''); $('slot').onchange = e => selectSlot(e.target.value);
   $('action').innerHTML = state.manifest.actions.map((a, i) => `<option value="${i}">${a.id} ${a.name.replace(/^\d+_/, '')}</option>`).join('');
   $('action').onchange = e => { state.action = +e.target.value; preview.frame = 0; frameUI(); };
-  $('dirs').innerHTML = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].map((n, d) => `<button title="direction ${d}">${d}</button>`).join('');
+  $('dirs').innerHTML = [...Array(8).keys()].map(d => `<button style="--a:${d * 45}deg" class="${d > 4 ? 'mirror' : ''}" title="Direction ${d}${d > 4 ? `: the client mirrors direction ${8 - d}` : ''}">${d}</button>`).join('');
   [...$('dirs').children].forEach((b, d) => b.onclick = () => {
     state.dir = preview.dir = d; preview.cycling = false; $('previewCycle').checked = false; frameUI();
   });
   $('frame').setAttribute('aria-label', 'Main frame');
   $('frame').oninput = e => { state.frame = preview.frame = +e.target.value; frameUI(); };
-  $('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; };
+  $('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; $('play').setAttribute('aria-label', $('play').textContent); };
+  setupTabs();
   $('uoView').onclick = resetView; $('showHidden').onchange = updateBody;
   $('measureActions').innerHTML = state.manifest.actions.map((a, i) => `<label><input type="checkbox" value="${i}" ${[0, 2, 4, 9, 16].includes(a.id) ? 'checked' : ''}>${a.id}</label>`).join('');
   $('measure').onclick = measure;
   $('headAB').onclick = headAB;
   $('cancelAB').onclick = () => { cancelAB = true; };
   $('loadAssets').onclick = loadAssets;
-  $('buildItem').onclick=() => buildItem('build'); $('rebuildItem').onclick=() => buildItem('rebuild');
-  pollBuild().catch(error => {$('buildStatus').textContent=error.message;});
   for (const id of ['scopeTarget','scopeWhen','scopeGroup']) $(id).onchange=scopeChanged;
   $('makeGroup').onclick=() => {
     const name=$('groupName').value.trim();
@@ -674,15 +706,24 @@ async function main() {
   $('previewSize').onchange = e => { $('sheet').style.setProperty('--preview-scale', e.target.value); drawSheet(); };
   $('sheet').onscroll = drawSheet;
   new ResizeObserver(() => { resize(); drawSheet(); }).observe($('view'));
+  renderPanel = new RenderPanel({
+    pose: () => ({info: state.selected, action: state.manifest.actions[state.action], frame: state.frame, dir: state.dir}),
+    part: partOf, adjustments: () => state.adjust, edited: () => lastEdit, save: () => persistence.save(),
+    ready: () => !persistence.conflict && !persistence.saving && same(persistence.disk, state.adjust),
+    setPose: (dir, frame) => {
+      state.playing = false; $('play').textContent = 'Play'; preview.cycling = false; $('previewCycle').checked = false;
+      state.dir = preview.dir = dir; state.frame = preview.frame = frame; frameUI();
+    },
+  });
   await selectSlot(slots[0]); frameUI();
-  ['left', 'right', 'bar', 'previewBar'].forEach(id => $(id).inert = false);
+  ['left', 'right', 'bar', 'previewBar', 'topActions'].forEach(id => $(id).inert = false);
   let last = 0;
   renderer.setAnimationLoop(t => {
     if (measuring || document.hidden) return;
     const count = state.manifest.actions[state.action].frames;
     if (preview.playing && t - preview.lastFrame >= 125) { preview.lastFrame = t; preview.frame = (preview.frame + 1) % count; preview.dirty = true; }
     if (preview.cycling && t - preview.lastDir >= 2000) { preview.lastDir = t; preview.dir = (preview.dir + 1) % 8; preview.dirty = true; }
-    if (state.playing && t - last > 125) { last = t; state.frame = (state.frame + 1) % state.manifest.actions[state.action].frames; $('frame').value = state.frame; $('frameLabel').textContent = `${state.frame + 1}/${state.manifest.actions[state.action].frames}`; setPose(state.action, state.frame, state.dir); }
+    if (state.playing && t - last > 125) { last = t; state.frame = (state.frame + 1) % state.manifest.actions[state.action].frames; $('frame').value = state.frame; $('frameLabel').textContent = `${state.frame + 1}/${state.manifest.actions[state.action].frames}`; setPose(state.action, state.frame, state.dir); renderPanel.sync(); }
     if (preview.dirty) renderSheet();
     renderer.render(scene, view);
   });

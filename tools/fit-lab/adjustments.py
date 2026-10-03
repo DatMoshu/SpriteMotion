@@ -21,16 +21,19 @@ def validate(data):
 
     if not isinstance(data, dict) or not {'parts', 'items'} <= set(data) or not set(data) <= {'parts', 'items', 'groups', 'corrections'}:
         raise ValueError('Adjustments need parts and items objects.')
-    for section, allowed in [('parts', {'offset', 'rotate', 'scale', 'bind', 'hide_body', 'occlusion'}), ('items', {'offset'})]:
+    for section, allowed in [('parts', {'offset', 'rotate', 'scale', 'depth_scale', 'bind', 'hide_body', 'occlusion'}), ('items', {'offset', 'sides'})]:
         if not isinstance(data[section], dict):
             raise ValueError(f'{section} must be an object.')
         for name, fit in data[section].items():
             if not isinstance(name, str) or not isinstance(fit, dict) or not set(fit) <= allowed:
                 raise ValueError('Invalid fit fields.')
             for key, value in fit.items():
-                if key in ('offset', 'rotate'):
+                if key == 'sides':
+                    valid = (isinstance(value, dict) and set(value) <= {'left', 'right'} and
+                             all(isinstance(v, list) and len(v) == 3 and all(number(n) for n in v) for v in value.values()))
+                elif key in ('offset', 'rotate'):
                     valid = isinstance(value, list) and len(value) == 3 and all(number(n) for n in value)
-                elif key == 'scale':
+                elif key in ('scale', 'depth_scale'):
                     valid = number(value) and value > 0
                 elif key == 'bind':
                     valid = value in ('skinned', 'rigid')
@@ -64,7 +67,7 @@ def validate(data):
         if identity in seen: raise ValueError('Duplicate correction selector.')
         seen.add(identity)
         fit = rule['fit']
-        if not isinstance(fit, dict) or not set(fit) <= {'offset','rotate','scale','occlusion'}:
+        if not isinstance(fit, dict) or not set(fit) <= {'offset','rotate','scale','depth_scale','occlusion'}:
             raise ValueError('Invalid correction fit.')
         validate({'parts': {'correction': fit}, 'items': {}})
     return data

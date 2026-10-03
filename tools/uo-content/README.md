@@ -35,8 +35,11 @@ Explicit snapshots take precedence. Unmatched item identity is an error when ite
 Saved slot values replace mapping defaults (avoiding double application of a mapping already merged by the sidecar);
 legacy item offsets and scoped deltas are then applied. Explicit job transforms add on top.
 Every rendered action/direction resolves from the same untouched base geometry; corrections never accumulate.
-Back/quiver slots use whole-body masking by default; other slots use the clothing limb/head mask. Per-scope
-`occlusion` can override this. The build recomputes body hiding after fitting each block.
+All enabled final-render masking uses the complete animated body, including the torso. Clothing mode allows
+bounded contact tolerance on the garment's own anatomical region, preserving left/right identity; body mode
+uses only the renderer's normal depth margin. Per-scope `occlusion` can override this or disable masking.
+The build recomputes fitting-body hiding after each block without removing faces from the invisible occluder.
+See [body occlusion](../../docs/body-occlusion.md). Existing saved renders require a fresh build.
 
 `python tools/uo-content/pipeline.py rebuild <job> --adjustments <lab-adjustments.json>` compares resolved fits
 for every existing block and renders only changed blocks. It creates a new validated revision, preserving the
@@ -48,7 +51,7 @@ scene carries the latest base/bindings; job settings record the per-block correc
 Rebuilding refuses to mix versions when the canonical model, renderer code, source meshes or palette has changed;
 make a fresh build in that case. Jobs record `render_fingerprint` and `source_fingerprints` for this check.
 Rigid bindings do not receive the mesh-deforming push-out solver. Masking policy changes do not change the solver's
-collision regions for skinned clothes; newer renderers retain their separate worn-part holdout policy.
+collision regions for skinned clothes; the separate pristine-body depth pass controls final visibility.
 
 ## Outputs and importing
 

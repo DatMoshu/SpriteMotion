@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/starter-catalog.schema.json",
+  "title": "Bundled starter equipment catalog",
+  "type": "object",
+  "required": ["schema", "schema_version", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "spritemotion.starter-catalog"},
+    "schema_version": {"const": 1},
+    "items": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "layer", "kind"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "name": {"type": "string"},
+        "layer": {"type": "integer", "minimum": 1, "maximum": 25},
+        "kind": {"enum": ["animated", "paperdoll", "internal"]},
+        "asset": {"type": "string", "pattern": "^[a-z0-9-]+\\.glb$"},
+        "part": {"type": "string"},
+        "mapping": {"type": "string", "pattern": "^[a-z0-9-]+\\.json$"},
+        "note": {"type": "string"}
+      }
+    }}
+  }
+}

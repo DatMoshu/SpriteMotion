@@ -19,6 +19,9 @@ Open work and where to start: `docs/handoff.md`.
 
 ## Layout
 
+The audited CC0 starter models in `examples/cc0-starter` may be committed with their original
+license and provenance hashes. This exception does not cover game-derived or commercial assets.
+
 - `common/` is the shared Python package (imports as `spritemotion`); `schemas/` holds every JSON data contract.
   Extend a schema (and `docs/`) before emitting a new field.
 - `games/<game>/`: adapter, profiles, annotations, equipment slots (`equipment/layers.json`), outfit lab.

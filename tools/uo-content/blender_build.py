@@ -230,7 +230,7 @@ if spec.get('pack_mapping'):
     sys.path.insert(0,str(Path(__file__).parent))
     import pack_fit
     pack=pack_fit.load_pack(spec['pack_mapping'])
-    objects=pack_fit.import_fitted(spec,rig,pack)
+    objects=pack_fit.import_fitted(spec,rig,pack,body)
     # The mapping's (lab-tuned) part settings are the defaults; explicit job settings add on top.
     fit=next((p for p in pack['parts'] if p['code']==spec.get('pack_part')),{})
     mapping_fit = fit
@@ -254,7 +254,9 @@ bpy.context.view_layer.update()
 rotation=Euler(tuple(math.radians(spec['rotate_'+a]) for a in 'xyz')).to_matrix().to_4x4()
 lo,hi=bounds(objects); center=Vector((lo+hi)/2)
 fit_center = center.copy()
-for o in objects: o.matrix_world=Matrix.Translation(center) @ rotation @ Matrix.Translation(-center) @ o.matrix_world
+depth_scale = initial_fit.get('depth_scale',1) if initial_fit is not None else 1
+depth_matrix = Matrix.Diagonal(Vector((1,depth_scale,1,1)))
+for o in objects: o.matrix_world=Matrix.Translation(center) @ rotation @ depth_matrix @ Matrix.Translation(-center) @ o.matrix_world
 bpy.context.view_layer.update()
 lo,hi=bounds(objects); center=Vector((lo+hi)/2)
 if initial_fit is not None: center = fit_center.copy()

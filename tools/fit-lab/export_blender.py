@@ -84,7 +84,8 @@ for n, item in enumerate(items_doc['items']):
     target = OUT / 'items' / f"{item['id']}.glb"
     if target.exists() and not FORCE and item['id'] in known:
         continue
-    objects = pack_fit.import_fitted({'source_files': item['files'], 'palette': item.get('palette')}, rig, pack)
+    objects = pack_fit.import_fitted({'source_files': item['files'], 'palette': item.get('palette'),
+                                      'pack_part': item['part']}, rig, pack, body)
     pack_fit.bind(objects, rig, False)
     totals = {}
     for o in objects:

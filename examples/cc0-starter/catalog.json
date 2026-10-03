@@ -1,0 +1,249 @@
+{
+  "schema": "spritemotion.starter-catalog",
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "weapon-sword",
+      "name": "OneHanded \u2014 weapon sword",
+      "layer": 1,
+      "kind": "animated",
+      "asset": "starter-sword.glb",
+      "part": "weapon",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "shield-round",
+      "name": "TwoHanded \u2014 shield round",
+      "layer": 2,
+      "kind": "animated",
+      "asset": "starter-shield.glb",
+      "part": "shield",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "boots",
+      "name": "Shoes \u2014 boots",
+      "layer": 3,
+      "kind": "animated",
+      "asset": "boots.glb",
+      "part": "boots",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "pants",
+      "name": "Pants \u2014 pants",
+      "layer": 4,
+      "kind": "animated",
+      "asset": "pants.glb",
+      "part": "legs",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "shirt",
+      "name": "Shirt \u2014 shirt",
+      "layer": 5,
+      "kind": "animated",
+      "asset": "shirt.glb",
+      "part": "chest",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "hood",
+      "name": "Helm \u2014 hood",
+      "layer": 6,
+      "kind": "animated",
+      "asset": "hood.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "gloves",
+      "name": "Gloves \u2014 gloves",
+      "layer": 7,
+      "kind": "animated",
+      "asset": "gloves.glb",
+      "part": "gloves",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "ring",
+      "name": "Ring \u2014 ring",
+      "layer": 8,
+      "kind": "paperdoll",
+      "asset": "ring.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json",
+      "note": "Source model for inventory/paperdoll artwork; no body-animation VD is generated."
+    },
+    {
+      "id": "talisman",
+      "name": "Talisman \u2014 talisman",
+      "layer": 9,
+      "kind": "paperdoll",
+      "asset": "talisman.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json",
+      "note": "Source model for inventory/paperdoll artwork; no body-animation VD is generated."
+    },
+    {
+      "id": "gorget",
+      "name": "Neck \u2014 gorget",
+      "layer": 10,
+      "kind": "animated",
+      "asset": "gorget.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "hair",
+      "name": "Hair \u2014 hair",
+      "layer": 11,
+      "kind": "animated",
+      "asset": "hair.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "belt",
+      "name": "Waist \u2014 belt",
+      "layer": 12,
+      "kind": "animated",
+      "asset": "belt.glb",
+      "part": "skirt",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "chest",
+      "name": "InnerTorso \u2014 chest",
+      "layer": 13,
+      "kind": "animated",
+      "asset": "chest.glb",
+      "part": "chest",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "bracelet",
+      "name": "Bracelet \u2014 bracelet",
+      "layer": 14,
+      "kind": "paperdoll",
+      "asset": "bracelet.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json",
+      "note": "Source model for inventory/paperdoll artwork; no body-animation VD is generated."
+    },
+    {
+      "id": "mask",
+      "name": "Face \u2014 mask",
+      "layer": 15,
+      "kind": "animated",
+      "asset": "mask.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "beard",
+      "name": "FacialHair \u2014 beard",
+      "layer": 16,
+      "kind": "animated",
+      "asset": "beard.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "tunic",
+      "name": "MiddleTorso \u2014 tunic",
+      "layer": 17,
+      "kind": "animated",
+      "asset": "tunic.glb",
+      "part": "chest",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "earrings",
+      "name": "Earrings \u2014 earrings",
+      "layer": 18,
+      "kind": "paperdoll",
+      "asset": "earrings.glb",
+      "part": "helm",
+      "mapping": "outfit-mapping.json",
+      "note": "Source model for inventory/paperdoll artwork; no body-animation VD is generated."
+    },
+    {
+      "id": "arms",
+      "name": "Arms \u2014 arms",
+      "layer": 19,
+      "kind": "animated",
+      "asset": "arms.glb",
+      "part": "arms",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "cloak",
+      "name": "Cloak \u2014 cloak",
+      "layer": 20,
+      "kind": "animated",
+      "asset": "cloak.glb",
+      "part": "cloak",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "backpack",
+      "name": "Backpack \u2014 backpack",
+      "layer": 21,
+      "kind": "animated",
+      "asset": "backpack.glb",
+      "part": "quiver",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "robe",
+      "name": "OuterTorso \u2014 robe",
+      "layer": 22,
+      "kind": "animated",
+      "asset": "robe.glb",
+      "part": "robe",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "skirt",
+      "name": "OuterLegs \u2014 skirt",
+      "layer": 23,
+      "kind": "animated",
+      "asset": "skirt.glb",
+      "part": "skirt",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "leg-armor",
+      "name": "InnerLegs \u2014 leg armor",
+      "layer": 24,
+      "kind": "animated",
+      "asset": "leg-armor.glb",
+      "part": "legs",
+      "mapping": "outfit-mapping.json"
+    },
+    {
+      "id": "mount",
+      "name": "Mount \u2014 mount",
+      "layer": 25,
+      "kind": "internal",
+      "note": "Internal server mount item, not an equipment sprite. Use a separately animated creature and mounted rider actions; no wearable mesh is appropriate."
+    },
+    {
+      "id": "weapon-spear",
+      "name": "Kenney weapon-spear",
+      "layer": 1,
+      "kind": "animated",
+      "asset": "weapon-spear.glb",
+      "part": "weapon"
+    },
+    {
+      "id": "shield-rectangle",
+      "name": "Kenney shield-rectangle",
+      "layer": 2,
+      "kind": "animated",
+      "asset": "shield-rectangle.glb",
+      "part": "shield"
+    }
+  ]
+}

@@ -16,10 +16,11 @@ import subprocess
 import sys
 import webbrowser
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 from adjustments import AdjustmentStore, ConflictError
 from assets import import_directory
 from builds import Builds
+from service import describe
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
@@ -50,7 +51,8 @@ def export(args):
 
 def serve(args):
     d = data_dir(args.pack)
-    adjust = sidecar() / 'packs' / args.pack / 'lab-adjustments.json'
+    adjust = (d / 'lab-adjustments.json' if args.pack == 'cc0-starter'
+              else sidecar() / 'packs' / args.pack / 'lab-adjustments.json')
     store = AdjustmentStore(adjust)
     builds = Builds(d,store)
 
@@ -72,7 +74,11 @@ def serve(args):
 
         def do_GET(self):
             path = urlsplit(self.path).path
+            if path == '/api/service': return self.reply(200, json.dumps(describe(args.pack)).encode())
             if path == '/api/build': return self.reply(200,json.dumps(builds.state()).encode())
+            if path == '/api/renders':
+                item = parse_qs(urlsplit(self.path).query).get('item', [''])[0]
+                return self.reply(200, json.dumps({'renders': builds.renders.renders(item)}).encode())
             if path == '/api/mapping':
                 manifest = json.loads((d / 'manifest.json').read_text())
                 mapping = Path(manifest.get('mapping') or '')

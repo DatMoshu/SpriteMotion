@@ -14,7 +14,7 @@ def load_pack(path):
     return json.loads(Path(path).read_text(encoding='utf-8-sig'))
 
 
-def import_fitted(spec, rig, pack):
+def import_fitted(spec, rig, pack, body=None):
     bones = pack['bones']
     aligned = {name: b for name, b in bones.items() if 'end' in b}
     mapping = {name: b['target'] for name, b in aligned.items()}
@@ -25,7 +25,10 @@ def import_fitted(spec, rig, pack):
     result = []
     for filename in spec['source_files']:
         before = set(bpy.data.objects)
-        bpy.ops.import_scene.fbx(filepath=filename)
+        if Path(filename).suffix.lower() in ('.glb', '.gltf'):
+            bpy.ops.import_scene.gltf(filepath=filename)
+        else:
+            bpy.ops.import_scene.fbx(filepath=filename)
         imported = set(bpy.data.objects)-before
         arm = next(o for o in imported if o.type == 'ARMATURE')
         arm.data.pose_position = 'REST'
@@ -40,8 +43,17 @@ def import_fitted(spec, rig, pack):
             start = arm.matrix_world@arm.data.bones[source].head_local
             endname = aligned[source]['end']
             endpoint = (arm.matrix_world@arm.data.bones[endname].head_local) if endname and endname in arm.data.bones else start+missing_end
+            if not endname and aligned[source].get('end_from_parent'):
+                parent = arm.data.bones[source].parent
+                if parent is None:
+                    raise ValueError(f'{source}: end_from_parent requires a parent joint')
+                endpoint = start + (start - arm.matrix_world @ parent.head_local)
             dest = rig.data.bones[target]
-            a = endpoint-start; b = dest.tail_local-dest.head_local
+            target_end = aligned[source].get('target_end')
+            finish = rig.data.bones[target_end].head_local if target_end else dest.tail_local
+            a = endpoint-start; b = finish-dest.head_local
+            if a.length < 1e-8 or b.length < 1e-8:
+                raise ValueError(f'{source}: aligned chain has zero length')
             # Keep torso/head vertical orientation; FBX bone roll is unrelated to anatomy.
             if source in keep:
                 rotation = Matrix.Identity(4); scale = 1.0
@@ -49,7 +61,9 @@ def import_fitted(spec, rig, pack):
                 rotation = a.rotation_difference(b).to_matrix().to_4x4()
                 scale = max(low, min(high, b.length/a.length))
             transforms[source] = Matrix.Translation(dest.head_local)@rotation@Matrix.Scale(scale, 4)@Matrix.Translation(-start)
-        for ob in [o for o in imported if o.type == 'MESH']:
+        # glTF creates mesh objects used only as bone display shapes; they are not equipment.
+        bone_shapes = {p.custom_shape for p in arm.pose.bones if p.custom_shape is not None}
+        for ob in [o for o in imported if o.type == 'MESH' and o not in bone_shapes]:
             # The base shape is the input; source morphs use the old coordinate system.
             if ob.data.shape_keys: ob.shape_key_clear()
             groups = {g.index: resolve(g.name) for g in ob.vertex_groups}
@@ -85,7 +99,26 @@ def import_fitted(spec, rig, pack):
     for image in list(bpy.data.images):
         if image.source == 'FILE' and not image.packed_file and image.filepath and not Path(bpy.path.abspath(image.filepath)).exists():
             bpy.data.images.remove(image)
+    part = next((p for p in pack.get('parts', []) if p['code'] == spec.get('pack_part')), {})
+    if part.get('surface_clearance') is not None:
+        if body is None:
+            raise ValueError('surface_clearance requires a rest-pose body mesh')
+        clear_surface(result, body, rig, part['surface_clearance'])
     return result
+
+
+def clear_surface(objects, body, rig, clearance):
+    """Project nearby penetrations onto the unposed body, in target-rig coordinates."""
+    from mathutils.bvhtree import BVHTree
+    transform = rig.matrix_world.inverted() @ body.matrix_world
+    points = [transform @ v.co for v in body.data.vertices]
+    tree = BVHTree.FromPolygons(points, [list(p.vertices) for p in body.data.polygons])
+    for ob in objects:
+        for vertex in ob.data.vertices:
+            hit, normal, _, distance = tree.find_nearest(vertex.co)
+            if hit is not None and distance <= .05 and (vertex.co - hit).dot(normal) < clearance:
+                vertex.co = hit + normal * clearance
+        ob.data.update()
 
 
 def bind(objects, rig, rigid=False):

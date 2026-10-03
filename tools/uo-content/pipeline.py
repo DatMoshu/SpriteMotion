@@ -32,7 +32,7 @@ def sha(path):
 
 
 def render_fingerprint():
-    paths = [HERE/name for name in ('blender_build.py','fit_runtime.py','pack_fit.py')]
+    paths = [HERE/name for name in ('blender_build.py','fit_runtime.py','occlusion.py','pack_fit.py')]
     paths += [ROOT/'tools/fit-lab/fit_rules.py']
     paths += [BACKEND/'pipeline'/name for name in ('render_uo_layer.py','uo_bind_item.py','uo_vd_writer.py')]
     return hashlib.sha256(''.join(sha(path) for path in paths).encode()).hexdigest()

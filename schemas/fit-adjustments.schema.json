@@ -2,34 +2,200 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Fit lab adjustments (also used by each backup)",
   "type": "object",
-  "required": ["parts", "items"],
+  "required": [
+    "parts",
+    "items"
+  ],
   "additionalProperties": false,
   "properties": {
-    "groups": {"type":"object", "additionalProperties":{"type":"array", "uniqueItems":true, "items":{"type":"string"}}},
-    "corrections": {"type":"array", "items":{"$ref":"#/$defs/correction"}},
-    "parts": {"type": "object", "additionalProperties": {"$ref": "#/$defs/fit"}},
-    "items": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "properties": {"offset": {"$ref": "#/$defs/vector"}}}}
+    "groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/correction"
+      }
+    },
+    "parts": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/fit"
+      }
+    },
+    "items": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offset": {
+            "$ref": "#/$defs/vector"
+          },
+          "sides": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "left": {
+                "$ref": "#/$defs/vector"
+              },
+              "right": {
+                "$ref": "#/$defs/vector"
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "$defs": {
-    "correction": {"type":"object", "additionalProperties":false, "required":["target","fit"], "properties":{
-      "target":{"enum":["pack","slot","group","item"]}, "key":{"type":"string", "minLength":1},
-      "action":{"type":"integer", "minimum":0, "maximum":34}, "direction":{"type":"integer", "minimum":0, "maximum":4},
-      "fit":{"type":"object", "additionalProperties":false, "properties":{
-        "offset":{"$ref":"#/$defs/vector"}, "rotate":{"$ref":"#/$defs/vector"}, "scale":{"type":"number", "exclusiveMinimum":0},
-        "occlusion":{"enum":["clothing","body","none"]}
-      }}
-    }, "allOf":[{"if":{"properties":{"target":{"enum":["slot","group","item"]}}},"then":{"required":["key"]}}]},
-    "vector": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
-    "fit": {
-      "type": "object", "additionalProperties": false,
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "fit"
+      ],
       "properties": {
-        "offset": {"$ref": "#/$defs/vector"}, "rotate": {"$ref": "#/$defs/vector"},
-        "scale": {"type": "number", "exclusiveMinimum": 0},
-        "bind": {"enum": ["skinned", "rigid"]},
-        "occlusion": {"enum": ["clothing", "body", "none"]},
-        "hide_body": {"type": "object", "additionalProperties": false, "required": ["enabled", "outward", "inward"], "properties": {
-          "enabled": {"type": "boolean"}, "outward": {"type": "number", "minimum": 0}, "inward": {"type": "number", "minimum": 0}
-        }}
+        "target": {
+          "enum": [
+            "pack",
+            "slot",
+            "group",
+            "item"
+          ]
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 34
+        },
+        "direction": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "fit": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "offset": {
+              "$ref": "#/$defs/vector"
+            },
+            "rotate": {
+              "$ref": "#/$defs/vector"
+            },
+            "scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "occlusion": {
+              "enum": [
+                "clothing",
+                "body",
+                "none"
+              ]
+            },
+            "depth_scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "target": {
+                "enum": [
+                  "slot",
+                  "group",
+                  "item"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "key"
+            ]
+          }
+        }
+      ]
+    },
+    "vector": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "fit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "offset": {
+          "$ref": "#/$defs/vector"
+        },
+        "rotate": {
+          "$ref": "#/$defs/vector"
+        },
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "bind": {
+          "enum": [
+            "skinned",
+            "rigid"
+          ]
+        },
+        "occlusion": {
+          "enum": [
+            "clothing",
+            "body",
+            "none"
+          ]
+        },
+        "hide_body": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "outward",
+            "inward"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "outward": {
+              "type": "number",
+              "minimum": 0
+            },
+            "inward": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "depth_scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
       }
     }
   }

@@ -2,9 +2,11 @@
 import json
 from pathlib import Path
 import sys
+import time
 from threading import Lock, Thread
 
 from adjustments import atomic_write
+from renders import RenderIndex
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/uo-content'))
@@ -18,9 +20,16 @@ class Builds:
         self.path = data/'lab-builds.json'
         self.lock = Lock()
         self.status = {'state':'idle'}
+        self.renders = RenderIndex(pipeline.HOME/'jobs')
 
     def state(self):
-        with self.lock: return dict(self.status)
+        with self.lock: status = dict(self.status)
+        if status['state']=='building':
+            manifest = json.loads((self.data/'manifest.json').read_text())
+            frames = {a['id']:a['frames'] for a in manifest['actions']}
+            progress = self.renders.progress(status['item'],status['started'],frames)
+            if progress: status['progress'] = progress
+        return status
 
     def start(self, request):
         if not isinstance(request,dict) or set(request) != {'item','mode','coverage','action'}:
@@ -37,7 +46,7 @@ class Builds:
         if request['mode']=='rebuild' and not parent: raise ValueError('Build this item once before rebuilding changed blocks.')
         with self.lock:
             if self.status['state']=='building': raise ValueError('A lab build is already running.')
-            self.status = {'state':'building','item':item['id']}
+            self.status = {'state':'building','item':item['id'],'mode':request['mode'],'started':time.time()}
         Thread(target=self.run,args=(request,catalog,item,document,last,parent),daemon=True).start()
         return self.state()
 

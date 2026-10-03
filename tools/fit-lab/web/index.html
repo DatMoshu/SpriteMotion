@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fit Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="lab.css">
 <script type="importmap">
 {"imports": {
@@ -14,91 +16,156 @@
 </script>
 </head>
 <body>
+<header id="top">
+  <div class="brand"><h1>Fit Lab</h1><p id="packName"></p><a href="http://127.0.0.1:8772/" target="_blank" rel="noopener">Open Content Studio ↗</a></div>
+  <div id="topActions" inert>
+    <p id="saveStatus" role="status" aria-live="polite">Loading saved adjustments…</p>
+    <button id="undo" title="Undo (Ctrl+Z)" disabled>Undo</button><button id="redo" title="Redo (Ctrl+Y)" disabled>Redo</button>
+    <button id="save" class="primary">Save</button>
+  </div>
+</header>
+
 <aside id="left" inert>
-  <h1>Fit Lab</h1>
-  <p class="sub" id="packName"></p>
-  <label>Slot <select id="slot"></select></label>
-  <p class="sub" id="slotInfo"></p>
-  <div id="items"></div>
-  <details><summary>Load asset directory</summary>
-    <p class="sub">Fitted UO GLBs only; added to the selected slot for this session. Raw FBX must be fitted/exported first.</p>
-    <label>Directory <input id="assetDirectory" type="text" placeholder="Local folder path"></label>
-    <button id="loadAssets">Load directory</button><p id="assetStatus" role="status"></p>
+  <label class="field">Slot <select id="slot"></select></label>
+  <p class="hint" id="slotInfo"></p>
+  <div id="items" aria-label="Items in this slot"></div>
+  <details class="tuck"><summary>Load fitted GLBs from a folder</summary>
+    <p class="hint">Fitted UO GLBs only. They join the selected slot for this session. Raw FBX must be fitted and exported first.</p>
+    <label class="field">Folder <input id="assetDirectory" type="text" placeholder="Local folder path"></label>
+    <button id="loadAssets">Load folder</button><p id="assetStatus" class="hint" role="status"></p>
   </details>
 </aside>
-<main>
-  <div id="view"></div>
+
+<main id="center">
+  <div id="stage">
+    <section class="pane" aria-label="Live 3D fit">
+      <header class="pane-head"><h2>Live 3D</h2><span class="pane-note">Drag to orbit</span>
+        <button id="uoView" class="quiet" title="Reset to the UO camera">UO camera</button>
+        <label class="check"><input id="showHidden" type="checkbox"> Hidden faces</label></header>
+      <div id="view"></div>
+    </section>
+    <section class="pane" id="renderPane" aria-label="Blender render">
+      <header class="pane-head"><h2>Blender render</h2>
+        <div id="renderModes" class="seg" role="group" aria-label="Render view">
+          <button data-mode="frame" aria-pressed="true">Frame</button><button data-mode="sheet" aria-pressed="false">Sprite sheet</button>
+        </div>
+        <span id="renderChip" class="chip" data-kind="none" role="status">Not rendered</span></header>
+      <div id="renderStage">
+        <canvas id="renderFrame" aria-label="Rendered sprite frame"></canvas>
+        <div id="renderSheet"></div>
+        <div id="renderEmpty" hidden><p id="renderEmptyText"></p><button id="renderNow" class="primary">Render this animation</button>
+          <p class="hint">Blender renders the five stored directions in the background. You can keep fitting while it works.</p></div>
+        <div id="renderProgress" hidden><i id="renderBar"></i></div>
+      </div>
+      <footer class="pane-foot">
+        <span class="pane-note foot-text"><span id="renderPose"></span><span id="renderMeta"></span></span>
+        <label class="check"><input id="renderBase" type="checkbox" checked> UO body</label>
+        <label class="check" title="After a saved fit change, re-render the current animation once the fit has been still for 3 seconds"><input id="renderAuto" type="checkbox"> Auto re-render</label>
+        <button id="renderGo">Render animation</button>
+        <button id="renderSheetDownload" class="quiet" hidden>Download sheet</button>
+        <a id="renderPackage" class="quiet-link" hidden download>Import package</a>
+      </footer>
+    </section>
+  </div>
+
   <div id="bar" inert>
-    <label>Action <select id="action"></select></label>
-    <span id="dirs"></span>
+    <label class="field inline">Action <select id="action"></select></label>
+    <div id="dirs" role="group" aria-label="Direction"></div>
+    <button id="play" class="play" aria-label="Play">Play</button>
     <input id="frame" type="range" min="0" max="0" value="0">
-    <span id="frameLabel">0</span>
-    <button id="play">Play</button>
-    <button id="uoView" title="Reset to the UO camera">UO camera</button>
-    <label><input id="showHidden" type="checkbox"> show hidden faces</label>
+    <span id="frameLabel" class="num">0</span>
+    <span id="status" class="pane-note"></span>
   </div>
-  <div id="sheetWrap">
-    <h2>Live slot previews</h2>
-    <div id="previewBar" inert>
-      <label><input id="previewPlay" type="checkbox" checked> Animate previews</label>
-      <label><input id="previewCycle" type="checkbox" checked> Cycle directions</label>
-      <label>Preview size <select id="previewSize"><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option></select></label>
-      <span id="previewPose" class="sub"></span>
-      <label>Base <select id="previewBase"><option value="original">Original UO sprite</option><option value="model" selected>3D body</option><option value="none">None — content only</option></select></label>
-      <label><input id="previewPokes" type="checkbox"> Show poke pixels</label>
-      <label><input id="stabilizeHead" type="checkbox"> Stabilize head</label>
+
+  <section id="sheetWrap" aria-label="Live slot previews">
+    <div class="pane-head">
+      <h2>Slot previews</h2>
+      <div id="previewBar" inert>
+        <label class="check"><input id="previewPlay" type="checkbox" checked> Animate</label>
+        <label class="check"><input id="previewCycle" type="checkbox" checked> Cycle directions</label>
+        <label class="field inline">Size <select id="previewSize"><option value="2">2×</option><option value="3">3×</option><option value="4">4×</option></select></label>
+        <label class="field inline">Base <select id="previewBase"><option value="original">Original UO sprite</option><option value="model" selected>3D body</option><option value="none">Item only</option></select></label>
+        <label class="check"><input id="previewPokes" type="checkbox"> Poke pixels</label>
+        <label class="check" title="Holds the head at the action's first-frame pose; neck and body motion remain. Preview only."><input id="stabilizeHead" type="checkbox"> Steady head</label>
+        <span id="previewPose" class="pane-note"></span>
+      </div>
     </div>
-    <p class="sub" id="referenceStatus"></p>
-    <p class="sub">Head stabilization holds its local first-frame pose; neck/body motion remains. Preview only.</p>
-    <p class="sub">Live UO-camera fit preview · magenta = body poke pixels · final Blender rendering may differ</p>
+    <p class="hint">Live camera previews; <span class="poke">magenta</span> marks body poke-through. The Blender render above is the final word. <span id="referenceStatus"></span></p>
     <div id="sheet"></div>
-  </div>
+  </section>
 </main>
+
 <aside id="right" inert>
-  <h2>History <span class="sub" id="historyCount"></span></h2>
-  <div class="row"><button id="undo" title="Ctrl+Z" disabled>Undo</button><button id="redo" title="Ctrl+Y / Ctrl+Shift+Z" disabled>Redo</button></div>
-  <details><summary>Change history</summary><div id="history" aria-label="Change history"></div></details>
-  <p id="saveStatus" role="status" aria-live="polite">Loading saved adjustments…</p>
-  <div id="recovery" hidden><p>Disk and recovered edits differ. Choose which to keep; neither is overwritten until you choose.</p><button id="useDisk">Use disk version</button><button id="useLocal">Keep my recovered edits</button></div>
-  <details><summary>Last three saved versions</summary><label>Backup <select id="backups"></select></label><button id="restoreBackup" disabled>Restore backup</button></details>
-  <h2>Slot fit <span class="sub" id="partCode"></span></h2>
-  <p class="sub">Base fit: applies to every animation and direction.</p>
-  <div id="fit"></div>
-  <h2>Hide body under clothes</h2>
-  <p class="sub">Like CC4's hide-mesh: body faces this close to the item are hidden, so they can't poke through or hold out holes in the sprite.</p>
-  <div id="hide"></div>
-  <h2>Scoped correction</h2>
-  <label>Apply to <select id="scopeTarget"><option value="item">This item</option><option value="slot">This slot</option><option value="group">Named group</option><option value="pack">Entire pack</option></select></label>
-  <label>When <select id="scopeWhen"><option value="all">All poses</option><option value="action">This animation</option><option value="direction">This direction</option><option value="pose">This animation + direction</option></select></label>
-  <label>Group <select id="scopeGroup"></select></label>
-  <label>New group name <input id="groupName" type="text"></label>
-  <button id="makeGroup">Group checked items</button>
-  <p class="sub" id="scopeLabel"></p><div id="scopeFit"></div>
-  <button id="removeCorrection">Remove this correction</button>
-  <h2>Render selected item</h2>
-  <label>Build coverage <select id="buildCoverage"><option value="preview">Preview: 5 actions</option><option value="action">Current animation</option><option value="full">All 35 animations</option></select></label>
-  <button id="buildItem">Build item</button><button id="rebuildItem">Rebuild changed blocks</button>
-  <p id="buildStatus" role="status"></p><a id="buildReview" hidden target="_blank" rel="noopener">Open rendered review</a>
-  <h2>Measure</h2>
-  <p class="sub">Poke pixels = pixels where body limb/head faces that lie under the item (within 5 cm outside / 3 cm inside it at rest) show in front of it: the holes the renderer's body holdout would cut. Counted in every frame of the checked actions × 5 directions. The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so counts run high.</p>
-  <div id="measureActions"></div>
-  <button id="measure">Measure slot</button>
-  <button id="headAB">Head A/B: 3 per slot</button>
-  <button id="cancelAB" hidden>Stop A/B</button>
-  <p id="abStatus" role="status"></p><a id="abDownload" hidden download="head-ab.json">Download A/B report</a>
-  <details><summary>A/B counts</summary><table id="abResults"></table></details>
-  <details><summary>A/B contact sheet</summary><p class="sub">Three items per slot; each pair is original motion then stabilized. Largest content-pixel change per item, with original UO underneath when available.</p><a id="abImageDownload" hidden download="head-ab.png">Download contact sheet</a><div id="abImages"></div></details>
-  <details><summary>A/B report JSON</summary><pre id="abJSON"></pre></details>
-  <table id="results"></table>
-  <div class="row"><button id="save">Save adjustments</button><button id="reset">Reset slot</button></div>
-  <p class="sub" id="status"></p>
+  <nav id="tabs" role="tablist" aria-label="Inspector">
+    <button role="tab" data-tab="fit" aria-selected="true">Fit</button>
+    <button role="tab" data-tab="scope" aria-selected="false">Corrections</button>
+    <button role="tab" data-tab="render" aria-selected="false">Render</button>
+    <button role="tab" data-tab="measure" aria-selected="false">Measure</button>
+    <button role="tab" data-tab="history" aria-selected="false">History</button>
+  </nav>
+  <div id="recovery" hidden><p>This browser holds edits that differ from the saved file. Choose which to keep; nothing is overwritten until you choose.</p><div class="row"><button id="useDisk">Use the saved file</button><button id="useLocal" class="primary">Keep my browser edits</button></div></div>
+
+  <div class="tab" data-tab="fit" role="tabpanel">
+    <h3>Slot fit</h3>
+    <p class="hint" id="partCode"></p>
+    <p class="hint">The base fit for every animation and direction.</p>
+    <div id="fit"></div>
+    <h3>Hide body under clothes</h3>
+    <p class="hint">Body faces this close to the item are hidden, so they can't poke through or cut holes in the sprite.</p>
+    <div id="hide"></div>
+    <div class="row"><button id="reset" class="danger">Reset slot</button></div>
+  </div>
+
+  <div class="tab" data-tab="scope" role="tabpanel" hidden>
+    <h3>Scoped correction</h3>
+    <p class="hint">Deltas on top of the slot fit, for one item, a group, or specific poses.</p>
+    <label class="field">Apply to <select id="scopeTarget"><option value="item">This item</option><option value="slot">This slot</option><option value="group">Named group</option><option value="pack">Entire pack</option></select></label>
+    <label class="field">When <select id="scopeWhen"><option value="all">All poses</option><option value="action">This animation</option><option value="direction">This direction</option><option value="pose">This animation and direction</option></select></label>
+    <label class="field">Group <select id="scopeGroup"></select></label>
+    <div class="combo"><label class="field">New group from checked items <input id="groupName" type="text" placeholder="Group name"></label><button id="makeGroup">Create</button></div>
+    <p class="hint" id="scopeLabel"></p><div id="scopeFit"></div>
+    <button id="removeCorrection" class="danger">Remove this correction</button>
+  </div>
+
+  <div class="tab" data-tab="render" role="tabpanel" hidden>
+    <h3>Render the selected item</h3>
+    <p class="hint">Uses the saved fit. The render pane shows the newest render of each animation; this builds wider coverage or patches only what changed.</p>
+    <label class="field">Coverage <select id="buildCoverage"><option value="action">Current animation</option><option value="preview">Preview: 5 animations</option><option value="full">All 35 animations</option></select></label>
+    <div class="row"><button id="buildItem" class="primary">Build item</button><button id="rebuildItem">Rebuild changed blocks</button></div>
+    <p id="buildStatus" class="hint" role="status"></p><a id="buildReview" hidden target="_blank" rel="noopener">Open the full review page</a>
+    <p class="hint">Rebuild compares against this item's last lab build and renders only the blocks your changes affect.</p>
+  </div>
+
+  <div class="tab" data-tab="measure" role="tabpanel" hidden>
+    <h3>Poke-through</h3>
+    <p class="hint">Counts body pixels that show through the item, over every frame of the checked animations in 5 directions. The first run is the baseline.</p>
+    <div id="measureActions" aria-label="Animations to measure"></div>
+    <div class="row"><button id="measure" class="primary">Measure slot</button></div>
+    <table id="results"></table>
+    <details class="tuck"><summary>How poke pixels are counted</summary><p class="hint">Limb and head faces lying under the item (within 5 cm outside or 3 cm inside it at rest) that show in front of it: the holes the renderer's body holdout would cut. The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so counts run high. Compare them; don't read them as absolutes.</p></details>
+    <h3>Head steadying A/B</h3>
+    <p class="hint">Compares original motion with a steadied head on the first three items of every slot.</p>
+    <div class="row"><button id="headAB">Run A/B</button><button id="cancelAB" hidden>Stop A/B</button></div>
+    <p id="abStatus" class="hint" role="status"></p><a id="abDownload" hidden download="head-ab.json">Download A/B report</a>
+    <details class="tuck"><summary>A/B counts</summary><table id="abResults"></table></details>
+    <details class="tuck"><summary>A/B contact sheet</summary><p class="hint">Each pair is original motion, then steadied. Largest content-pixel change per item, with the original UO sprite underneath when available.</p><a id="abImageDownload" hidden download="head-ab.png">Download contact sheet</a><div id="abImages"></div></details>
+    <details class="tuck"><summary>A/B report JSON</summary><pre id="abJSON"></pre></details>
+  </div>
+
+  <div class="tab" data-tab="history" role="tabpanel" hidden>
+    <h3>Edits <span class="hint" id="historyCount"></span></h3>
+    <div id="history" aria-label="Change history"></div>
+    <h3>Saved versions</h3>
+    <label class="field">Backup <select id="backups"></select></label>
+    <button id="restoreBackup" disabled>Restore backup</button>
+  </div>
 </aside>
 <script type="module">
 const status = document.getElementById('saveStatus');
 for (const [name, module] of [
   ['3D renderer', 'three'], ['mesh support', 'three-mesh-bvh'],
   ['model loader', 'three/addons/loaders/GLTFLoader.js'], ['camera controls', 'three/addons/controls/OrbitControls.js'],
-  ['edit history', './history.mjs'], ['autosave', './persistence.js'], ['fit lab', './lab.js']
+  ['edit history', './history.mjs'], ['autosave', './persistence.js'], ['render pane', './render-panel.js'], ['fit lab', './lab.js']
 ]) {
   status.textContent = 'Loading ' + name + '…';
   try { await import(module); }

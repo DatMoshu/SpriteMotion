@@ -4,6 +4,8 @@ The last test needs the user's own Ultima Online client: set SPRITEMOTION_UO_SOU
 to the folder holding anim.mul / anim.idx.
 """
 import os
+import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -45,10 +47,16 @@ def test_bundled_uo_annotations_keep_the_approved_corrections():
 
 def test_no_game_assets_or_local_paths_are_published():
     files = tracked_files()
+    starter = REPO / 'examples/cc0-starter'
+    approved = json.loads((starter / 'provenance.json').read_text())['files']
     for path in files:
         rel = path.relative_to(REPO).as_posix()
         assert not rel.startswith("workspace/") or rel == "workspace/README.md", rel
-        assert path.suffix.lower() not in {".mul", ".uop", ".idx", ".blend", ".fbx", ".glb"}, rel
+        if path.parent == starter and path.name in approved:
+            assert path.suffix == '.glb'
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == approved[path.name]['sha256'], rel
+        else:
+            assert path.suffix.lower() not in {".mul", ".uop", ".idx", ".blend", ".fbx", ".glb"}, rel
         if rel.startswith("games/") and path.suffix.lower() in {".png", ".bmp", ".gif"}:
             pytest.fail(f"image under games/ (game art must never be committed): {rel}")
         if path.suffix.lower() in {".py", ".gd", ".json", ".md", ".bat", ".toml", ".cfg", ".godot", ".tscn",

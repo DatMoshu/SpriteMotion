@@ -1,0 +1,762 @@
+{
+  "schema": "spritemotion.asset-pack",
+  "schema_version": 1,
+  "id": "cc0-starter",
+  "title": "CC0 starter outfit",
+  "game": "ultima-online",
+  "target_rig": "uo-model3d-v13",
+  "source": {
+    "env": "SPRITEMOTION_CC0_STARTER",
+    "license": "CC0-1.0; bundled files and provenance in examples/cc0-starter"
+  },
+  "fit": {
+    "scale_clamp": [
+      0.5,
+      1.8
+    ],
+    "missing_end_offset": [
+      0,
+      0,
+      0.08
+    ],
+    "unmapped": "nearest_mapped_ancestor"
+  },
+  "bones": {
+    "root": {
+      "parent": null,
+      "role": "root",
+      "target": "pelvis",
+      "follows": "pelvis"
+    },
+    "pelvis": {
+      "parent": "root",
+      "role": "deform",
+      "target": "pelvis",
+      "end": "spine_01",
+      "keep_orientation": true
+    },
+    "spine_01": {
+      "parent": "pelvis",
+      "role": "deform",
+      "target": "spine",
+      "end": "spine_02",
+      "keep_orientation": true
+    },
+    "spine_02": {
+      "parent": "spine_01",
+      "role": "deform",
+      "target": "chest",
+      "end": "spine_03",
+      "keep_orientation": true
+    },
+    "spine_03": {
+      "parent": "spine_02",
+      "role": "deform",
+      "target": "chest",
+      "end": "neck_01",
+      "keep_orientation": true
+    },
+    "neck_01": {
+      "parent": "spine_03",
+      "role": "deform",
+      "target": "neck",
+      "end": "Head",
+      "keep_orientation": true
+    },
+    "Head": {
+      "parent": "neck_01",
+      "role": "deform",
+      "target": "head",
+      "end": null,
+      "keep_orientation": true
+    },
+    "clavicle_l": {
+      "parent": "spine_03",
+      "role": "deform",
+      "target": "clavicle.L",
+      "end": "upperarm_l"
+    },
+    "upperarm_l": {
+      "parent": "clavicle_l",
+      "role": "deform",
+      "target": "upper_arm.L",
+      "end": "lowerarm_l"
+    },
+    "lowerarm_l": {
+      "parent": "upperarm_l",
+      "role": "deform",
+      "target": "forearm.L",
+      "end": "hand_l"
+    },
+    "hand_l": {
+      "parent": "lowerarm_l",
+      "role": "deform",
+      "target": "hand.L",
+      "end": "middle_01_l",
+      "target_end": "finger3-1.L"
+    },
+    "index_01_l": {
+      "parent": "hand_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "index_02_l": {
+      "parent": "index_01_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "index_03_l": {
+      "parent": "index_02_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "index_04_leaf_l": {
+      "parent": "index_03_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "middle_01_l": {
+      "parent": "hand_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "middle_02_l": {
+      "parent": "middle_01_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "middle_03_l": {
+      "parent": "middle_02_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "middle_04_leaf_l": {
+      "parent": "middle_03_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "pinky_01_l": {
+      "parent": "hand_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "pinky_02_l": {
+      "parent": "pinky_01_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "pinky_03_l": {
+      "parent": "pinky_02_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "pinky_04_leaf_l": {
+      "parent": "pinky_03_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "ring_01_l": {
+      "parent": "hand_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "ring_02_l": {
+      "parent": "ring_01_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "ring_03_l": {
+      "parent": "ring_02_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "ring_04_leaf_l": {
+      "parent": "ring_03_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "thumb_01_l": {
+      "parent": "hand_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "thumb_02_l": {
+      "parent": "thumb_01_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "thumb_03_l": {
+      "parent": "thumb_02_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "thumb_04_leaf_l": {
+      "parent": "thumb_03_l",
+      "role": "finger",
+      "target": "hand.L",
+      "follows": "hand_l"
+    },
+    "clavicle_r": {
+      "parent": "spine_03",
+      "role": "deform",
+      "target": "clavicle.R",
+      "end": "upperarm_r"
+    },
+    "upperarm_r": {
+      "parent": "clavicle_r",
+      "role": "deform",
+      "target": "upper_arm.R",
+      "end": "lowerarm_r"
+    },
+    "lowerarm_r": {
+      "parent": "upperarm_r",
+      "role": "deform",
+      "target": "forearm.R",
+      "end": "hand_r"
+    },
+    "hand_r": {
+      "parent": "lowerarm_r",
+      "role": "deform",
+      "target": "hand.R",
+      "end": "middle_01_r",
+      "target_end": "finger3-1.R"
+    },
+    "index_01_r": {
+      "parent": "hand_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "index_02_r": {
+      "parent": "index_01_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "index_03_r": {
+      "parent": "index_02_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "index_04_leaf_r": {
+      "parent": "index_03_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "middle_01_r": {
+      "parent": "hand_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "middle_02_r": {
+      "parent": "middle_01_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "middle_03_r": {
+      "parent": "middle_02_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "middle_04_leaf_r": {
+      "parent": "middle_03_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "pinky_01_r": {
+      "parent": "hand_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "pinky_02_r": {
+      "parent": "pinky_01_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "pinky_03_r": {
+      "parent": "pinky_02_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "pinky_04_leaf_r": {
+      "parent": "pinky_03_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "ring_01_r": {
+      "parent": "hand_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "ring_02_r": {
+      "parent": "ring_01_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "ring_03_r": {
+      "parent": "ring_02_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "ring_04_leaf_r": {
+      "parent": "ring_03_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "thumb_01_r": {
+      "parent": "hand_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "thumb_02_r": {
+      "parent": "thumb_01_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "thumb_03_r": {
+      "parent": "thumb_02_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "thumb_04_leaf_r": {
+      "parent": "thumb_03_r",
+      "role": "finger",
+      "target": "hand.R",
+      "follows": "hand_r"
+    },
+    "thigh_l": {
+      "parent": "pelvis",
+      "role": "deform",
+      "target": "thigh.L",
+      "end": "calf_l"
+    },
+    "calf_l": {
+      "parent": "thigh_l",
+      "role": "deform",
+      "target": "shin.L",
+      "end": "foot_l"
+    },
+    "foot_l": {
+      "parent": "calf_l",
+      "role": "deform",
+      "target": "foot.L",
+      "end": "ball_l"
+    },
+    "ball_l": {
+      "parent": "foot_l",
+      "role": "deform",
+      "target": "toe.L",
+      "end": "ball_leaf_l"
+    },
+    "ball_leaf_l": {
+      "parent": "ball_l",
+      "role": "finger",
+      "target": "toe.L",
+      "follows": "ball_l"
+    },
+    "thigh_r": {
+      "parent": "pelvis",
+      "role": "deform",
+      "target": "thigh.R",
+      "end": "calf_r"
+    },
+    "calf_r": {
+      "parent": "thigh_r",
+      "role": "deform",
+      "target": "shin.R",
+      "end": "foot_r"
+    },
+    "foot_r": {
+      "parent": "calf_r",
+      "role": "deform",
+      "target": "foot.R",
+      "end": "ball_r"
+    },
+    "ball_r": {
+      "parent": "foot_r",
+      "role": "deform",
+      "target": "toe.R",
+      "end": "ball_leaf_r"
+    },
+    "ball_leaf_r": {
+      "parent": "ball_r",
+      "role": "finger",
+      "target": "toe.R",
+      "follows": "ball_r"
+    }
+  },
+  "parts": [
+    {
+      "code": "weapon-sword",
+      "name": "OneHanded",
+      "status": "uo",
+      "uo_layer": 1,
+      "studio_part": "weapon",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "shield-round",
+      "name": "TwoHanded",
+      "status": "uo",
+      "uo_layer": 2,
+      "studio_part": "shield",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "boots",
+      "name": "Shoes",
+      "status": "uo",
+      "uo_layer": 3,
+      "studio_part": "boots",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "pants",
+      "name": "Pants",
+      "status": "uo",
+      "uo_layer": 4,
+      "studio_part": "legs",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "shirt",
+      "name": "Shirt",
+      "status": "uo",
+      "uo_layer": 5,
+      "studio_part": "chest",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "depth_scale": 1.85
+    },
+    {
+      "code": "hood",
+      "name": "Helm",
+      "status": "uo",
+      "uo_layer": 6,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "gloves",
+      "name": "Gloves",
+      "status": "uo",
+      "uo_layer": 7,
+      "studio_part": "gloves",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "ring",
+      "name": "Ring",
+      "status": "uo",
+      "uo_layer": 8,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "talisman",
+      "name": "Talisman",
+      "status": "uo",
+      "uo_layer": 9,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "gorget",
+      "name": "Neck",
+      "status": "uo",
+      "uo_layer": 10,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "offset": [
+        0,
+        0,
+        0.075
+      ]
+    },
+    {
+      "code": "hair",
+      "name": "Hair",
+      "status": "uo",
+      "uo_layer": 11,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "offset": [
+        0,
+        0,
+        0.12
+      ]
+    },
+    {
+      "code": "belt",
+      "name": "Waist",
+      "status": "uo",
+      "uo_layer": 12,
+      "studio_part": "skirt",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "chest",
+      "name": "InnerTorso",
+      "status": "uo",
+      "uo_layer": 13,
+      "studio_part": "chest",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "depth_scale": 1.45
+    },
+    {
+      "code": "bracelet",
+      "name": "Bracelet",
+      "status": "uo",
+      "uo_layer": 14,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "mask",
+      "name": "Face",
+      "status": "uo",
+      "uo_layer": 15,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "offset": [
+        0,
+        0,
+        0.11
+      ]
+    },
+    {
+      "code": "beard",
+      "name": "FacialHair",
+      "status": "uo",
+      "uo_layer": 16,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "offset": [
+        0,
+        0,
+        0.17
+      ]
+    },
+    {
+      "code": "tunic",
+      "name": "MiddleTorso",
+      "status": "uo",
+      "uo_layer": 17,
+      "studio_part": "chest",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "depth_scale": 1.65
+    },
+    {
+      "code": "earrings",
+      "name": "Earrings",
+      "status": "uo",
+      "uo_layer": 18,
+      "studio_part": "helm",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "arms",
+      "name": "Arms",
+      "status": "uo",
+      "uo_layer": 19,
+      "studio_part": "arms",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "cloak",
+      "name": "Cloak",
+      "status": "uo",
+      "uo_layer": 20,
+      "studio_part": "cloak",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "backpack",
+      "name": "Backpack",
+      "status": "uo",
+      "uo_layer": 21,
+      "studio_part": "quiver",
+      "bind": "rigid",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "robe",
+      "name": "OuterTorso",
+      "status": "uo",
+      "uo_layer": 22,
+      "studio_part": "robe",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      },
+      "depth_scale": 1.3
+    },
+    {
+      "code": "skirt",
+      "name": "OuterLegs",
+      "status": "uo",
+      "uo_layer": 23,
+      "studio_part": "skirt",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    },
+    {
+      "code": "leg-armor",
+      "name": "InnerLegs",
+      "status": "uo",
+      "uo_layer": 24,
+      "studio_part": "legs",
+      "bind": "skinned",
+      "hide_body": {
+        "enabled": true,
+        "outward": 0.02,
+        "inward": 0.01
+      }
+    }
+  ]
+}
