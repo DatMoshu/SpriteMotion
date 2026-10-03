@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "codex/**", "work/**", "release/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e ".[test]"
+      - name: Repository data and privacy guards
+        run: python -m pytest tests/integration/test_repository.py -q
+      - name: Shared agent instructions are current
+        run: python tools/agents/run.py --check
+
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+      - run: python -m pip install -e ".[test]" build
+      - name: Build distributable Python package
+        run: python -m build
+      - name: Regression tests
+        run: python -m pytest -q
+      - name: Outfit lab tests
+        working-directory: games/ultima-online/outfit-lab
+        run: python -m unittest -q
+      # Hosted runners do not prove proprietary-model renders or in-game fit.
+      # Those require local acceptance evidence in the PR.
