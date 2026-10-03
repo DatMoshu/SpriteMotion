@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/fit-lab-service.schema.json",
+  "title": "SpriteMotion Fit Lab service discovery",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "pack", "capabilities"],
+  "properties": {
+    "schema": {"const": "spritemotion.fit-lab-service"},
+    "schema_version": {"const": 1},
+    "pack": {"type": "string", "minLength": 1},
+    "capabilities": {"type": "array", "uniqueItems": true, "items": {"enum": ["revision-saves", "three-backups", "scoped-fits", "blender-builds", "render-index"]}}
+  }
+}

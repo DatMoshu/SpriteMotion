@@ -25,6 +25,34 @@ Automatic fit is a starting placement. Use rotation/scale/offset controls, or fi
 
 Preview builds contain actions 0, 4, 9, 22 and 25 across five stored directions. Full builds contain all 35 actions / 1,050 frames. Jobs run serially and never mix frames from earlier designs. Review exposes eight facings by mirroring three stored views, and body/item visibility switches. Review FPS is not authoritative game timing.
 
+### Fit corrections and selected blocks
+
+Jobs can specify `actions` and optionally exact `blocks` (`[[action, stored_direction], ...]`). Directions are 0–4;
+mirrored views share their stored block. Fit-aware settings follow `schemas/fit-build.schema.json`.
+`fit_item: {id, slot, part}` identifies an item; `fit_adjustments` is a frozen adjustment document. When omitted,
+pack jobs look for `lab-adjustments.json` beside their mapping and identify the item from the local lab source list.
+Explicit snapshots take precedence. Unmatched item identity is an error when item/group/slot corrections need it.
+Saved slot values replace mapping defaults (avoiding double application of a mapping already merged by the sidecar);
+legacy item offsets and scoped deltas are then applied. Explicit job transforms add on top.
+Every rendered action/direction resolves from the same untouched base geometry; corrections never accumulate.
+All enabled final-render masking uses the complete animated body, including the torso. Clothing mode allows
+bounded contact tolerance on the garment's own anatomical region, preserving left/right identity; body mode
+uses only the renderer's normal depth margin. Per-scope `occlusion` can override this or disable masking.
+The build recomputes fitting-body hiding after each block without removing faces from the invisible occluder.
+See [body occlusion](../../docs/body-occlusion.md). Existing saved renders require a fresh build.
+
+`python tools/uo-content/pipeline.py rebuild <job> --adjustments <lab-adjustments.json>` compares resolved fits
+for every existing block and renders only changed blocks. It creates a new validated revision, preserving the
+source build. Untouched VD blocks remain byte-identical; PNG blocks and metadata are merged, then all frames
+undergo the usual independent alpha/anchor validation. A failed revision stays under `staging/` and is not promoted.
+Job `rebuild` provenance records source/patch IDs, replaced blocks and hashes of untouched VD blocks. Mapping
+files are frozen in each new job so a partial rebuild cannot pick up unrelated mapping changes. The editable
+scene carries the latest base/bindings; job settings record the per-block corrections.
+Rebuilding refuses to mix versions when the canonical model, renderer code, source meshes or palette has changed;
+make a fresh build in that case. Jobs record `render_fingerprint` and `source_fingerprints` for this check.
+Rigid bindings do not receive the mesh-deforming push-out solver. Masking policy changes do not change the solver's
+collision regions for skinned clothes; the separate pristine-body depth pass controls final visibility.
+
 ## Outputs and importing
 
 Each job under `workspace/ultima-online/content-studio/jobs/<id>` includes:

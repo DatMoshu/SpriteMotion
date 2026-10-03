@@ -59,6 +59,16 @@ On other platforms, create and activate a Python environment, run
 `python -m pip install -e ".[test]"`, then use the same Python setup command and
 `python tools/uo-content/studio.py`.
 
+## Try the CC0 starter equipment
+
+[Bundled CC0 examples](examples/cc0-starter/README.md) cover all 25 UO layer routes,
+with animated wearables, jewelry source/paperdoll examples and mount guidance.
+After the Python, Blender and local model setup above, run
+`launchers/editor/workbench.bat cc0-starter` on Windows or
+`sh launchers/editor/workbench.sh cc0-starter` on Linux. The workbench prepares the
+starter lab export when needed and starts Studio and Fit Lab.
+See [all launchers](launchers/editor/README.md).
+
 ## Open Fit Lab
 
 Fit Lab needs a prepared asset-pack mapping, item list and Blender export.
@@ -85,8 +95,8 @@ The instructions above describe the public `main` branch. More recent fitting
 and rendering changes may be on development branches or in
 [open pull requests](https://github.com/DatMoshu/SpriteMotion/pulls).
 
-Scoped animation/direction corrections and updated masking are being integrated
-through [the fitting improvements PR](https://github.com/DatMoshu/SpriteMotion/pull/1).
+Fit Lab supports scoped animation/direction corrections, Blender render review,
+body holdouts, front/back depth and independent left/right item offsets.
 A shared Fit Lab inside [GUO](https://github.com/DatMoshu/GodotUO) has been tested
 locally; its distribution and fresh-install onboarding are still in development.
 Do not assume a SpriteMotion checkout installs the GUO integration.
@@ -94,7 +104,8 @@ Do not assume a SpriteMotion checkout installs the GUO integration.
 ## What you download
 
 **Included:** Python and Blender tools, the web editors, game adapters, schemas,
-annotation data, agent instructions, and a redistributable procedural sample.
+annotation data, agent instructions, a redistributable procedural sample and
+audited CC0 starter equipment with licenses and provenance hashes.
 
 **Not included:** UO client files, extracted sprites, the canonical body scene,
 commercial asset packs, private mappings, or generated game content. Work files

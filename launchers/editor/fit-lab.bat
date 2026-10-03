@@ -13,4 +13,4 @@ if not exist "workspace\ultima-online\fit-lab\%SM_PACK%\manifest.json" (
   pause
   exit /b 1
 )
-"%SPRITEMOTION_PYTHON%" tools\fit-lab\run.py serve --pack %SM_PACK%
+"%SPRITEMOTION_PYTHON%" tools\fit-lab\run.py serve --pack "%SM_PACK%"

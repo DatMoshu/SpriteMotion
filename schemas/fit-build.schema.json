@@ -1,0 +1,21 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Fit-aware build settings extension",
+  "type":"object",
+  "properties":{
+    "render_fingerprint":{"type":"string"},
+    "source_fingerprints":{"type":"object","additionalProperties":{"type":"string"}},
+    "rebuild":{"type":"object","required":["source_job","patch_job","blocks","unchanged_vd_blocks"],"properties":{
+      "source_job":{"type":"string"},"patch_job":{"type":"string"},"blocks":{"type":"array"},
+      "unchanged_vd_blocks":{"type":"object","additionalProperties":{"type":"string"}}
+    }},
+    "fit_blocks":{"type":"object","additionalProperties":{"type":"object","required":["fit","occlusion","hidden_body_faces"],"properties":{
+      "fit":{"type":"object"},"occlusion":{"enum":["clothing","body","none"]},"hidden_body_faces":{"type":"integer","minimum":0}
+    }}},
+    "fit_adjustments":{"$ref":"fit-adjustments.schema.json"},
+    "fit_item":{"type":"object","required":["id","slot","part"],"properties":{"id":{"type":"string"},"slot":{"type":"string"},"part":{"type":"string"}}},
+    "actions":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"integer","minimum":0,"maximum":34}},
+    "blocks":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"array","minItems":2,"maxItems":2,"prefixItems":[{"type":"integer","minimum":0,"maximum":34},{"type":"integer","minimum":0,"maximum":4}]}},
+    "occlusion":{"enum":["clothing","body","none"]}
+  }
+}

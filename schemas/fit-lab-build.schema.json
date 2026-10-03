@@ -1,0 +1,23 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Local lab build state",
+  "type":"object", "required":["state"],
+  "properties":{
+    "state":{"enum":["idle","building","complete","failed"]},"item":{"type":"string"},
+    "job":{"type":"string"},"review":{"type":"string"},"error":{"type":"string"},"unchanged":{"type":"boolean"},
+    "mode":{"enum":["build","rebuild"]},"started":{"type":"number","description":"Unix time the build started"},
+    "progress":{"type":"object","required":["done","total"],"additionalProperties":false,"description":"Frames written by the running Blender job","properties":{
+      "done":{"type":"integer","minimum":0},"total":{"type":"integer","minimum":1}}}
+  },"additionalProperties":false,
+  "$defs":{
+    "request":{"type":"object","required":["item","mode","coverage","action"],"additionalProperties":false,"properties":{
+      "item":{"type":"string"},"mode":{"enum":["build","rebuild"]},"coverage":{"enum":["preview","action","full"]},"action":{"type":"integer","minimum":0,"maximum":34}
+    }},
+    "latest":{"type":"object","additionalProperties":{"type":"string","pattern":"^[a-zA-Z0-9]+$"}},
+    "renders":{"type":"object","required":["renders"],"additionalProperties":false,"description":"GET /api/renders?item=<id>, newest first","properties":{
+      "renders":{"type":"array","items":{"type":"object","required":["job","item","actions","finished"],"additionalProperties":false,"properties":{
+        "job":{"type":"string","pattern":"^[a-zA-Z0-9]+$"},"item":{"type":"string"},
+        "actions":{"type":"array","items":{"type":"integer","minimum":0,"maximum":34}},"finished":{"type":"number"}}}}
+    }}
+  }
+}

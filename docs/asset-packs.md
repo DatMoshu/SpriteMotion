@@ -34,6 +34,8 @@ repository data; only put one there if its pack's licence allows it.
 | `target` | Target-rig bone that receives this bone's vertex weights |
 | `end` | Present on **aligned** bones: the source bone at the far end of the chain (`null`: use `fit.missing_end_offset`) |
 | `keep_orientation` | Aligned bone that is only moved, not rotated or scaled (spine, head: FBX bone roll is unrelated to anatomy) |
+| `target_end` | Optional target bone whose head ends the aligned chain. Use a knuckle for a wrist-to-knuckle source chain, rather than a hand bone that extends to the fingertip. |
+| `end_from_parent` | With `end: null`, extrapolate the previous joint segment for a terminal finger. Imported FBX bone tails may point across the anatomy and must not be used as finger tips. |
 | `follows` | For a non-aligned bone: the aligned ancestor it moves with |
 | `proposed_target` | A better target the rig offers that the fitter does not use yet (twist bones, fingers, the shield bone) |
 
@@ -41,6 +43,10 @@ The fit, per source mesh: every aligned bone's chain (head → `end` head) is ro
 its length, clamped to `fit.scale_clamp`. Every vertex is moved by the weighted blend of its bones' transforms, and
 its weights are folded into the target bones. A bone that is not aligned (twist, finger, socket, a part's own cloth or
 hair bones) uses its nearest aligned ancestor (`fit.unmapped: nearest_mapped_ancestor`).
+
+To animate fingers, explicitly align each finger segment with its target and next source joint. Give terminal
+segments `end: null, end_from_parent: true`. `proposed_target` remains informational; it never silently changes
+existing bindings. Paired rigid pieces retain one anchor **per mesh**, both in the lab and Blender.
 
 `dynamic_chains` lists cloth and hair bones that ship inside part files rather than the base skeleton (matched by name
 prefix), with the socket they hang from and, where the rig has one, a better target such as the rig's cloak or skirt
@@ -59,7 +65,9 @@ One entry per part **type** (a helmet type, a left-hand type, and so on):
 | `studio_part` | Fit template in the studio (`helm`, `chest`, `arms`, `gloves`, `legs`, `boots`, `robe`, `cloak`, `skirt`, `weapon`, `shield`, `bow`, `quiver`) |
 | `bind` | `skinned` (deforms with its bones) or `rigid` (moves with one bone; metal must not stretch) |
 | `offset` | Rest-pose offset in metres, applied before binding (for example helmet crown clearance) |
+| `surface_clearance` | Optional rest-pose clearance in metres for close-fitting shells. Vertices within 5 cm of the body that penetrate its surface are projected outward before binding. Does not replace joint alignment or pose-time collision checks. |
 | `rotate`, `scale` | Rest-pose rotation (degrees, XYZ about the item centre) and uniform scale |
+| `depth_scale` | Front-to-back multiplier on Blender Y about the item centre, before rotation. Defaults to 1; changes depth without changing width or height. Saved slot values replace the mapping default; scoped corrections multiply it. |
 | `hide_body` | `{enabled, outward, inward}`: CC4-style hiding of body faces under the part (metres along each face normal, rest pose), so the body cannot poke through or hold out holes in the sprite |
 | `weighted_bones` | Bones the pack's parts of this type are weighted to (sampled) |
 
@@ -77,3 +85,12 @@ Tune `offset`, `rotate`, `scale`, `bind` and `hide_body` per slot in the [fit la
    (an empty list means valid).
 4. Build a preview job with `source_files`, `palette` (if the pack uses a palette texture) and `pack_mapping` in its
    settings, and review the fit on the contact sheet before running full builds.
+
+### Independent left/right item offsets
+
+The Fit tab provides Left/Right X, Y and Z offsets for an individual item, useful for paired gloves and boots.
+These add to the shared fit in Blender XYZ metres before animation. Left/right refer to the character,
+not the screen; mirrored UO directions mirror the fitted result. Target-rig bone weights select each side,
+including meshes containing both limbs. Neutral bones are unchanged. Each side can be reset separately;
+autosave, backups and undo/redo include these offsets. Existing saves default to zero.
+The adjustment document stores these as `items.<id>.sides.left` and `.right` three-number vectors.

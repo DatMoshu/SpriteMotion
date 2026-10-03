@@ -30,6 +30,59 @@ pixels: eight items improved, six worsened, forty unchanged. Two runs reproduced
 sheet chooses each item's largest content-pixel difference and labels the pose. These results use the saved fits
 at run time (included in the JSON); they are not final Blender render validation or a reason to change rig defaults.
 
+## Scoped corrections, body masking and lab builds
+
+Latest finish checks (2026-10-02): backpack masking off/on rendered 125 frames each across actions 0/4/9/22/25
+and five stored directions on the updated renderer. Both exports passed alpha/anchor validation with no clipped
+or empty frames. After separating holdout policy from push-out, the masked render only removes covered pixels
+(zero newly visible pixels). Rigid items no longer receive mesh-deforming push-out. Evidence:
+`workspace/back-occlusion-jobs.json`, `workspace/back-occlusion-stats.json`, `workspace/back-occlusion-comparison.png`.
+A skinned chest run (actions 4/9) exercised pack, slot, group, legacy item offset and pose-specific rotation together
+with body hiding; see `workspace/scoped-chest-job.txt`. A current-renderer two-block rebuild changed only (4,3), kept
+(4,0) byte-identical and left the original job untouched; see `workspace/scoped-rebuild-result.txt`.
+Partial rebuilds now track renderer/source fingerprints and refuse a mixed-version rebuild after model, renderer,
+mesh or palette changes. The release/acceptance plan is [render-release-roadmap.md](render-release-roadmap.md).
+Final regression run: 86 pytest tests passed, one client-dependent test skipped; 15 outfit-lab tests and two Node
+history tests passed. The production adjustment file's hash was unchanged across the final lab restart.
+
+`lab-adjustments.json` gained optional `groups` and `corrections` (pack/slot/group/item, optionally per action and/or
+stored direction; mirrored directions share). Lab and build resolve them with the same rules
+(`tools/fit-lab/fit_rules.py`, `web/fit-rules.mjs`, parity-tested). `occlusion` (clothing/body/none) picks which body
+parts hide an item; back/quiver default to whole-body. The lab can **Build item** and **Rebuild changed blocks**
+(`tools/uo-content/rebuild.py`); see `tools/fit-lab/README.md` and `tools/uo-content/README.md`. The preview's Euler
+order now matches Blender (XYZ), so saved multi-axis rotations preview differently than before — correctly.
+
+Verified 2026-10-02 against a scratch copy of the adjustments: item+pose correction, Ctrl+Z / Ctrl+Shift+Z (undo
+removes it from disk, redo restores it), mirrored direction 5 showing direction 3's correction and 4 not, a named
+group from checked items with a per-action group correction. Lab build of the Elven back item, action 9: the scene
+report shows +5 cm only in direction 3 and the group's +2 cm in all five; item-only frames keep just the parts outside
+the body except in the back view. Changing only the direction-3 correction and rebuilding re-rendered block (9,3)
+alone; the other four VD blocks were byte-identical and the revision validated.
+
+Not verified: a full 35-action lab build or a rebuild whose base slot fit changed. Each rebuild leaves its patch job
+in `jobs/` (listed as a partial job by the studio). Studio pack
+jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
+corrections.
+
+## UO_Model3D 2026-10 update (installed)
+
+The upstream update (unpacked under `workspace/uo-model-review/v2/`, installed with `pipeline.py setup`) changes the
+body `.blend` (same 13,380-vertex topology, four new weapon bones under the hands: 112 bones), `render_uo_layer.py`,
+`uo_bind_item.py`, `vdtool.py`, and adds body shape/pose fitting, lighting and weapon tooling. Its renderer has a
+native 256x256 canvas with anchor (128,192) and cuts items along the original body outline itself.
+`blender_build.py` now skips its canvas padding when the renderer defines `CANVAS` and accepts 108 or 112 bones;
+`fit_runtime.py` rebuilds `HIDER_TRIS` (the holdout mask, minus parts the item is skinned to) and `TORSO_TRIS` as
+well as `OCCLUDER_TRIS` per block, because hidden body faces change the triangle count. Body masking now includes
+the clavicles in the torso set. The fit lab was re-exported from the new model (reference, body, 72 items).
+
+Verified 2026-10-02 on the new model: the Elven back item (action 9, scoped test corrections) built and validated with
+the same canvas/anchor and per-block fits as on v13, frames within two pixels of the v13 build; the Elven torso
+(actions 0/4, saved fits, hide-body on) hid 655 faces per block and validated, frames within ±2% pixels of a v13
+build of the same job (shading differs: new lighting); a non-pack template chest (actions 4/9) built and validated.
+Not verified: full 35-action builds, mounted actions, cloaks (`TORSO_TRIS`), weapons on the new weapon bones.
+Rollback: `pipeline.py setup --source workspace/uo-model-review/main`, and restore the lab export from
+`workspace/uo-model-review/fitlab-synty-sidekick-v13/`.
+
 ## Verified in the takeover check
 
 - **Studio build with pack fit.** `blender_build.py` reads `pack_mapping` + `pack_part` from job settings, applies the
@@ -45,8 +98,8 @@ at run time (included in the JSON); they are not final Blender render validation
 
 ## Not yet used by builds
 
-- **Lab → mapping.** The sidecar's mapping generator merges `lab-adjustments.json` slot fits. Item overrides
-  (`items` in that file) are saved by the lab but not used by builds.
+- **Lab → mapping.** The sidecar's mapping generator merges `lab-adjustments.json` slot fits. Item overrides and
+  scoped corrections are used by fit-aware builds (lab builds, or studio jobs with `fit_item`), not by the generator.
 
 ## Known gaps
 

@@ -5,6 +5,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { computeBoundsTree } from 'three-mesh-bvh';
 import { FitPersistence } from './persistence.js';
+import { same } from './history.mjs';
+import { resolveFit, storedDirection } from './fit-rules.mjs';
+import { RenderPanel } from './render-panel.js';
+import { dominantJoint } from './rigid-binding.mjs';
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 
 const $ = id => document.getElementById(id);
@@ -21,7 +25,7 @@ const state = { manifest: null, mapping: null, adjust: { parts: {}, items: {} },
 const items = new Map();                                   // id -> loaded item
 const hiddenCache = new Map();
 const loader = new GLTFLoader();
-let persistence, measuring = false, slotRequest = 0;
+let persistence, renderPanel, measuring = false, slotRequest = 0, lastEdit = 0;
 const preview = { frame: 0, dir: 3, playing: true, cycling: true, dirty: true, lastFrame: 0, lastDir: 0 };
 
 // ---------- scene ----------
@@ -40,6 +44,12 @@ target.texture.colorSpace = THREE.SRGBColorSpace; // readback pixels should matc
 const pixels = new Uint8Array(W * H * 4);
 const flat = c => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide });
 const RED = flat(0xff0000), GREEN = flat(0x00ff00);
+const DEPTH = new THREE.MeshBasicMaterial({colorWrite:false, depthWrite:true, side:THREE.DoubleSide});
+DEPTH.onBeforeCompile = shader => {
+  shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>',
+    '#include <project_vertex>\ngl_Position.z += ' + (2 * .01 / (uoCam.far - uoCam.near)).toFixed(8) + ' * gl_Position.w;');
+};
+let poseAction = null, poseDirection = null, currentPoseFrame = 0, referenceCanvas;
 let body, bodyMesh, mixer, clips = {}, bodyBase, bodyTris, occluderTri, hiddenOverlay, bodyMeasure;
 let reference, referenceImage, stabilizeHead = false, headBone;
 const headPoses = new Map();
@@ -123,10 +133,25 @@ async function loadItem(info) {
       const si = geo.attributes.skinIndex;
       for (let i = 0; i < si.count; i++) for (let j = 0; j < 4; j++) si.setComponent(i, j, index[o.skeleton.bones[si.getComponent(i, j)].name] ?? 0);
     }
-    parts.push({ geo, base, normals, material: o.material });
+    // Blender rigid binding chooses an anchor separately for each source mesh.
+    // A paired item must not attach its right piece to the left piece's bone.
+    const anchor = o.isSkinnedMesh ? dominantJoint(geo.attributes.skinIndex, geo.attributes.skinWeight) : undefined;
+    const sideWeights = base.map((_, i) => {
+      const weights = [0,0]; let total = 0;
+      if (o.isSkinnedMesh) for (let j=0;j<4;j++) {
+        const weight=geo.attributes.skinWeight.getComponent(i,j);
+        const name=bodyMesh.skeleton.bones[geo.attributes.skinIndex.getComponent(i,j)]?.name || '';
+        total+=weight;
+        if (name.endsWith('L')) weights[0]+=weight;
+        if (name.endsWith('R')) weights[1]+=weight;
+      }
+      return weights.map(w => total ? w/total : 0);
+    });
+    parts.push({ geo, base, normals, sideWeights, material: o.material,
+      bone: bodyMesh.skeleton.bones[anchor ?? index[clean(info.dominant_bone)]] });
   });
   const center = new THREE.Box3().setFromPoints(parts.flatMap(p => p.base)).getCenter(new THREE.Vector3());
-  const item = { info, parts, center, skinned: [], rigid: [], bone: bodyMesh.skeleton.bones[index[clean(info.dominant_bone)]] };
+  const item = { info, parts, center, skinned: [], rigid: [] };
   for (const p of parts) {
     const s = new THREE.SkinnedMesh(p.geo, p.material); bodyMesh.parent.add(s);
     s.position.copy(bodyMesh.position); s.quaternion.copy(bodyMesh.quaternion); s.bind(bodyMesh.skeleton, bodyMesh.bindMatrix);
@@ -140,27 +165,36 @@ async function loadItem(info) {
 // ---------- fit ----------
 function partOf(info) { return (state.mapping?.parts || []).find(p => p.code === info.part) || {}; }
 function fitFor(info) {
+  const fit = resolveFit(state.adjust, partOf(info), info, poseAction, poseDirection);
+  return {...fit, hide:fit.hide_body, itemOffset:[0,0,0]};
+}
+function baseFor(info) {
   const m = partOf(info), a = state.adjust.parts[info.part] || {};
-  return { offset: a.offset ?? m.offset ?? [0, 0, 0], rotate: a.rotate ?? m.rotate ?? [0, 0, 0], scale: a.scale ?? m.scale ?? 1,
-           bind: a.bind ?? m.bind ?? 'skinned', hide: a.hide_body ?? m.hide_body ?? { enabled: false, outward: 0.02, inward: 0.01 },
-           itemOffset: state.adjust.items[info.id]?.offset ?? [0, 0, 0] };
+  return {offset:a.offset ?? m.offset ?? [0,0,0], rotate:a.rotate ?? m.rotate ?? [0,0,0], scale:a.scale ?? m.scale ?? 1,
+    depth_scale:a.depth_scale ?? m.depth_scale ?? 1,
+    bind:a.bind ?? m.bind ?? 'skinned', hide:a.hide_body ?? m.hide_body ?? {enabled:true,outward:.02,inward:.01},
+    itemOffset:state.adjust.items[info.id]?.offset ?? [0,0,0]};
 }
 function fitMatrix(item) {
   const f = fitFor(item.info), o = f.offset.map((x, i) => x + f.itemOffset[i]);
   const off = new THREE.Vector3(o[0], o[1], o[2]).applyMatrix4(C);
-  const R = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(...f.rotate.map(THREE.MathUtils.degToRad), 'XYZ'));
+  const R = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(...f.rotate.map(THREE.MathUtils.degToRad), 'ZYX'));
   const Rg = C.clone().multiply(R).multiply(Cinv);
   return new THREE.Matrix4().makeTranslation(item.center.x + off.x, item.center.y + off.y, item.center.z + off.z)
-    .multiply(Rg).multiply(new THREE.Matrix4().makeScale(f.scale, f.scale, f.scale))
+    .multiply(Rg).multiply(C.clone().multiply(new THREE.Matrix4().makeScale(f.scale, f.scale*f.depth_scale, f.scale)).multiply(Cinv))
     .multiply(new THREE.Matrix4().makeTranslation(-item.center.x, -item.center.y, -item.center.z));
 }
 function applyFit(item) {
   const M = fitMatrix(item), N = new THREE.Matrix3().getNormalMatrix(M), toBody = bodyMesh.bindMatrix.clone().invert();
+  const sides = fitFor(item.info).sides;
+  const offsets = ['left','right'].map(side => new THREE.Vector3(...(sides[side] || [0,0,0])).applyMatrix4(C));
   item.world = [];
   item.parts.forEach((p, k) => {
     const pos = p.geo.attributes.position, nrm = p.geo.attributes.normal, w = [];
     for (let i = 0; i < pos.count; i++) {
-      const v = p.base[i].clone().applyMatrix4(M); w.push(v);
+      const v = p.base[i].clone().applyMatrix4(M);
+      offsets.forEach((offset, side) => v.addScaledVector(offset, p.sideWeights[i][side]));
+      w.push(v);
       const l = v.clone().applyMatrix4(toBody); pos.setXYZ(i, l.x, l.y, l.z);
       if (nrm && p.normals[i]) { const n = p.normals[i].clone().applyMatrix3(N).normalize(); nrm.setXYZ(i, n.x, n.y, n.z); }
     }
@@ -218,6 +252,13 @@ function updateBody() {
 // ---------- pose ----------
 function setPose(actionIdx, frame, dir) {
   const act = state.manifest.actions[actionIdx], clip = clips[act.name];
+  poseAction = act.id; poseDirection = dir; currentPoseFrame = frame;
+  let refit = false;
+  for (const item of items.values()) {
+    const signature = JSON.stringify(fitFor(item.info));
+    if (item.poseFit !== signature) { item.poseFit = signature; applyFit(item); refit = true; }
+  }
+  if (refit) { hiddenCache.clear(); updateBody(); }
   mixer.stopAllAction();
   if (clip) {
     const a = mixer.clipAction(clip); a.play(); a.paused = true;
@@ -233,11 +274,12 @@ function setPose(actionIdx, frame, dir) {
   charRoot.updateMatrixWorld(true);
   const inv = body.matrixWorld.clone().invert();
   for (const it of items.values()) {               // rigid items: bone location + rotation, no animated scale
-    if (!it.bone) continue;
-    const rest = bodyMesh.skeleton.boneInverses[bodyMesh.skeleton.bones.indexOf(it.bone)].clone().invert();
-    const now = inv.clone().multiply(it.bone.matrixWorld);
-    const M = noScale(now).multiply(noScale(rest).invert());
-    it.rigid.forEach(m => m.matrix.copy(M));
+    it.parts.forEach((part, k) => {
+      if (!part.bone) return;
+      const rest = bodyMesh.skeleton.boneInverses[bodyMesh.skeleton.bones.indexOf(part.bone)].clone().invert();
+      const now = inv.clone().multiply(part.bone.matrixWorld);
+      it.rigid[k].matrix.copy(noScale(now).multiply(noScale(rest).invert()));
+    });
   }
   scene.updateMatrixWorld(true);
   return dir > 4;
@@ -255,7 +297,24 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   meshes.forEach(m => { m.visible = true; if (mode !== 'look') m.material = GREEN; });
   if (mode === 'poke') { bodyMeasure.geometry.setIndex(bodyIndex(hiddenFor(item), coveredFor(item))); bodyMeasure.visible = true; }
   if (mode === 'look' && $('previewBase').value === 'model') { bodyMesh.geometry.setIndex(bodyIndex(hiddenFor(item), null)); bodyMesh.visible = true; }
-  const out = renderTarget().slice();
+  let out = renderTarget().slice();
+  if (mode === 'look' && $('previewBase').value !== 'model' && fitFor(item.info).occlusion !== 'none') {
+    const free = out;
+    const occlusion = fitFor(item.info).occlusion;
+    // Use all potential occluders, not just faces near the item at rest.
+    const hidden = occlusion === 'body' ? new Set() : hiddenFor(item), maskIndices = [];
+    for (let t = 0; t < bodyTris.length / 3; t++) if (!hidden.has(t) &&
+      (occlusion === 'body' || occluderTri[t])) maskIndices.push(...bodyTris.slice(t*3,t*3+3));
+    bodyMeasure.geometry.setIndex(maskIndices); bodyMeasure.material = DEPTH; bodyMeasure.visible = true; bodyMeasure.renderOrder = -1;
+    out = renderTarget().slice();
+    const tile = reference?.tiles[`${poseAction},${currentPoseFrame},${storedDirection(poseDirection)}`];
+    if (tile && referenceCanvas) {
+      const alpha = referenceCanvas.getContext('2d').getImageData(tile[0]*W,tile[1]*H,W,H).data;
+      for (let y=0;y<H;y++) for(let x=0;x<W;x++) if (!alpha[((H-1-y)*W+x)*4+3]) {
+        const pixel=(y*W+x)*4; out.set(free.subarray(pixel,pixel+4),pixel);
+      }
+    }
+  }
   for (const [o, v, m] of keep) { o.visible = v; o.material = m; }
   meshes.forEach((m, k) => m.material = item.parts[k].material);
   bodyMeasure.visible = false;
@@ -282,7 +341,7 @@ function slider(parent, label, value, min, max, step, unit, onChange) {
 function part() { return state.adjust.parts[state.selected.part] ??= {}; }
 function record(label) { persistence?.commit(state.adjust, `${state.slot}: ${label}`); }
 function changed() {
-  hiddenCache.clear();
+  hiddenCache.clear(); lastEdit = performance.now();
   for (const it of items.values()) applyFit(it);
   for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
   updateBody(); drawSheet();
@@ -290,25 +349,83 @@ function changed() {
 }
 function buildPanels() {
   const info = state.selected; if (!info) return;
-  const f = fitFor(info), fit = $('fit'), hide = $('hide');
+  const f = baseFor(info), fit = $('fit'), hide = $('hide');
   $('partCode').textContent = `${info.part} · ${partOf(info).name || ''} · layer ${partOf(info).uo_layer ?? '—'}`;
   fit.innerHTML = ''; hide.innerHTML = '';
-  ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Offset ' + ax, f.offset[i] * 100, -10, 10, 0.1, ' cm', v => { const o = [...fitFor(info).offset]; o[i] = v / 100; part().offset = o; changed(); }));
-  ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Rotate ' + ax, f.rotate[i], -30, 30, 1, '°', v => { const r = [...fitFor(info).rotate]; r[i] = v; part().rotate = r; changed(); }));
+  ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Offset ' + ax, f.offset[i] * 100, -10, 10, 0.1, ' cm', v => { const o = [...baseFor(info).offset]; o[i] = v / 100; part().offset = o; changed(); }));
+  ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Rotate ' + ax, f.rotate[i], -30, 30, 1, '°', v => { const r = [...baseFor(info).rotate]; r[i] = v; part().rotate = r; changed(); }));
   slider(fit, 'Scale', f.scale * 100, 80, 125, 1, '%', v => { part().scale = v / 100; changed(); });
+  slider(fit, 'Front/back depth', f.depth_scale * 100, 50, 250, 1, '%', v => { part().depth_scale = v / 100; changed(); });
   const bind = document.createElement('label');
   bind.innerHTML = `Binding <select><option value="skinned">skinned (deforms)</option><option value="rigid">rigid (follows one bone)</option></select>`;
   bind.querySelector('select').value = f.bind; bind.querySelector('select').onchange = e => { part().bind = e.target.value; changed(); record('Binding'); };
   fit.appendChild(bind);
-  const sub = document.createElement('p'); sub.className = 'sub'; sub.textContent = `This item only (${info.id}):`; fit.appendChild(sub);
+  const sub = document.createElement('p'); sub.className = 'hint'; sub.textContent = `This item only (${info.id}):`; fit.appendChild(sub);
   ['X', 'Y', 'Z'].forEach((ax, i) => slider(fit, 'Item ' + ax, f.itemOffset[i] * 100, -5, 5, 0.1, ' cm', v => {
-    const o = [...fitFor(info).itemOffset]; o[i] = v / 100; (state.adjust.items[info.id] ??= {}).offset = o; changed(); }));
+    const o = [...baseFor(info).itemOffset]; o[i] = v / 100; (state.adjust.items[info.id] ??= {}).offset = o; changed(); }));
+  const sideHint = document.createElement('p'); sideHint.className='hint';
+  sideHint.textContent='Separate sides for this item (character left/right, before animation). Shared fit still applies to both.'; fit.appendChild(sideHint);
+  for (const side of ['left','right']) {
+    const values=state.adjust.items[info.id]?.sides?.[side] || [0,0,0];
+    ['X','Y','Z'].forEach((axis,i) => slider(fit, `${side === 'left' ? 'Left' : 'Right'} ${axis}`, values[i]*100,-15,15,.1,' cm', value => {
+      const entry=state.adjust.items[info.id] ??= {}; const sides=entry.sides ??= {};
+      const offset=[...(sides[side] || [0,0,0])]; offset[i]=value/100; sides[side]=offset; changed();
+    }));
+    const reset=document.createElement('button'); reset.textContent=`Reset ${side} offset`;
+    reset.onclick=() => { if(state.adjust.items[info.id]?.sides) delete state.adjust.items[info.id].sides[side]; changed(); record(`Reset ${side}`); buildPanels(); }; fit.appendChild(reset);
+  }
   const on = document.createElement('label');
   on.innerHTML = `<input type="checkbox" ${f.hide.enabled ? 'checked' : ''}> Hide body under this slot`;
-  on.querySelector('input').onchange = e => { part().hide_body = { ...fitFor(info).hide, enabled: e.target.checked }; changed(); record('Hide body'); };
+  on.querySelector('input').onchange = e => { part().hide_body = { ...baseFor(info).hide, enabled: e.target.checked }; changed(); record('Hide body'); };
   hide.appendChild(on);
-  slider(hide, 'Outward', f.hide.outward * 100, 0, 8, 0.1, ' cm', v => { part().hide_body = { ...fitFor(info).hide, outward: v / 100 }; changed(); });
-  slider(hide, 'Inward', f.hide.inward * 100, 0, 5, 0.1, ' cm', v => { part().hide_body = { ...fitFor(info).hide, inward: v / 100 }; changed(); });
+  slider(hide, 'Outward', f.hide.outward * 100, 0, 8, 0.1, ' cm', v => { part().hide_body = { ...baseFor(info).hide, outward: v / 100 }; changed(); });
+  slider(hide, 'Inward', f.hide.inward * 100, 0, 5, 0.1, ' cm', v => { part().hide_body = { ...baseFor(info).hide, inward: v / 100 }; changed(); });
+  buildScopedPanel();
+}
+function correctionSelector() {
+  const target = $('scopeTarget').value, when = $('scopeWhen').value, selector = {target};
+  if (target !== 'pack') selector.key = target === 'item' ? state.selected.id : target === 'slot' ? state.slot : $('scopeGroup').value;
+  if (when === 'action' || when === 'pose') selector.action = state.manifest.actions[state.action].id;
+  if (when === 'direction' || when === 'pose') selector.direction = storedDirection(state.dir);
+  return selector;
+}
+function selectedCorrection(create=false) {
+  const selector = correctionSelector();
+  if (selector.target === 'group' && !selector.key) return null;
+  let rule = state.adjust.corrections?.find(r => ['target','key','action','direction'].every(k => r[k] === selector[k]));
+  if (!rule && create) { rule = {...selector, fit:{}}; (state.adjust.corrections ??= []).push(rule); }
+  return rule;
+}
+function buildScopedPanel() {
+  if (!state.selected) return;
+  const group = $('scopeGroup').value;
+  $('scopeGroup').replaceChildren(...Object.keys(state.adjust.groups || {}).sort().map(name => new Option(name,name)));
+  if (state.adjust.groups?.[group]) $('scopeGroup').value = group;
+  const selector = correctionSelector(), fit = selectedCorrection()?.fit || {}, box = $('scopeFit');
+  const label = `${selector.target}: ${selector.key || 'all items'} · animation ${selector.action ?? 'all'} · direction ${selector.direction ?? 'all'}`;
+  $('scopeLabel').textContent = label + ('direction' in selector ? ' (mirrored partner shares this correction)' : '') + ' · deltas from base fit';
+  box.replaceChildren(); box.inert = selector.target === 'group' && !selector.key;
+  const commit = () => { persistence.commit(state.adjust, label); $('removeCorrection').disabled=!selectedCorrection(); };
+  const addSlider = (name,value,min,max,step,unit,update) => {
+    slider(box,name,value,min,max,step,unit,v => { const rule=selectedCorrection(true); if(rule) {update(rule.fit,v); changed();} });
+    box.lastElementChild.querySelector('input').onchange = commit;
+  };
+  ['X','Y','Z'].forEach((axis,i) => addSlider('Correction '+axis,(fit.offset?.[i] || 0)*100,-30,30,.1,' cm',(f,v) => {(f.offset ??= [0,0,0])[i]=v/100;}));
+  ['X','Y','Z'].forEach((axis,i) => addSlider('Correction rotate '+axis,fit.rotate?.[i] || 0,-90,90,1,'°',(f,v) => {(f.rotate ??= [0,0,0])[i]=v;}));
+  addSlider('Correction scale',(fit.scale ?? 1)*100,50,150,1,'%',(f,v) => {f.scale=v/100;});
+  addSlider('Correction depth',(fit.depth_scale ?? 1)*100,50,250,1,'%',(f,v) => {f.depth_scale=v/100;});
+  const labelEl=document.createElement('label'), select=document.createElement('select'); labelEl.textContent='Body masking ';
+  for(const [value,text] of [['','Inherit'],['clothing','Clothing: limbs/head'],['body','Attachment: whole body'],['none','No body masking']]) select.add(new Option(text,value));
+  select.value=fit.occlusion || ''; select.onchange=() => {const rule=selectedCorrection(true); if(!rule)return; if(select.value)rule.fit.occlusion=select.value; else delete rule.fit.occlusion; changed();commit();};
+  labelEl.append(select);box.append(labelEl);
+  $('removeCorrection').disabled=!selectedCorrection();
+}
+function scopeChanged() {
+  if ($('scopeWhen').value !== 'all') {
+    state.playing=false; $('play').textContent='Play'; preview.playing=preview.cycling=false;
+    $('previewPlay').checked=$('previewCycle').checked=false; preview.frame=state.frame;preview.dir=state.dir;
+  }
+  buildScopedPanel(); frameUI();
 }
 async function selectSlot(slot) {
   const request = ++slotRequest;
@@ -319,17 +436,22 @@ async function selectSlot(slot) {
   state.slot = slot;
   state.shown = new Set([list[0].id]); state.selected = list[0];
   renderItems(); for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
-  buildPanels(); updateBody(); buildSheet(); drawSheet(); renderMeasureTable();
+  buildPanels(); updateBody(); buildSheet(); drawSheet(); renderMeasureTable(); renderPanel?.sync();
 }
 function renderItems() {
   const box = $('items'); box.innerHTML = '';
   for (const info of state.manifest.items.filter(i => i.slot === state.slot)) {
     const row = document.createElement('div'); row.className = 'item' + (state.selected?.id === info.id ? ' on' : '');
-    row.innerHTML = `<input type="checkbox" ${state.shown.has(info.id) ? 'checked' : ''}><div>${html(info.id)}<div class="fam">${html(info.family || '')}</div></div>`;
+    row.innerHTML = `<input type="checkbox" title="Show in the 3D view" aria-label="Show ${html(info.id)} in 3D" ${state.shown.has(info.id) ? 'checked' : ''}><div><div class="name">${html(info.family || info.id)}</div><div class="code">${html(info.id)}</div></div>`;
     row.querySelector('input').onclick = e => { e.stopPropagation(); e.target.checked ? state.shown.add(info.id) : state.shown.delete(info.id); changed(); };
-    row.onclick = () => { state.selected = info; renderItems(); buildPanels(); };
+    row.onclick = () => selectItem(info);
     box.appendChild(row);
   }
+}
+function selectItem(info) {
+  state.selected = info; renderItems(); buildPanels();
+  for (const [id, card] of previewCards) card.canvas.parentElement.classList.toggle('on', id === info.id);
+  renderPanel?.sync();
 }
 function drawSheet() { preview.dirty = true; }
 const previewCards = new Map();
@@ -339,6 +461,7 @@ function buildSheet() {
     const figure = document.createElement('figure'), canvas = document.createElement('canvas'), caption = document.createElement('figcaption');
     canvas.width = W; canvas.height = H; canvas.setAttribute('aria-label', info.id + ' live preview');
     figure.title = info.id; figure.append(canvas, caption); $('sheet').appendChild(figure);
+    figure.classList.toggle('on', state.selected?.id === info.id); canvas.onclick = () => selectItem(info);
     caption.textContent = info.family || info.id;
     previewCards.set(info.id, { canvas, caption, info });
   }
@@ -368,7 +491,7 @@ function renderSheet() {
 async function measure() {
   if (measuring) return;
   measuring = true; persistence.suspended = true;
-  const panels = ['left', 'right', 'bar', 'previewBar']; panels.forEach(id => $(id).inert = true);
+  const panels = ['left', 'right', 'bar', 'previewBar', 'topActions']; panels.forEach(id => $(id).inert = true);
   try {
   const acts = [...document.querySelectorAll('#measureActions input:checked')].map(i => +i.value);
   const list = state.manifest.items.filter(i => i.slot === state.slot).map(i => items.get(i.id));
@@ -402,6 +525,7 @@ function frameUI() {
   [...$('dirs').children].forEach((b, d) => b.classList.toggle('on', d === state.dir));
   renderer.domElement.style.transform = state.dir > 4 ? 'scaleX(-1)' : '';
   setPose(state.action, state.frame, state.dir); drawSheet();
+  buildScopedPanel(); renderPanel?.sync();
 }
 
 async function loadAssets() {
@@ -418,7 +542,6 @@ async function loadAssets() {
   } catch (error) { $('assetStatus').textContent = error.message; }
   finally { $('loadAssets').disabled = false; }
 }
-
 let cancelAB = false, reportURL;
 function paintComparison(ctx, pixels, action, frame, dir, x, y) {
   const tile = reference?.tiles[`${state.manifest.actions[action].id},${frame},${dir}`];
@@ -439,7 +562,7 @@ async function headAB() {
   const context = contact.getContext('2d'); context.fillStyle = '#14181d'; context.fillRect(0, 0, contact.width, contact.height);
   context.font = '10px sans-serif'; context.fillStyle = '#dfe5ec';
   $('abImages').replaceChildren(contact); $('abImageDownload').hidden = true;
-  const panels = ['left', 'bar', 'previewBar']; panels.forEach(id => $(id).inert = true);
+  const panels = ['left', 'bar', 'previewBar', 'topActions']; panels.forEach(id => $(id).inert = true);
   const disabled = [...$('right').querySelectorAll('button,input,select')].map(el => [el, el.disabled]);
   disabled.forEach(([el]) => el.disabled = el.id !== 'cancelAB'); $('cancelAB').hidden = false;
   const report = {created: new Date().toISOString(), complete: false, actions: actions.map(a => state.manifest.actions[a].id),
@@ -508,6 +631,18 @@ async function headAB() {
   }
 }
 
+function setupTabs() {
+  const tabs = [...document.querySelectorAll('#tabs button')];
+  const show = name => {
+    for (const tab of tabs) tab.setAttribute('aria-selected', tab.dataset.tab === name);
+    for (const panel of document.querySelectorAll('#right .tab')) panel.hidden = panel.dataset.tab !== name;
+    try { localStorage.setItem('fit-lab:tab', name); } catch {}
+  };
+  tabs.forEach(tab => tab.onclick = () => show(tab.dataset.tab));
+  let saved = 'fit'; try { saved = localStorage.getItem('fit-lab:tab') || 'fit'; } catch {}
+  show(tabs.some(t => t.dataset.tab === saved) ? saved : 'fit');
+}
+
 async function main() {
   state.manifest = await getJSON('data/manifest.json');
   state.mapping = await getJSON('api/mapping').catch(() => null);
@@ -521,7 +656,9 @@ async function main() {
   try {
     reference = await getJSON('data/reference.json'); referenceImage = new Image();
     referenceImage.src = 'data/' + reference.image; await referenceImage.decode();
-    $('referenceStatus').textContent = 'Original UO reference loaded. Composites are preview overlays, not final holdout renders.';
+    referenceCanvas = document.createElement('canvas'); referenceCanvas.width = referenceImage.width; referenceCanvas.height = referenceImage.height;
+    referenceCanvas.getContext('2d', {willReadFrequently:true}).drawImage(referenceImage,0,0);
+    $('referenceStatus').textContent = 'Original UO reference loaded · depth masking enabled · final Blender edge correction and push-out may differ.';
   } catch {
     $('previewBase').querySelector('[value=original]').disabled = true;
     $('referenceStatus').textContent = 'Original sprite unavailable. Run the pack export again to extract the canonical reference.';
@@ -530,19 +667,29 @@ async function main() {
   $('slot').innerHTML = slots.map(s => `<option>${s}</option>`).join(''); $('slot').onchange = e => selectSlot(e.target.value);
   $('action').innerHTML = state.manifest.actions.map((a, i) => `<option value="${i}">${a.id} ${a.name.replace(/^\d+_/, '')}</option>`).join('');
   $('action').onchange = e => { state.action = +e.target.value; preview.frame = 0; frameUI(); };
-  $('dirs').innerHTML = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].map((n, d) => `<button title="direction ${d}">${d}</button>`).join('');
+  $('dirs').innerHTML = [...Array(8).keys()].map(d => `<button style="--a:${d * 45}deg" class="${d > 4 ? 'mirror' : ''}" title="Direction ${d}${d > 4 ? `: the client mirrors direction ${8 - d}` : ''}">${d}</button>`).join('');
   [...$('dirs').children].forEach((b, d) => b.onclick = () => {
     state.dir = preview.dir = d; preview.cycling = false; $('previewCycle').checked = false; frameUI();
   });
   $('frame').setAttribute('aria-label', 'Main frame');
   $('frame').oninput = e => { state.frame = preview.frame = +e.target.value; frameUI(); };
-  $('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; };
+  $('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; $('play').setAttribute('aria-label', $('play').textContent); };
+  setupTabs();
   $('uoView').onclick = resetView; $('showHidden').onchange = updateBody;
   $('measureActions').innerHTML = state.manifest.actions.map((a, i) => `<label><input type="checkbox" value="${i}" ${[0, 2, 4, 9, 16].includes(a.id) ? 'checked' : ''}>${a.id}</label>`).join('');
   $('measure').onclick = measure;
   $('headAB').onclick = headAB;
   $('cancelAB').onclick = () => { cancelAB = true; };
   $('loadAssets').onclick = loadAssets;
+  for (const id of ['scopeTarget','scopeWhen','scopeGroup']) $(id).onchange=scopeChanged;
+  $('makeGroup').onclick=() => {
+    const name=$('groupName').value.trim();
+    if (!name || !state.shown.size) { $('scopeLabel').textContent='Enter a name and check at least one item.';return; }
+    if (state.adjust.groups?.[name]) { $('scopeLabel').textContent='That group exists; choose a new name.';return; }
+    (state.adjust.groups ??= {})[name]=[...state.shown].sort(); persistence.commit(state.adjust,'Create group '+name);
+    buildScopedPanel();$('scopeGroup').value=name;$('scopeTarget').value='group';scopeChanged();
+  };
+  $('removeCorrection').onclick=() => { const rule=selectedCorrection(); if(!rule)return; state.adjust.corrections=state.adjust.corrections.filter(r=>r!==rule);changed();persistence.commit(state.adjust,'Remove scoped correction');buildScopedPanel(); };
   $('previewBase').onchange = drawSheet; $('previewPokes').onchange = drawSheet;
   $('stabilizeHead').onchange = e => { stabilizeHead = e.target.checked; frameUI(); };
   $('save').onclick = () => persistence.save();
@@ -559,15 +706,24 @@ async function main() {
   $('previewSize').onchange = e => { $('sheet').style.setProperty('--preview-scale', e.target.value); drawSheet(); };
   $('sheet').onscroll = drawSheet;
   new ResizeObserver(() => { resize(); drawSheet(); }).observe($('view'));
+  renderPanel = new RenderPanel({
+    pose: () => ({info: state.selected, action: state.manifest.actions[state.action], frame: state.frame, dir: state.dir}),
+    part: partOf, adjustments: () => state.adjust, edited: () => lastEdit, save: () => persistence.save(),
+    ready: () => !persistence.conflict && !persistence.saving && same(persistence.disk, state.adjust),
+    setPose: (dir, frame) => {
+      state.playing = false; $('play').textContent = 'Play'; preview.cycling = false; $('previewCycle').checked = false;
+      state.dir = preview.dir = dir; state.frame = preview.frame = frame; frameUI();
+    },
+  });
   await selectSlot(slots[0]); frameUI();
-  ['left', 'right', 'bar', 'previewBar'].forEach(id => $(id).inert = false);
+  ['left', 'right', 'bar', 'previewBar', 'topActions'].forEach(id => $(id).inert = false);
   let last = 0;
   renderer.setAnimationLoop(t => {
     if (measuring || document.hidden) return;
     const count = state.manifest.actions[state.action].frames;
     if (preview.playing && t - preview.lastFrame >= 125) { preview.lastFrame = t; preview.frame = (preview.frame + 1) % count; preview.dirty = true; }
     if (preview.cycling && t - preview.lastDir >= 2000) { preview.lastDir = t; preview.dir = (preview.dir + 1) % 8; preview.dirty = true; }
-    if (state.playing && t - last > 125) { last = t; state.frame = (state.frame + 1) % state.manifest.actions[state.action].frames; $('frame').value = state.frame; $('frameLabel').textContent = `${state.frame + 1}/${state.manifest.actions[state.action].frames}`; setPose(state.action, state.frame, state.dir); }
+    if (state.playing && t - last > 125) { last = t; state.frame = (state.frame + 1) % state.manifest.actions[state.action].frames; $('frame').value = state.frame; $('frameLabel').textContent = `${state.frame + 1}/${state.manifest.actions[state.action].frames}`; setPose(state.action, state.frame, state.dir); renderPanel.sync(); }
     if (preview.dirty) renderSheet();
     renderer.render(scene, view);
   });

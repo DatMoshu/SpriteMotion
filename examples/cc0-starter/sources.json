@@ -1,0 +1,122 @@
+{
+  "boots.glb": {
+    "sha256": "99aa5c436c000575d87046591634f2f4f61d42b98a3ec42afc860121f5f4779c",
+    "source": "Male_Ranger_Feet_Boots.fbx",
+    "source_sha256": "e60d0f0eae8a9791dce407767991cc3b759f2f7660cd8eae5018e61f11e1aaef"
+  },
+  "pants.glb": {
+    "sha256": "fd23e5dd1638328234aa1964c3646b105a42c74bfb43246463f5c4639db45a2a",
+    "source": "Male_Peasant_Legs.fbx",
+    "source_sha256": "547c90e8c7440cc149ebc5164ec0fda2cf2be0470cdf53816401545be0337abd"
+  },
+  "shirt.glb": {
+    "sha256": "111d69e533431a06f653b6c2f494390c9d3a122661cc256f6f4a1a5e5a9bf52f",
+    "source": "Male_Peasant_Body.fbx",
+    "source_sha256": "d875b268f63ddf884257a6f7c7a8c20b48f3aafa30363755a6115963b1a17349"
+  },
+  "hood.glb": {
+    "sha256": "fb09ae4e5e4c712c0c86c296290c396eebad7166faf6c70b48389a0fd38a5264",
+    "source": "Male_Ranger_Head_Hood.fbx",
+    "source_sha256": "c8b6f4e01b569176a5d91a7255bfc0eb45e83529b7e97eb4640c75db25f847f2"
+  },
+  "chest.glb": {
+    "sha256": "453c3749e18eea67ce9a8a65034e01064455ef8ecc56b81a0ec743f695ae3bef",
+    "source": "Male_Ranger_Body.fbx",
+    "source_sha256": "9f5b7866170daa1d32a4652c0574188379d93b9889792e13edb3f2492fed444c"
+  },
+  "tunic.glb": {
+    "sha256": "111d69e533431a06f653b6c2f494390c9d3a122661cc256f6f4a1a5e5a9bf52f",
+    "source": "Male_Peasant_Body.fbx",
+    "source_sha256": "d875b268f63ddf884257a6f7c7a8c20b48f3aafa30363755a6115963b1a17349"
+  },
+  "arms.glb": {
+    "sha256": "baed4beb8e103190635332b5217505a6ee9f4c624db9e3391863a0c6e76eaa9b",
+    "source": "Male_Ranger_Arms.fbx",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "leg-armor.glb": {
+    "sha256": "0dcfcd172650be25ef934a5a3f8b9d905b5709321efa1f19f33832bd257cbce6",
+    "source": "Male_Ranger_Legs.fbx",
+    "source_sha256": "f1e30b2e4210086496ab2e18d107d4c163c8bde7ce72b10cd309cf5125540f63"
+  },
+  "gorget.glb": {
+    "sha256": "730ca2fd8c38a452b7805295b9ede7067718dfa8e67a3fe7dd42df13ee7724ff",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "hair.glb": {
+    "sha256": "d2e1776c473500ae1c4b807b1df150268c1f90c202821758949228f46adbf260",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "belt.glb": {
+    "sha256": "4b80d09ed278fecd84776a58d6b426941a6a79a920d90e670e19af3c89ad6649",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "mask.glb": {
+    "sha256": "9f91b4bf9e907b4c4d4535cda84b41649e0e0cfc711b7466b625b87eab78ca1f",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "beard.glb": {
+    "sha256": "8d928e0e3b1ce2791c55fb5b9e8c91753903682ab5289a653d956ee043103e7e",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "cloak.glb": {
+    "sha256": "7ead79dea2710d0efdf0412add38e2099448dbfef4e873184d5ab58794c5b8e7",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "backpack.glb": {
+    "sha256": "37ad5992109486d64efcecd4c21cb71edfbdabff97b237642a2ac9e8e21643c4",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "robe.glb": {
+    "sha256": "5402b4ddfa739595319e1b691886149415353ec4ddad9cf4a2191a67e6de0f53",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "skirt.glb": {
+    "sha256": "ab8239fb510559d77ee1354f8224b270ee72e1b376c2e27e391d5b5881ccd00b",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "gloves.glb": {
+    "sha256": "629c7b91ce8ef714dd2fe5da457e7b80be410778a0588ada33e64f01ad228391",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "ring.glb": {
+    "sha256": "f64d4aec95adc55d33e3cfaa0be6ff0ec7ddb4a0684edb4cc374b42af35e1798",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "bracelet.glb": {
+    "sha256": "c02974355bba5a2d732fe37733b3a67a20e1803e321a98f2f280c1c2fe8caf40",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "earrings.glb": {
+    "sha256": "687e026f6ec8e4a3119d4fea9533835847897f3778f52d1b6de9949705094fa3",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "talisman.glb": {
+    "sha256": "fa16d1b0ec8e57f78d74d57ecc4b61c1ffcd4c063126b406cc931acf1f90804e",
+    "source": "Original primitive geometry; CC0 Quaternius rig",
+    "source_sha256": "1f8171fa29e8ad0d4290f2d9c7d99b6dead8a79987140db3b220c3b62ee8cd0b"
+  },
+  "starter-sword.glb": {
+    "sha256": "46d36fde626f74c590754265cd391ac7f6b656da967683084e3fd7084e9f38e4",
+    "source": "Kenney weapon-sword.glb mounted on CC0 Quaternius rig",
+    "source_sha256": "9a78c1d3543a0e3bf376971dfabb68f962c8c9d4e8bc4771b6ffdcff4c9a2833"
+  },
+  "starter-shield.glb": {
+    "sha256": "ef974610f6a8df8a7cf06a852aecec6d36a64dd6845219069606d17a414e884f",
+    "source": "Kenney shield-round.glb mounted on CC0 Quaternius rig",
+    "source_sha256": "a291d4364b97aa2030ec33321766a7c1b890a9db2372df3f16f05b03a38e8f35"
+  }
+}

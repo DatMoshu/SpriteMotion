@@ -174,6 +174,14 @@
             "type": "boolean",
             "description": "Translate only; keep the source orientation and scale (spine and head)."
           },
+          "target_end": {
+            "type": "string",
+            "description": "Use this target bone's head as the chain endpoint instead of the target tail (for example wrist to knuckle)."
+          },
+          "end_from_parent": {
+            "type": "boolean",
+            "description": "For a terminal aligned bone with null end, extrapolate the previous joint segment instead of using missing_end_offset."
+          },
           "follows": {
             "type": "string",
             "description": "Aligned ancestor this bone moves with (informational, derived)."
@@ -313,6 +321,12 @@
             "$ref": "#/$defs/vec3",
             "description": "Rest-pose offset in metres applied before binding."
           },
+          "surface_clearance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0.03,
+            "description": "Optional rest-pose body clearance in metres. Push nearby penetrating vertices out to the body surface before binding; does not move vertices more than 5 cm from the surface."
+          },
           "candidate_slot": {
             "type": "object",
             "required": [
@@ -361,6 +375,11 @@
                 "minimum": 0
               }
             }
+          },
+          "depth_scale": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Front-to-back multiplier along rest-pose Blender Y about the item center, before rotation; width and height are unchanged."
           }
         }
       }

@@ -19,6 +19,9 @@ Open work and where to start: `docs/handoff.md`.
 
 ## Layout
 
+The audited CC0 starter models in `examples/cc0-starter` may be committed with their original
+license and provenance hashes. This exception does not cover game-derived or commercial assets.
+
 - `common/` is the shared Python package (imports as `spritemotion`); `schemas/` holds every JSON data contract.
   Extend a schema (and `docs/`) before emitting a new field.
 - `games/<game>/`: adapter, profiles, annotations, equipment slots (`equipment/layers.json`), outfit lab.
@@ -38,8 +41,8 @@ headless Blender run, not only a syntax check.
 
 ## Key facts
 
-- Canonical body: UO_Model3D v13 (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`), 108 bones,
-  rig `UO_Rig`, direction = driver `-d*pi/4` on the rig's Z rotation, UO frame i = scene frame 1 + 3i.
+- Canonical body: UO_Model3D v13 (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`), 112 bones
+  (the 2026-10 update added `weapon1h.R`, `axe2h.L`, `bow.L`, `polearm.L` to v13's 108), rig `UO_Rig`, direction = driver `-d*pi/4` on the rig's Z rotation, UO frame i = scene frame 1 + 3i.
 - In item renders the body is a holdout: body poking through clothing cuts holes in the item sprite. Asset-pack
   parts can hide body faces under them (`hide_body` in the mapping, tuned in `tools/fit-lab`).
 - Asset packs are mapped 1:1 per pack: `docs/asset-packs.md`.

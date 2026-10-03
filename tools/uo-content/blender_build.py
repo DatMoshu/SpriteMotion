@@ -14,8 +14,9 @@ backend, job = Path(spec['backend']), Path(spec['job'])
 bpy.ops.wm.open_mainfile(filepath=str(backend / 'model/UO_Body_0x190.blend'), load_ui=False, use_scripts=False)
 bpy.context.preferences.filepaths.save_version = 0
 rig, body = bpy.data.objects['UO_Rig'], bpy.data.objects['UO_Body']
-if len(rig.data.bones) != 108 or body.data.shape_keys:
-    raise ValueError('Expected the v13 108-bone model without corrective shape keys.')
+# v13 has 108 bones; the 2026-10 update adds four weapon bones under the hands.
+if len(rig.data.bones) not in (108, 112) or body.data.shape_keys:
+    raise ValueError('Expected the v13 108/112-bone model without corrective shape keys.')
 rig.animation_data.action = None
 rig['uo_direction'] = 0
 rig.rotation_euler = (0, 0, 0)
@@ -35,6 +36,19 @@ def execute_external(name, overrides=None, injected=None):
     path = backend / 'pipeline' / name
     tree = ast.parse(path.read_text(encoding='utf-8'))
     if name == 'render_uo_layer.py':
+        class Blocks(ast.NodeTransformer):
+            def visit_For(self, node):
+                self.generic_visit(node)
+                if isinstance(node.target, ast.Name) and node.target.id == 'd' and ast.unparse(node.iter) == 'range(5)':
+                    node.body[:0] = ast.parse('if _selected_blocks is not None and (a,d) not in _selected_blocks: continue').body
+                    for index, child in enumerate(node.body):
+                        if isinstance(child, ast.Expr) and ast.unparse(child) == 'rig.update_tag()':
+                            node.body.insert(index+1, ast.parse('_fit_pose(a,d,globals())').body[0])
+                            break
+                return node
+        tree = Blocks().visit(tree)
+        # The 2026-10 renderer has its own 256x256 CANVAS with anchor (128,192); only older ones are padded here.
+        native = any(isinstance(n, ast.Assign) and ast.unparse(n.targets[0]) == 'CANVAS' for n in tree.body)
         # Pad the native viewport, without changing pixels/metre or perspective.
         # Keep compressed source image decoding at its original 136x120 dimensions.
         class Canvas(ast.NodeTransformer):
@@ -42,7 +56,7 @@ def execute_external(name, overrides=None, injected=None):
                 if type(node.value) is int and node.value in (120,136):
                     return ast.copy_location(ast.Constant(256),node)
                 return node
-        for node in tree.body:
+        for node in [] if native else tree.body:
             if isinstance(node,ast.FunctionDef) and node.name in ('raster','body_occlusion'):
                 Canvas().visit(node)
             if isinstance(node,ast.Assign):
@@ -57,7 +71,7 @@ def execute_external(name, overrides=None, injected=None):
                     if isinstance(child,ast.Assign) and any(isinstance(t,ast.Subscript) and
                         isinstance(t.value,ast.Name) and t.value.id=='HORSE_MASKS' for t in child.targets):
                         child.value=ast.parse('np.pad(bits.reshape(120,136).astype(bool), ((106,30),(60,60)))',mode='eval').body
-        for node in tree.body:
+        for node in [] if native else tree.body:
             if isinstance(node,ast.FunctionDef) and node.name=='original':
                 for child in ast.walk(node):
                     if isinstance(child,ast.Return) and isinstance(child.value,ast.Call):
@@ -206,19 +220,28 @@ def import_asset(path):
     return copies
 
 part=spec['part']
+sys.path.insert(0,str(Path(__file__).parent))
+from fit_runtime import BlockFit, resolve
+extra_fit = {'offset':[spec['offset_'+a] for a in 'xyz'], 'rotate':[spec['rotate_'+a] for a in 'xyz'], 'scale':spec['scale']}
+initial_fit = None
+mapping_fit = {}
 if spec.get('pack_mapping'):
     # A third-party asset pack: its mapping (docs/asset-packs.md) drives the rest-pose fit.
     sys.path.insert(0,str(Path(__file__).parent))
     import pack_fit
     pack=pack_fit.load_pack(spec['pack_mapping'])
-    objects=pack_fit.import_fitted(spec,rig,pack)
+    objects=pack_fit.import_fitted(spec,rig,pack,body)
     # The mapping's (lab-tuned) part settings are the defaults; explicit job settings add on top.
     fit=next((p for p in pack['parts'] if p['code']==spec.get('pack_part')),{})
+    mapping_fit = fit
+    fit = resolve(spec.get('fit_adjustments', {'parts':{},'items':{}}), fit,
+                  spec.get('fit_item', {'id':'','slot':part,'part':spec.get('pack_part','')}))
+    initial_fit = fit
+    spec.setdefault('rigid', fit['bind'] == 'rigid')
     for i,a in enumerate('xyz'):
         spec['offset_'+a]=spec.get('offset_'+a,0)+fit.get('offset',[0,0,0])[i]
         spec['rotate_'+a]=spec.get('rotate_'+a,0)+fit.get('rotate',[0,0,0])[i]
     spec['scale']=spec.get('scale',1)*fit.get('scale',1)
-    spec.setdefault('hide_body',fit.get('hide_body'))
 else:
     objects = import_asset(Path(spec['asset'])) if spec['input_kind']=='model' else starter(part)
 if spec.get('mount_source_origin'):
@@ -230,9 +253,13 @@ if spec.get('mount_source_origin'):
 bpy.context.view_layer.update()
 rotation=Euler(tuple(math.radians(spec['rotate_'+a]) for a in 'xyz')).to_matrix().to_4x4()
 lo,hi=bounds(objects); center=Vector((lo+hi)/2)
-for o in objects: o.matrix_world=Matrix.Translation(center) @ rotation @ Matrix.Translation(-center) @ o.matrix_world
+fit_center = center.copy()
+depth_scale = initial_fit.get('depth_scale',1) if initial_fit is not None else 1
+depth_matrix = Matrix.Diagonal(Vector((1,depth_scale,1,1)))
+for o in objects: o.matrix_world=Matrix.Translation(center) @ rotation @ depth_matrix @ Matrix.Translation(-center) @ o.matrix_world
 bpy.context.view_layer.update()
 lo,hi=bounds(objects); center=Vector((lo+hi)/2)
+if initial_fit is not None: center = fit_center.copy()
 target=center.copy(); factor=1.
 if spec['input_kind']=='model' and spec['fit']=='auto':
     regions={'helm':['head'],'chest':['chest','spine'],'arms':['upper_arm.L','upper_arm.R','forearm.L','forearm.R'],
@@ -311,21 +338,18 @@ report={'model':'UO_Model3D v13','bones':len(rig.data.bones),'shape_keys':0,
 (job/'original-frames.json').write_text(bpy.data.texts['uo_original_frames.json'].as_string())
 bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(job/'item.blend'))
-if (spec.get('hide_body') or {}).get('enabled'):
-    # CC4-style: body faces under the item can't poke through or hold out holes (rest pose, after item.blend is saved).
-    sys.path.insert(0,str(Path(__file__).parent))
-    import pack_fit
-    rig.data.pose_position='REST'; bpy.context.view_layer.update()
-    hb=spec['hide_body']; report['hidden_body_faces']=pack_fit.hide_body_under(body,objects,hb.get('outward',.02),hb.get('inward',.01))
-    rig.data.pose_position='POSE'; bpy.context.view_layer.update()
-    (job/'scene-report.json').write_text(json.dumps(report,indent=2))
 module_spec=importlib.util.spec_from_file_location('external_vd_writer',backend/'pipeline/uo_vd_writer.py')
 writer=importlib.util.module_from_spec(module_spec); module_spec.loader.exec_module(writer)
+block_fit = BlockFit(spec,rig,body,objects,mapping_fit,initial_fit,fit_center,extra_fit)
 execute_external('render_uo_layer.py', {
     'ONLY':[a.name for a in acts if int(a['uo_action']) in spec['actions']],
     'OUT_DIR':str(job/'render')+'/', 'VD_FILE':str(job/'%s.vd'),
     'ANCHOR':(128,192),
-    'BODY_GAP':0.0 if part in ('helm','weapon','shield','bow','quiver') else .006,
+    'BODY_GAP':0.0 if spec.get('rigid') or part in ('helm','weapon','shield','bow','quiver') else .006,
     'DESPECKLE':0, 'FILL_HOLES':0, 'MIN_PIECE':0,
-}, {'writer':writer})
+}, {'writer':writer, '_fit_pose':block_fit,
+    '_selected_blocks':set(map(tuple,spec['blocks'])) if 'blocks' in spec else None})
+report['fit_blocks'] = block_fit.report
+report['hidden_body_faces'] = next(iter(block_fit.report.values()))['hidden_body_faces'] if block_fit.report else 0
+(job/'scene-report.json').write_text(json.dumps(report,indent=2))
 (job/'clothing.vd').replace(job/'item.vd')
