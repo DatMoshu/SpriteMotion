@@ -3,6 +3,19 @@
 Thanks for helping. SpriteMotion accepts three kinds of contribution: code,
 annotations, and research notes. Each has its own rules below.
 
+## Pull requests and protected main
+
+Work on a branch (or a fork) and open a pull request targeting `main`.
+Merging requires the `guard` and `build` checks plus one code-owner approval
+from @DatMoshu. New commits dismiss stale approvals. Force pushes and deletion
+of `main` are blocked; merged working branches are deleted automatically.
+As in GUO, administrators retain a bypass for maintainer changes and recovery.
+Contributors cannot approve their own pull requests. CI uses read-only tokens;
+GitHub Actions cannot approve pull requests.
+
+The checks cover repository guards, packaging and automated tests. Passing CI
+does not establish correct in-game fit or replace local Blender render review.
+
 ## Ground rules for everything
 
 1. **No game assets.** Never commit game files, extracted frames, sprite sheets,
