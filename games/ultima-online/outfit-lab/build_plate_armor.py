@@ -1,4 +1,4 @@
-"""Master Chief-style armor with directional helmet art on original UO animation."""
+"""Sci-fi plate armor with directional helmet art on original UO animation."""
 import json
 import os
 import hashlib
@@ -8,13 +8,13 @@ from PIL import Image
 from uo import client_source
 from build import REPO, HERE, UOReader, canvas, fit_texture, fit_lightsaber, occlude
 
-OUT=REPO/'workspace/ultima-online/spartan-lab'
+OUT=REPO/'workspace/ultima-online/plate-armor-lab'
 MASKS=REPO/'workspace/ultima-online/region-audit/all-actions-region-pass/frames'
 SOURCE=os.environ.get('SPRITEMOTION_UO_SOURCE')
 PARTS=[('chest','Chest armor',0x1415),('arms','Shoulders and arms',0x1410),
        ('gloves','Gauntlets',0x1414),('legs','Leg armor',0x1411),
-       ('boots','Armored boots',0x170B),('helmet','Master Chief helmet',0x1412),
-       ('sword','Halo energy sword',0xF5E)]
+       ('boots','Armored boots',0x170B),('helmet','Sci-fi plate helmet',0x1412),
+       ('sword','Energy sword',0xF5E)]
 
 def crop_asset(image,threshold=100):
     a=np.array(image.convert('RGBA'));a[a[:,:,3]<threshold,3]=0
@@ -44,7 +44,7 @@ def main():
     helmets[0].save(OUT/'designs/helmet.png')
     designs['sword']=crop_asset(Image.open(OUT/'energy-sword.png'),24);designs['sword'].save(OUT/'designs/sword.png')
     r=UOReader(client_source(SOURCE));items=[dict(key=k,displayName=name,**r.item(g)) for k,name,g in PARTS]
-    m=dict(title='Spartan Armor',body=400,canvas=256,origin=[128,192],items=items,actions=[],drawOrder=['legs','boots','chest','arms','gloves','helmet','sword'],
+    m=dict(title='Sci-fi Plate Armor',body=400,canvas=256,origin=[128,192],items=items,actions=[],drawOrder=['legs','boots','chest','arms','gloves','helmet','sword'],
       limitations=['Original body 400 frames, with experimental 2D armor fitting on native plate armor silhouettes.',
       'Helmet uses five generated directional views fitted to original helmet bounds. Head pitch and extreme fall poses remain approximate.',
       'Rear helmet views have no gold visor; mirrored facings reuse the corresponding stored artwork.',
@@ -87,7 +87,7 @@ def main():
     m['report']=report
     (OUT/'manifest.json').write_text(json.dumps(m,indent=2));(OUT/'data.js').write_text('window.OUTFIT='+json.dumps(m)+';')
     for name in ['index.html','viewer.js','style.css']:shutil.copyfile(HERE/name,OUT/name)
-    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Spartan Armor').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Master Chief-style green armor and directional gold-visored helmet. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full armor</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','Pane A uses original UO plate armor, helmet and broadsword animations.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
+    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Sci-fi Plate Armor').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Sci-fi green plate armor and directional gold-visored helmet. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full armor</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','Pane A uses original UO plate armor, helmet and broadsword animations.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
     print(json.dumps(report))
 
 if __name__=='__main__':main()

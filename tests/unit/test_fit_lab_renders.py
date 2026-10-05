@@ -40,3 +40,9 @@ def test_progress_counts_frames_of_the_running_job(tmp_path):
     patch = job(tmp_path, 'patch', 'other', state='building', actions=(9,), blocks=[[9, 3]])
     assert renders.RenderIndex(tmp_path).progress('other', started, {9: 7}) == {'done': 0, 'total': 7}
     assert renders.RenderIndex(tmp_path).progress('missing', started, {}) is None
+
+
+def test_patch_only_rebuild_jobs_are_not_listed_as_renders(tmp_path):
+    full = job(tmp_path, 'full', 'cloak', actions=(9,)); os.utime(full / 'status.json', (1, 1))
+    job(tmp_path, 'patch', 'cloak', actions=(9,), blocks=[[9, 3]])   # newer, but holds one block only
+    assert [r['job'] for r in renders.RenderIndex(tmp_path).renders('cloak')] == ['full']

@@ -55,7 +55,7 @@ Examples measured on one shard's client. Check yours, because shards and client 
 | Clothing, armour, robes: the shape stays, the material changes | texture transfer, `fit_texture` | `build_item.py` (one item) or `build.py` |
 | Flat item: shield, banner | whole picture laid on the item, `fit_planar` | `build_item.py --planar` |
 | Slender hand-held weapon: sword, staff, spear (long straight axis) | axis fit, `fit_lightsaber` | `build.py --config` with `axisFit` |
-| Helmet with different views | one picture per direction (`fit_helmet`) | see `build_spartan.py` |
+| Helmet with different views | one picture per direction (`fit_helmet`) | see `build_plate_armor.py` |
 | Shorter or ragged hanging item (cloak) | shape step, `shorten_frayed` | `build_item.py --cut/--fray` |
 
 Crossbows and bows have irregular shapes. The axis fit is untested on them.

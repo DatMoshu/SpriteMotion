@@ -89,10 +89,10 @@ The builder expects `design.png` (2x2 cells: jacket, pants, chain, shoes) and
 against fresh decoding; `review_tracksuit.py` checks rear-chain suppression
 and generates eight-direction walk and attack contact sheets.
 
-## Spartan armor and directional helmet
+## Sci-fi plate armor and directional helmet
 
-`build_spartan.py` creates a separate Master Chief-style armor preview under
-`workspace/ultima-online/spartan-lab/`. Six independent armor controls cover
+`build_plate_armor.py` creates a separate sci-fi plate armor preview under
+`workspace/ultima-online/plate-armor-lab/`. Six independent armor controls cover
 chest, arms, gloves, legs, boots and helmet, plus the existing energy sword.
 Original plate animations 527/528/530/529, boots 477 and helmet 563 supply
 registration and motion. Clothing uses material transfer, while the helmet
@@ -104,11 +104,11 @@ Inputs are `design.png` (3x2: chest/arms/gloves, legs/boots/back chest),
 `energy-sword.png` (grip left). The original demos remain separate.
 
 ```powershell
-python games/ultima-online/outfit-lab/build_spartan.py
-python games/ultima-online/outfit-lab/review_spartan.py
-python -m http.server 8769 --bind 127.0.0.1 --directory workspace/ultima-online/spartan-lab
+python games/ultima-online/outfit-lab/build_plate_armor.py
+python games/ultima-online/outfit-lab/review_plate_armor.py
+python -m http.server 8769 --bind 127.0.0.1 --directory workspace/ultima-online/plate-armor-lab
 ```
 
-`launchers/editor/spartan-lab.bat` opens the offline preview. Evidence is saved
+`launchers/editor/plate-armor-lab.bat` opens the offline preview. Evidence is saved
 alongside the generated output. The reviewer checks all stored rear-facing helmet
 frames for gold visor pixels and generates walk, idle and attack contact sheets.

@@ -128,7 +128,7 @@ class AdjustmentStore:
             # Back up even the initial empty state so the first save is reversible.
             stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
             backups = self._backups()
-            if not backups or canonical(json.loads(backups[0].read_text())) != canonical(current['adjustments']):
+            if not backups or canonical(json.loads(backups[0].read_text(encoding='utf-8'))) != canonical(current['adjustments']):
                 atomic_write(self.backup_dir / f'{stamp}-{uuid4().hex[:8]}.json', canonical(current['adjustments']))
             for old in self._backups()[3:]:
                 old.unlink()

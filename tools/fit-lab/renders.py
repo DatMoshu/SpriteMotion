@@ -26,7 +26,8 @@ class RenderIndex:
                 if not status or status.get('state') not in ('complete', 'failed'): continue   # retry while running
                 self.seen.add(entry.name)
                 spec, review = read_json(Path(entry.path, 'job.json')), read_json(Path(entry.path, 'review/manifest.json'))
-                if status['state'] != 'complete' or not spec or not review or not spec.get('fit_item'): continue
+                # Patch jobs ('blocks') hold only changed blocks for a rebuild merge, never a whole render.
+                if status['state'] != 'complete' or not spec or not review or not spec.get('fit_item') or 'blocks' in spec: continue
                 self.known[entry.name] = {'job': entry.name, 'item': spec['fit_item']['id'],
                     'actions': sorted({s['action'] for s in review['sequences']}),
                     'finished': Path(entry.path, 'status.json').stat().st_mtime}

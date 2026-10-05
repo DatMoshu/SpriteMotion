@@ -5,7 +5,9 @@ import struct
 import shutil
 from PIL import Image
 import numpy as np
-from client_import import stage, file_sha
+from client_import import stage, file_sha, require_client_files, ANIM_FILES
+
+EQUIPMENT_FILES=ANIM_FILES+('art.mul','artidx.mul','tiledata.mul')
 
 # Existing client records supply known flags, layer and physical defaults.
 TEMPLATES={'helm':0x140A,'chest':0x1415,'arms':0x1410,'gloves':0x1414,'legs':0x1411,
@@ -103,6 +105,7 @@ namespace Server.Items
 
 def stage_equipment(job,client,body,graphic,flavor='modernuo'):
     job,client=Path(job).resolve(),Path(client).resolve()
+    require_client_files(client,EQUIPMENT_FILES)
     spec=json.loads((job/'job.json').read_text(encoding='utf-8'))
     report=json.loads((job/'validation.json').read_text(encoding='utf-8'))
     if report['clipped_frames']: raise ValueError('Fix clipped frames before staging equipment.')
@@ -119,30 +122,34 @@ def stage_equipment(job,client,body,graphic,flavor='modernuo'):
     if not np.array_equal(decode_art(encoded)[...,3]>0,np.asarray(image)[...,3]>=128):
         raise ValueError('Inventory art round-trip failed.')
     out=job/'staged-client'
-    result=stage(job/'item.vd',client,body,out)
-    data[target:target+size]=data[source:source+size]
-    struct.pack_into('<H',data,target+flags+6,body)
-    data[target+size-20:target+size]=spec['name'].encode('cp1252',errors='replace')[:19].ljust(20,b'\0')
-    (out/'tiledata.mul').write_bytes(data)
-    shutil.copy2(client/'art.mul',out/'art.mul')
-    while len(artidx)<index+12:artidx+=struct.pack('<iii',-1,-1,-1)
-    with (out/'art.mul').open('ab') as f:
-        offset=f.tell();f.write(encoded)
-    struct.pack_into('<iii',artidx,index,offset,len(encoded),0)
-    (out/'artidx.mul').write_bytes(artidx)
-    (out/f'SpriteMotionItem{graphic:04X}.cs').write_text(server_source(spec['name'],graphic,spec['part'],flavor))
-    result.update(graphic=graphic,layer=LAYERS[spec['part']],template_graphic=TEMPLATES[spec['part']],
-        server_format=flavor,server_class=f'SpriteMotionItem{graphic:04X}',server_compiled=False,
-        inventory_alpha_roundtrip=True,
-        remaining=['Compile/install generated cosmetic item class in your server',
-          'Sync staged client files and tiledata to the selected client/server',
-          'Check Body.def / Bodyconv.def / Equipconv.def routing',
-          'Custom paperdoll gump and female body conversion are not generated','In-game equip test'])
-    if (client/'artLegacyMUL.uop').exists():
-        result['remaining'].insert(0,'Client has artLegacyMUL.uop: import inventory.png through your UOP art tool or configure classic MUL art loading; the staged art.mul may be shadowed.')
-    for name in ['art.mul','artidx.mul','tiledata.mul']:
-        result['source_hashes'][name]=file_sha(client/name);result['staged_hashes'][name]=file_sha(out/name)
-    (out/'import-report.json').write_text(json.dumps(result,indent=2))
+    result=stage(job/'item.vd',client,body,out)   # refuses an existing out, so out is ours from here
+    try:
+        data[target:target+size]=data[source:source+size]
+        struct.pack_into('<H',data,target+flags+6,body)
+        data[target+size-20:target+size]=spec['name'].encode('cp1252',errors='replace')[:19].ljust(20,b'\0')
+        (out/'tiledata.mul').write_bytes(data)
+        shutil.copy2(client/'art.mul',out/'art.mul')
+        while len(artidx)<index+12:artidx+=struct.pack('<iii',-1,-1,-1)
+        with (out/'art.mul').open('ab') as f:
+            offset=f.tell();f.write(encoded)
+        struct.pack_into('<iii',artidx,index,offset,len(encoded),0)
+        (out/'artidx.mul').write_bytes(artidx)
+        (out/f'SpriteMotionItem{graphic:04X}.cs').write_text(server_source(spec['name'],graphic,spec['part'],flavor),encoding='utf-8')
+        result.update(graphic=graphic,layer=LAYERS[spec['part']],template_graphic=TEMPLATES[spec['part']],
+            server_format=flavor,server_class=f'SpriteMotionItem{graphic:04X}',server_compiled=False,
+            inventory_alpha_roundtrip=True,
+            remaining=['Compile/install generated cosmetic item class in your server',
+              'Sync staged client files and tiledata to the selected client/server',
+              'Check Body.def / Bodyconv.def / Equipconv.def routing',
+              'Custom paperdoll gump and female body conversion are not generated','In-game equip test'])
+        if (client/'artLegacyMUL.uop').exists():
+            result['remaining'].insert(0,'Client has artLegacyMUL.uop: import inventory.png through your UOP art tool or configure classic MUL art loading; the staged art.mul may be shadowed.')
+        for name in ['art.mul','artidx.mul','tiledata.mul']:
+            result['source_hashes'][name]=file_sha(client/name);result['staged_hashes'][name]=file_sha(out/name)
+        (out/'import-report.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
+    except BaseException:
+        shutil.rmtree(out,ignore_errors=True)
+        raise
     return result
 
 if __name__=='__main__':

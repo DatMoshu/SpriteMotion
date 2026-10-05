@@ -119,13 +119,13 @@ def snapshot_fit(spec):
         validate(spec['fit_adjustments'])
     elif spec.get('pack_mapping'):
         saved = Path(spec['pack_mapping']).parent / 'lab-adjustments.json'
-        if saved.exists(): spec['fit_adjustments'] = validate(json.loads(saved.read_text()))
+        if saved.exists(): spec['fit_adjustments'] = validate(json.loads(saved.read_text(encoding='utf-8')))
     document = spec.get('fit_adjustments', {'parts':{},'items':{}})
     if 'fit_item' not in spec and spec.get('pack_mapping'):
         sources = {str(Path(p).resolve()).casefold() for p in spec.get('source_files', [])}
         matches = []
         for path in (ROOT / 'workspace/ultima-online/fit-lab').glob('*/lab-items.json'):
-            catalog = json.loads(path.read_text())
+            catalog = json.loads(path.read_text(encoding='utf-8'))
             if Path(catalog.get('mapping','')).resolve() != Path(spec['pack_mapping']).resolve(): continue
             matches.extend(i for i in catalog['items'] if sources and sources == {str(Path(p).resolve()).casefold() for p in i['files']})
         if len(matches) == 1: spec['fit_item'] = {k: matches[0][k] for k in ('id','slot','part')}
@@ -330,7 +330,7 @@ def main():
     elif args.command == 'rebuild':
         sys.path.insert(0,str(ROOT/'tools/fit-lab'))
         from rebuild import rebuild_job
-        print(rebuild_job(args.job,json.loads(Path(args.adjustments).read_text())),flush=True)
+        print(rebuild_job(args.job,json.loads(Path(args.adjustments).read_text(encoding='utf-8'))),flush=True)
     else:
         job = create_job(json.loads(Path(args.spec).read_text(encoding='utf-8')), args.asset)
         print(job, flush=True)

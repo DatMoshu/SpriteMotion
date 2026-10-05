@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
 from PIL import Image
-from build_spartan import crop_asset,fit_helmet
+from build_plate_armor import crop_asset,fit_helmet
 
-class SpartanTests(unittest.TestCase):
+class PlateArmorTests(unittest.TestCase):
     def test_empty_helmet_stays_empty(self):
         self.assertIsNone(fit_helmet(Image.new('RGBA',(256,256)),Image.new('RGBA',(20,20),'gold')).getbbox())
 

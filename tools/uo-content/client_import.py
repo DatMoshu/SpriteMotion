@@ -46,9 +46,17 @@ def file_sha(path):
         for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
     return h.hexdigest()
 
+ANIM_FILES=('anim.mul','anim.idx')
+
+def require_client_files(client, names):
+    """Fail before any output folder exists when the selected client lacks a file staging needs."""
+    missing=[n for n in names if not (Path(client)/n).is_file()]
+    if missing: raise ValueError(f'Client folder is missing {", ".join(missing)}: choose a classic MUL client folder.')
+
 def stage(vd, client, body, out):
     vd,client,out=Path(vd).resolve(),Path(client).resolve(),Path(out).resolve()
     if not 400<=body<=2047: raise ValueError('Choose a people animation ID from 400 to 2047.')
+    require_client_files(client,ANIM_FILES)
     blocks=vd_blocks(vd)
     if len(blocks)!=175: raise ValueError('Preview VD is incomplete. Build all 35 actions before importing.')
     for a in range(35):
@@ -75,25 +83,30 @@ def stage(vd, client, body, out):
             except ValueError as e:
                 if 'routed' in str(e): raise
     out.mkdir(parents=True)
-    shutil.copy2(client/'anim.mul',out/'anim.mul')
-    dst=bytearray(index)
-    while len(dst)<(first+175)*12: dst+=struct.pack('<iii',-1,-1,-1)
-    with (out/'anim.mul').open('ab') as f:
-        for (a,d),data in sorted(blocks.items()):
-            offset=f.tell(); f.write(data)
-            struct.pack_into('<iii',dst,(first+a*5+d)*12,offset,len(data),0)
-    (out/'anim.idx').write_bytes(dst)
-    with (out/'anim.mul').open('rb') as f:
-        for (a,d),data in blocks.items():
-            offset,length,_=struct.unpack_from('<iii',dst,(first+a*5+d)*12)
-            f.seek(offset)
-            if f.read(length)!=data: raise ValueError('Staged client verification failed.')
-    report=dict(body=body,source_client=str(client),vd_sha256=file_sha(vd),blocks=175,
-        source_hashes={n:file_sha(client/n) for n in ['anim.mul','anim.idx']},
-        staged_hashes={n:file_sha(out/n) for n in ['anim.mul','anim.idx']},
-        verified=True,deployed=False,remaining=['Static item art and graphic ID','Tiledata animation and wearable layer',
-        'Server item definition','Check Body.def / Bodyconv.def / Equipconv.def routing','In-game equip test'])
-    (out/'import-report.json').write_text(json.dumps(report,indent=2))
+    try:
+        shutil.copy2(client/'anim.mul',out/'anim.mul')
+        dst=bytearray(index)
+        while len(dst)<(first+175)*12: dst+=struct.pack('<iii',-1,-1,-1)
+        with (out/'anim.mul').open('ab') as f:
+            for (a,d),data in sorted(blocks.items()):
+                offset=f.tell(); f.write(data)
+                struct.pack_into('<iii',dst,(first+a*5+d)*12,offset,len(data),0)
+        (out/'anim.idx').write_bytes(dst)
+        with (out/'anim.mul').open('rb') as f:
+            for (a,d),data in blocks.items():
+                offset,length,_=struct.unpack_from('<iii',dst,(first+a*5+d)*12)
+                f.seek(offset)
+                if f.read(length)!=data: raise ValueError('Staged client verification failed.')
+        report=dict(body=body,source_client=str(client),vd_sha256=file_sha(vd),blocks=175,
+            source_hashes={n:file_sha(client/n) for n in ['anim.mul','anim.idx']},
+            staged_hashes={n:file_sha(out/n) for n in ['anim.mul','anim.idx']},
+            verified=True,deployed=False,remaining=['Static item art and graphic ID','Tiledata animation and wearable layer',
+            'Server item definition','Check Body.def / Bodyconv.def / Equipconv.def routing','In-game equip test'])
+        (out/'import-report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    except BaseException:
+        # The folder is new (checked above), so removing it lets the user retry with the same --out.
+        shutil.rmtree(out,ignore_errors=True)
+        raise
     return report
 
 if __name__=='__main__':

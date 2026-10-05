@@ -54,7 +54,7 @@ def main():
     weapon=Image.open(OUT/'energy-sword.png').convert('RGBA');box=weapon.getchannel('A').point(lambda a:255 if a>24 else 0).getbbox()
     designs['sword']=weapon.crop(box);designs['sword'].save(OUT/'designs/sword.png')
     r=UOReader(client_source(SOURCE))
-    items=[dict(key=k,displayName=name,**r.item(g)) for k,name,g in [('shirt','Red tracksuit top',0x1517),('pants','Striped pants',0x1539),('shoes','Red sneakers',0x170F),('sword','Halo energy sword',0xF5E)]]
+    items=[dict(key=k,displayName=name,**r.item(g)) for k,name,g in [('shirt','Red tracksuit top',0x1517),('pants','Striped pants',0x1539),('shoes','Red sneakers',0x170F),('sword','Energy sword',0xF5E)]]
     items.insert(3,dict(key='chain',displayName='Gold chain',label='Custom necklace overlay (no original animation)',graphic=0,animId=0))
     m=dict(title='Crimson Runner',body=400,canvas=256,origin=[128,192],items=items,actions=[],drawOrder=['pants','shoes','shirt','chain','sword'],
       limitations=['Original body 400 frames and native equipment alignment; experimental 2D fitting.',
@@ -103,7 +103,7 @@ def main():
     m['report']=report
     (OUT/'manifest.json').write_text(json.dumps(m,indent=2));(OUT/'data.js').write_text('window.OUTFIT='+json.dumps(m)+';')
     for name in ['index.html','viewer.js','style.css']:shutil.copyfile(HERE/name,OUT/name)
-    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Crimson Runner').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Red tracksuit, white arm and leg stripes, gold chain and Halo-style energy sword. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full outfit</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','The gold chain is a new torso overlay with no original UO animation. The original top combines a shirt and leather sleeves.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
+    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Crimson Runner').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Red tracksuit, white arm and leg stripes, gold chain and sci-fi energy sword. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full outfit</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','The gold chain is a new torso overlay with no original UO animation. The original top combines a shirt and leather sleeves.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
     print(json.dumps(report))
 
 if __name__=='__main__':main()

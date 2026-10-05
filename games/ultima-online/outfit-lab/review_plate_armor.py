@@ -1,8 +1,8 @@
-"""Eight-direction evidence and rear-visor checks for the Spartan preview."""
+"""Eight-direction evidence and rear-visor checks for the sci-fi plate armor preview."""
 import json
 import numpy as np
 from PIL import Image,ImageDraw
-from build_spartan import OUT
+from build_plate_armor import OUT
 
 def gold_pixels(im):
     a=np.array(im).astype(float);r,g,b,alpha=[a[:,:,i] for i in range(4)]
