@@ -26,7 +26,14 @@
 </header>
 
 <aside id="left" inert>
+  <section id="outfit" aria-label="Whole outfit">
+    <div class="row"><label class="check" title="Show kept slots beside the slot you are editing"><input id="outfitShow" type="checkbox" checked> Show outfit</label>
+      <span id="outfitCount" class="hint"></span></div>
+    <div class="row"><label class="field inline">Wear set <select id="wearSet"><option value="">Choose a set…</option></select></label>
+      <button id="clearOutfit">Clear outfit</button></div>
+  </section>
   <label class="field">Slot <select id="slot"></select></label>
+  <label class="check" title="Keep this slot's selected item visible while you edit other slots"><input id="keepSlot" type="checkbox"> Keep visible</label>
   <p class="hint" id="slotInfo"></p>
   <div id="items" aria-label="Items in this slot"></div>
   <details class="tuck"><summary>Load fitted GLBs from a folder</summary>
@@ -140,6 +147,7 @@
     <h3>Poke-through</h3>
     <p class="hint">Counts body pixels that show through the item, over every frame of the checked animations in 5 directions. The first run is the baseline.</p>
     <div id="measureActions" aria-label="Animations to measure"></div>
+    <label class="check" title="Body hiding and counts include every kept item. Off: only the edited slot."><input id="measureOutfit" type="checkbox"> Measure outfit</label>
     <div class="row"><button id="measure" class="primary">Measure slot</button></div>
     <table id="results"></table>
     <details class="tuck"><summary>How poke pixels are counted</summary><p class="hint">Body faces that show in front of the item by more than the renderer's allowance: the 1 cm holdout margin (or the Hide body inward distance, if larger, in clothing mode) plus the 6 mm push-out for skinned garments (not rigid, helm, weapon, shield, bow, quiver). Clothing counts limb and head faces under the item; body counts the whole body; none counts nothing. These are the holes the renderer would cut. Compare counts; don't read them as absolutes.</p></details>

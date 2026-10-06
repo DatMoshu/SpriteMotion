@@ -135,8 +135,8 @@ before this rule, so compare runs; don't read them as absolutes. Baselines live 
 
 ### Whole outfit while fitting one slot
 
-Status: design (2026-10-05), not implemented yet. Implementation goes in `web/outfit.mjs` (pure logic, tested
-from pytest with Node like `fit-rules.mjs`) and is wired into `lab.js`.
+The rules live in `web/outfit.mjs` (pure logic, tested from pytest with Node in `tests/unit/test_fit_lab_outfit.py`)
+and are wired into `lab.js`.
 
 By default the 3D view shows only the slot being edited. **Keep visible** (a checkbox beside the Slot selector)
 adds that slot to the *outfit*: its worn item stays rendered in the 3D view when another slot is selected.

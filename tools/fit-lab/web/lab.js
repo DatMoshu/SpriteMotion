@@ -10,6 +10,7 @@ import { resolveFit, storedDirection } from './fit-rules.mjs';
 import { pokeRule } from './poke-rules.mjs';
 import { RenderPanel } from './render-panel.js';
 import { dominantJoint } from './rigid-binding.mjs';
+import * as Outfit from './outfit.mjs';
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 
 const $ = id => document.getElementById(id);
@@ -27,6 +28,7 @@ const items = new Map();                                   // id -> loaded item
 const hiddenCache = new Map();
 const loader = new GLTFLoader();
 let persistence, renderPanel, measuring = false, slotRequest = 0, lastEdit = 0;
+let outfit = Outfit.emptyOutfit(), outfitKey = '';
 const preview = { frame: 0, dir: 3, playing: true, cycling: true, dirty: true, lastFrame: 0, lastDir: 0 };
 
 // ---------- scene ----------
@@ -213,6 +215,8 @@ function applyFit(item) {
   });
   item.bvh = null;
 }
+function visibleIds() { return new Set([...state.shown, ...Outfit.keptIds(outfit, state.slot)]); }
+function refreshVisible() { const on = visibleIds(); for (const it of items.values()) setVisible(it, on.has(it.info.id)); }
 function setVisible(item, on) {
   const rigid = fitFor(item.info).bind === 'rigid';
   item.skinned.forEach(m => m.visible = on && !rigid); item.rigid.forEach(m => m.visible = on && rigid);
@@ -250,7 +254,7 @@ function bodyIndex(hidden, under) {         // under: only limb/head faces lying
 }
 function updateBody() {
   const hidden = new Set();
-  for (const id of state.shown) { const it = items.get(id); if (it) for (const t of hiddenFor(it)) hidden.add(t); }
+  for (const id of [...state.shown, ...Outfit.measuredKept(outfit, state.slot)]) { const it = items.get(id); if (it) for (const t of hiddenFor(it)) hidden.add(t); }
   bodyMesh.geometry.setIndex(bodyIndex(hidden, null));
   const over = []; for (const t of hidden) over.push(bodyTris[3 * t], bodyTris[3 * t + 1], bodyTris[3 * t + 2]);
   hiddenOverlay.geometry.setIndex(over); hiddenOverlay.visible = $('showHidden').checked;
@@ -296,7 +300,7 @@ function noScale(m) { const p = new THREE.Vector3(), q = new THREE.Quaternion(),
 
 // ---------- offscreen UO-camera renders ----------
 function renderTarget() { renderer.setRenderTarget(target); renderer.clear(); renderer.render(scene, uoCam); renderer.readRenderTargetPixels(target, 0, 0, W, H, pixels); renderer.setRenderTarget(null); return pixels; }
-function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
+function soloRender(item, mode, extra = null) {        // mode: 'mask' | 'poke' | 'look'; extra: more hidden body faces
   const background = scene.background;
   if (mode === 'look') scene.background = null;
   const bodyIndexBefore = bodyMesh.geometry.index;
@@ -305,7 +309,8 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   meshes.forEach(m => { m.visible = true; if (mode !== 'look') m.material = GREEN; });
   if (mode === 'poke') {                 // the renderer's holdout rule for this item, see poke-rules.mjs
     const rule = pokeRule(fitFor(item.info), partOf(item.info).studio_part);
-    bodyMeasure.geometry.setIndex(rule.measure ? (rule.faces === 'all' ? bodyIndex(new Set(), null) : bodyIndex(hiddenFor(item), coveredFor(item))) : []);
+    const hidden = extra ? new Set([...hiddenFor(item), ...extra]) : hiddenFor(item);
+    bodyMeasure.geometry.setIndex(rule.measure ? (rule.faces === 'all' ? bodyIndex(new Set(), null) : bodyIndex(hidden, coveredFor(item))) : []);
     bodyMeasure.material = pokeMaterial(rule.allowance); bodyMeasure.visible = rule.measure;
   }
   if (mode === 'look' && $('previewBase').value === 'model') { bodyMesh.geometry.setIndex(bodyIndex(hiddenFor(item), null)); bodyMesh.visible = true; }
@@ -334,8 +339,8 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   scene.background = background;
   return out;
 }
-function pokeCount(item) {
-  const mask = soloRender(item, 'mask'), both = soloRender(item, 'poke'); let n = 0; const where = [];
+function pokeCount(item, extra = null) {
+  const mask = soloRender(item, 'mask'), both = soloRender(item, 'poke', extra); let n = 0; const where = [];
   for (let i = 0; i < W * H; i++) if (mask[4 * i + 1] > 128 && both[4 * i] > 128 && both[4 * i + 1] < 128) { n++; where.push(i); }
   return { n, where };
 }
@@ -355,7 +360,7 @@ function record(label) { persistence?.commit(state.adjust, `${state.slot}: ${lab
 function changed() {
   hiddenCache.clear(); lastEdit = performance.now();
   for (const it of items.values()) applyFit(it);
-  for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
+  refreshVisible();
   updateBody(); drawSheet();
   persistence?.edit(state.adjust);
 }
@@ -447,7 +452,7 @@ async function selectSlot(slot) {
   if (request !== slotRequest) return;
   state.slot = slot;
   state.shown = new Set([list[0].id]); state.selected = list[0];
-  renderItems(); for (const it of items.values()) setVisible(it, state.shown.has(it.info.id));
+  renderItems(); refreshVisible(); outfitUI();
   buildPanels(); updateBody(); buildSheet(); drawSheet(); renderMeasureTable(); renderPanel?.sync();
 }
 function renderItems() {
@@ -462,6 +467,7 @@ function renderItems() {
 }
 function selectItem(info) {
   state.selected = info; renderItems(); buildPanels();
+  if (Outfit.isKept(outfit, info.slot) && outfit.worn[info.slot] !== info.id) setOutfit(Outfit.select(outfit, info.slot, info.id));
   for (const [id, card] of previewCards) card.canvas.parentElement.classList.toggle('on', id === info.id);
   renderPanel?.sync();
 }
@@ -504,31 +510,73 @@ async function measure() {
   if (measuring) return;
   measuring = true; persistence.suspended = true;
   const panels = ['left', 'right', 'bar', 'previewBar', 'topActions']; panels.forEach(id => $(id).inert = true);
+  let summary = '';
   try {
   const acts = [...document.querySelectorAll('#measureActions input:checked')].map(i => +i.value);
   const list = state.manifest.items.filter(i => i.slot === state.slot).map(i => items.get(i.id));
-  const totals = Object.fromEntries(list.map(it => [it.info.id, 0]));
+  // Measure outfit: edited items are counted with the kept items' hidden faces removed as well, and every kept item
+  // gets a row, counted with the hidden faces of the edited slot's ticked items and of the other kept items.
+  const kept = Outfit.measuredKept(outfit, state.slot).map(id => items.get(id)).filter(Boolean);
+  const ticked = list.filter(it => state.shown.has(it.info.id));
+  const others = it => { const out = new Set(); for (const o of [...kept, ...ticked]) if (o !== it) for (const t of hiddenFor(o)) out.add(t); return out; };
+  const totals = Object.fromEntries([...list, ...kept].map(it => [it.info.id, 0]));
   let done = 0; const jobs = acts.reduce((s, a) => s + state.manifest.actions[a].frames * 5, 0);
   for (const a of acts) for (let f = 0; f < state.manifest.actions[a].frames; f++) for (let d = 0; d < 5; d++) {
     setPose(a, f, d);
-    for (const it of list) totals[it.info.id] += pokeCount(it).n;
+    const keptHidden = kept.length ? new Set(kept.flatMap(it => [...hiddenFor(it)])) : null;
+    for (const it of list) totals[it.info.id] += pokeCount(it, keptHidden).n;
+    for (const it of kept) totals[it.info.id] += pokeCount(it, others(it)).n;
     if (++done % 10 === 0) { $('status').textContent = `measuring ${done}/${jobs} poses…`; await new Promise(r => setTimeout(r)); }
   }
   for (const id in totals) { state.baseline[id] ??= totals[id]; state.results[id] = totals[id]; }
-  $('status').textContent = `measured ${jobs} poses × ${list.length} items`;
-  renderMeasureTable(); setPose(state.action, state.frame, state.dir);
-  } catch (error) { $('status').textContent = 'Measurement failed: ' + error.message; }
+  summary = `measured ${jobs} poses × ${list.length} items` + (kept.length ? ` + ${kept.length} kept` : '');
+  renderMeasureTable();
+  } catch (error) { summary = 'Measurement failed: ' + error.message; }
   finally {
     measuring = false; persistence.suspended = false; panels.forEach(id => $(id).inert = false);
     updateBody(); setPose(state.action, state.frame, state.dir); drawSheet();
+    if (summary) $('status').textContent = summary;     // after updateBody, which writes the hidden-face count
   }
 }
 function renderMeasureTable() {
   const rows = state.manifest.items.filter(i => i.slot === state.slot && i.id in state.results);
+  const kept = Outfit.measuredKept(outfit, state.slot).filter(id => id in state.results)
+    .map(id => state.manifest.items.find(i => i.id === id)).filter(Boolean);
   let sumB = 0, sumN = 0;
-  const body = rows.map(i => { const b = state.baseline[i.id], n = state.results[i.id]; sumB += b; sumN += n;
-    return `<tr><td title="${html(i.id)}">${html(i.family || i.id)}</td><td>${b}</td><td>${n}</td><td class="${n < b ? 'better' : n > b ? 'worse' : ''}">${n - b}</td></tr>`; }).join('');
-  $('results').innerHTML = rows.length ? `<tr><th>item</th><th>first</th><th>now</th><th>Δ</th></tr>${body}<tr><th>slot</th><th>${sumB}</th><th>${sumN}</th><th class="${sumN < sumB ? 'better' : sumN > sumB ? 'worse' : ''}">${sumN - sumB}</th></tr>` : '';
+  const row = (i, label) => { const b = state.baseline[i.id], n = state.results[i.id];
+    return `<tr><td title="${html(i.id)}">${html(label)}</td><td>${b}</td><td>${n}</td><td class="${n < b ? 'better' : n > b ? 'worse' : ''}">${n - b}</td></tr>`; };
+  const body = rows.map(i => { sumB += state.baseline[i.id]; sumN += state.results[i.id]; return row(i, i.family || i.id); }).join('');
+  const keptRows = kept.map(i => row(i, `kept ${i.slot}: ${i.family || i.id}`)).join('');
+  $('results').innerHTML = rows.length ? `<tr><th>item</th><th>first</th><th>now</th><th>Δ</th></tr>${body}<tr><th>slot</th><th>${sumB}</th><th>${sumN}</th><th class="${sumN < sumB ? 'better' : sumN > sumB ? 'worse' : ''}">${sumN - sumB}</th></tr>${keptRows}` : '';
+}
+
+// ---------- whole outfit (view state, never a fit edit) ----------
+function saveOutfit() { try { localStorage.setItem(outfitKey, JSON.stringify(outfit)); } catch {} }
+async function setOutfit(next) {
+  outfit = next; saveOutfit(); outfitUI();
+  const infos = Object.values(outfit.worn).map(id => state.manifest.items.find(i => i.id === id)).filter(Boolean);
+  await Promise.all(infos.map(loadItem));
+  if (next !== outfit) return;                       // a newer change already took over
+  refreshVisible(); setPose(state.action, state.frame, state.dir); updateBody(); renderMeasureTable();
+}
+function outfitUI() {
+  const kept = Object.keys(outfit.worn).length;
+  $('keepSlot').checked = Outfit.isKept(outfit, state.slot);
+  $('outfitShow').checked = outfit.show; $('measureOutfit').checked = outfit.measure_outfit;
+  $('outfitCount').textContent = kept ? `${kept} slot${kept === 1 ? '' : 's'} kept` : 'No slots kept';
+  $('clearOutfit').disabled = !kept;
+}
+function setupOutfit() {
+  outfitKey = `fit-lab:outfit:${location.origin}:${state.manifest.pack}`;
+  let raw = null; try { raw = localStorage.getItem(outfitKey); } catch {}
+  outfit = Outfit.parseOutfit(raw, state.manifest.items);
+  $('wearSet').append(...Outfit.families(state.manifest.items).filter(f => f.slots > 1)
+    .map(f => new Option(`${f.family} (${f.slots} slots)`, f.family)));
+  $('wearSet').onchange = e => { if (e.target.value) setOutfit(Outfit.wearSet(outfit, e.target.value, state.manifest.items)); e.target.value = ''; };
+  $('keepSlot').onchange = e => setOutfit(e.target.checked ? Outfit.keep(outfit, state.slot, state.selected.id) : Outfit.release(outfit, state.slot));
+  $('outfitShow').onchange = e => setOutfit({...outfit, show: e.target.checked});
+  $('measureOutfit').onchange = e => setOutfit({...outfit, measure_outfit: e.target.checked});
+  $('clearOutfit').onclick = () => setOutfit(Outfit.clearOutfit(outfit));
 }
 function frameUI() {
   const act = state.manifest.actions[state.action];
@@ -727,7 +775,8 @@ async function main() {
       state.dir = preview.dir = dir; state.frame = preview.frame = frame; frameUI();
     },
   });
-  await selectSlot(slots[0]); frameUI();
+  setupOutfit();
+  await selectSlot(slots[0]); await setOutfit(outfit); frameUI();
   ['left', 'right', 'bar', 'previewBar', 'topActions'].forEach(id => $(id).inert = false);
   let last = 0;
   renderer.setAnimationLoop(t => {
