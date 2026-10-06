@@ -37,10 +37,13 @@
 <main id="center">
   <div id="stage">
     <section class="pane" aria-label="Live 3D fit">
-      <header class="pane-head"><h2>Live 3D</h2><span class="pane-note">Drag to orbit</span>
+      <header class="pane-head"><h2>Live 3D</h2>
+        <div id="viewModes" class="seg" role="group" aria-label="3D view layout">
+          <button data-layout="single" aria-pressed="true" title="One orbit view">1 view</button><button data-layout="quad" aria-pressed="false" title="Orbit view plus front, side and back">2×2</button>
+        </div>
         <button id="uoView" class="quiet" title="Reset to the UO camera">UO camera</button>
         <label class="check"><input id="showHidden" type="checkbox"> Hidden faces</label></header>
-      <div id="view"></div>
+      <div id="view" title="Drag to orbit"><span class="view-tag" data-i="0">Orbit · drag to turn</span><span class="view-tag" data-i="1">Front</span><span class="view-tag" data-i="2">Side</span><span class="view-tag" data-i="3">Back</span></div>
     </section>
     <section class="pane" id="renderPane" aria-label="Blender render">
       <header class="pane-head"><h2>Blender render</h2>
@@ -68,7 +71,7 @@
 
   <div id="bar" inert>
     <label class="field inline">Action <select id="action"></select></label>
-    <div id="dirs" role="group" aria-label="Direction"></div>
+    <div id="dirs" role="group" aria-label="Facing direction (arrow keys turn)"></div><span id="dirLabel" aria-live="polite"></span>
     <button id="play" class="play" aria-label="Play">Play</button>
     <input id="frame" type="range" min="0" max="0" value="0">
     <span id="frameLabel" class="num">0</span>

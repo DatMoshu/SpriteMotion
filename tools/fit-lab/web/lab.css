@@ -112,6 +112,15 @@ aside { overflow-y: auto; }
 .pane-head > #uoView + .check { margin-left: 0; }
 #view { position: relative; min-height: 0; overflow: hidden; }
 #view canvas { position: absolute; inset: 0; display: block; }
+/* 2×2: corner labels and hairlines over one canvas; the corners are drawn by drawView() in lab.js. */
+.view-tag { display: none; position: absolute; z-index: 1; margin: 8px 10px; padding: 1px 8px; border-radius: 999px;
+  background: rgba(13, 14, 16, .7); color: var(--dim); font-size: 11.5px; pointer-events: none; }
+#view.quad .view-tag { display: block; }
+.view-tag[data-i="0"] { left: 0; top: 0; } .view-tag[data-i="1"] { left: 50%; top: 0; }
+.view-tag[data-i="2"] { left: 0; top: 50%; } .view-tag[data-i="3"] { left: 50%; top: 50%; }
+#view.quad::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(var(--line-soft), var(--line-soft)) 50% 0 / 1px 100% no-repeat,
+              linear-gradient(var(--line-soft), var(--line-soft)) 0 50% / 100% 1px no-repeat; }
 
 #renderStage { position: relative; min-height: 0; overflow: hidden;
   background: repeating-conic-gradient(var(--check-a) 0 25%, var(--check-b) 0 50%) 0 0 / 16px 16px; }
@@ -151,12 +160,19 @@ aside { overflow-y: auto; }
 #bar { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--panel); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); min-width: 0; }
 #frame { flex: 1 1 200px; min-width: 100px; }
 #status { margin-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-#dirs { position: relative; width: 60px; height: 60px; flex: 0 0 auto; border-radius: 50%; border: 1px solid var(--line-soft); }
-#dirs button { position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; padding: 0; border-radius: 50%;
-  font-size: 11px; line-height: 18px; text-align: center; background: var(--well); color: var(--dim);
-  transform: translate(-50%, -50%) rotate(var(--a)) translateY(-20px) rotate(calc(-1 * var(--a))); }
+/* Facing ring: each number sits where the character faces on screen; the needle points the current way. */
+#dirs { --facing: 180deg; position: relative; width: 84px; height: 84px; flex: 0 0 auto; border-radius: 50%;
+  border: 1px solid var(--line-soft); background: radial-gradient(circle, var(--raise) 0 9px, transparent 10px); }
+#dirs::before { content: ''; position: absolute; left: 50%; top: 50%; width: 10px; height: 22px; background: var(--accent);
+  clip-path: polygon(50% 0, 100% 40%, 64% 40%, 64% 100%, 36% 100%, 36% 40%, 0 40%);
+  transform-origin: 50% 100%; transform: translate(-50%, -100%) rotate(var(--facing)); }
+#dirs button { position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; padding: 0; border-radius: 50%;
+  font-size: 11.5px; line-height: 22px; text-align: center; background: var(--well); color: var(--dim);
+  transform: translate(-50%, -50%) rotate(var(--a)) translateY(-30px) rotate(calc(-1 * var(--a))); }
+#dirs button:hover:not(.on) { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
 #dirs button.mirror { border-style: dashed; }
 #dirs button.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+#dirLabel { min-width: 9.5em; color: var(--ink); font-size: 13px; white-space: nowrap; }
 .play { min-width: 64px; }
 
 /* slot previews */
