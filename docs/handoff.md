@@ -103,8 +103,9 @@ Rollback: `pipeline.py setup --source workspace/uo-model-review/main`, and resto
 
 ## Known gaps
 
-- The lab's poke metric does not model the renderer's 1 cm holdout margin or 6 mm body push-out (counts run high;
-  compare, don't read as absolutes).
+- The lab's poke metric models the renderer's 1 cm holdout margin, the 6 mm push-out as an upper bound, and the
+  clothing/body/none occlusion modes (`tools/fit-lab/web/poke-rules.mjs`); it still does not solve the push-out itself,
+  so compare counts, don't read them as absolutes.
 - Rig targets marked `proposed_target` in mappings (twist bones, fingers, shield, cloak/skirt chains) are not used by
   `pack_fit.py` yet.
 - Untested contributed outfit-lab options: `merge_items.py`, `make_gump_cloak.py`, `build_item.py --planar/--cut`,

@@ -142,7 +142,7 @@
     <div id="measureActions" aria-label="Animations to measure"></div>
     <div class="row"><button id="measure" class="primary">Measure slot</button></div>
     <table id="results"></table>
-    <details class="tuck"><summary>How poke pixels are counted</summary><p class="hint">Limb and head faces lying under the item (within 5 cm outside or 3 cm inside it at rest) that show in front of it: the holes the renderer's body holdout would cut. The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so counts run high. Compare them; don't read them as absolutes.</p></details>
+    <details class="tuck"><summary>How poke pixels are counted</summary><p class="hint">Body faces that show in front of the item by more than the renderer's allowance: the 1 cm holdout margin (or the Hide body inward distance, if larger, in clothing mode) plus the 6 mm push-out for skinned garments (not rigid, helm, weapon, shield, bow, quiver). Clothing counts limb and head faces under the item; body counts the whole body; none counts nothing. These are the holes the renderer would cut. Compare counts; don't read them as absolutes.</p></details>
     <h3>Head steadying A/B</h3>
     <p class="hint">Compares original motion with a steadied head on the first three items of every slot.</p>
     <div class="row"><button id="headAB">Run A/B</button><button id="cancelAB" hidden>Stop A/B</button></div>

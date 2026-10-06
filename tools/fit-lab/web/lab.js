@@ -7,6 +7,7 @@ import { computeBoundsTree } from 'three-mesh-bvh';
 import { FitPersistence } from './persistence.js';
 import { same } from './history.mjs';
 import { resolveFit, storedDirection } from './fit-rules.mjs';
+import { pokeRule } from './poke-rules.mjs';
 import { RenderPanel } from './render-panel.js';
 import { dominantJoint } from './rigid-binding.mjs';
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -45,10 +46,17 @@ const pixels = new Uint8Array(W * H * 4);
 const flat = c => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide });
 const RED = flat(0xff0000), GREEN = flat(0x00ff00);
 const DEPTH = new THREE.MeshBasicMaterial({colorWrite:false, depthWrite:true, side:THREE.DoubleSide});
-DEPTH.onBeforeCompile = shader => {
+const pushBack = metres => shader => {     // move the body `metres` away from the UO camera, as the renderer's margin does
   shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>',
-    '#include <project_vertex>\ngl_Position.z += ' + (2 * .01 / (uoCam.far - uoCam.near)).toFixed(8) + ' * gl_Position.w;');
+    '#include <project_vertex>\ngl_Position.z += ' + (2 * metres / (uoCam.far - uoCam.near)).toFixed(8) + ' * gl_Position.w;');
 };
+DEPTH.onBeforeCompile = pushBack(.01);
+const pokeMaterials = new Map();           // allowance in metres -> red body material shifted back by it
+function pokeMaterial(allowance) {
+  const key = allowance.toFixed(4);
+  if (!pokeMaterials.has(key)) { const m = flat(0xff0000); m.onBeforeCompile = pushBack(allowance); pokeMaterials.set(key, m); }
+  return pokeMaterials.get(key);
+}
 let poseAction = null, poseDirection = null, currentPoseFrame = 0, referenceCanvas;
 let body, bodyMesh, mixer, clips = {}, bodyBase, bodyTris, occluderTri, hiddenOverlay, bodyMeasure;
 let reference, referenceImage, stabilizeHead = false, headBone;
@@ -295,7 +303,11 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   const keep = []; scene.traverse(o => { if (o.isMesh) { keep.push([o, o.visible, o.material]); o.visible = false; } });
   const rigid = fitFor(item.info).bind === 'rigid', meshes = rigid ? item.rigid : item.skinned;
   meshes.forEach(m => { m.visible = true; if (mode !== 'look') m.material = GREEN; });
-  if (mode === 'poke') { bodyMeasure.geometry.setIndex(bodyIndex(hiddenFor(item), coveredFor(item))); bodyMeasure.visible = true; }
+  if (mode === 'poke') {                 // the renderer's holdout rule for this item, see poke-rules.mjs
+    const rule = pokeRule(fitFor(item.info), item.info);
+    bodyMeasure.geometry.setIndex(rule.measure ? (rule.faces === 'all' ? bodyIndex(new Set(), null) : bodyIndex(hiddenFor(item), coveredFor(item))) : []);
+    bodyMeasure.material = pokeMaterial(rule.allowance); bodyMeasure.visible = rule.measure;
+  }
   if (mode === 'look' && $('previewBase').value === 'model') { bodyMesh.geometry.setIndex(bodyIndex(hiddenFor(item), null)); bodyMesh.visible = true; }
   let out = renderTarget().slice();
   if (mode === 'look' && $('previewBase').value !== 'model' && fitFor(item.info).occlusion !== 'none') {
@@ -317,7 +329,7 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   }
   for (const [o, v, m] of keep) { o.visible = v; o.material = m; }
   meshes.forEach((m, k) => m.material = item.parts[k].material);
-  bodyMeasure.visible = false;
+  bodyMeasure.visible = false; bodyMeasure.material = RED;
   bodyMesh.geometry.setIndex(bodyIndexBefore);
   scene.background = background;
   return out;
