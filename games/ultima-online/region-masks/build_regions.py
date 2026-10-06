@@ -16,6 +16,7 @@ from collections import deque
 import numpy as np
 from scipy import ndimage
 from PIL import Image, ImageDraw, ImageFont
+from region_fonts import load_font
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO = SCRIPT_DIR.parents[2]
@@ -106,8 +107,8 @@ def frame_regions(body, garments):
 def build(actions):
     (ROOT / 'frames').mkdir(parents=True, exist_ok=True)
     reader = UOReader(client_source(CLIENT))
-    font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 18)
-    small = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 13)
+    font = load_font(18)
+    small = load_font(13)
     old = ROOT / 'region-report.json'
     report = json.loads(old.read_text()) if old.exists() else {}
     report.update({'regions': REGIONS, 'garments': {k: a for k, a, _ in GARMENTS}})

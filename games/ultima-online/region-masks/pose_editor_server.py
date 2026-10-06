@@ -1,6 +1,6 @@
 """Loopback-only live pose editor, local saves, and asynchronous Blender export."""
 from pathlib import Path
-import argparse, functools, json, math, os, subprocess, threading, time, uuid
+import argparse, functools, json, math, os, shutil, subprocess, threading, time, uuid
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
@@ -8,6 +8,14 @@ ROOT=Path(__file__).resolve().parents[3]
 OUT=ROOT/'workspace/ultima-online/female-locomotion'
 SOURCE=Path(__file__).parent
 EDITABLE={f'{bone}_{side}' for bone in ('upperarm','lowerarm','hand','thigh','calf','foot') for side in ('l','r')}|{'LegPlate_L','LegPlate_R','Hip_L','Hip_R'}
+
+def find_blender():
+    exe=os.environ.get('SPRITEMOTION_BLENDER') or shutil.which('blender')
+    if not exe:
+        found=sorted(Path(os.environ.get('ProgramFiles','C:/Program Files'),'Blender Foundation').glob('Blender */blender.exe'))
+        exe=str(found[-1]) if found else None
+    if not exe:raise RuntimeError('Set SPRITEMOTION_BLENDER to blender.exe.')
+    return exe
 
 def validate(doc,scene):
     if not isinstance(doc,dict) or doc.get('version')!=1 or doc.get('assetId')!=scene['assetId']:
@@ -74,7 +82,7 @@ class Handler(SimpleHTTPRequestHandler):
     def bake(self,job,folder,edits):
         output=folder/'UO_Female_Edited.blend'
         try:
-            command=[str(ROOT/'tools/blender-runtime/blender-5.2.2-windows-x64/blender.exe'),'-b',str(OUT/self.server.scene.get('sourceBlend','UO_Female_Idle_Walk_Run.blend')),'--python-exit-code','1','--python',str(ROOT/'tools/blender/apply_pose_edits.py'),'--','--edits',str(edits),'--output',str(output)]
+            command=[find_blender(),'-b',str(OUT/self.server.scene.get('sourceBlend','UO_Female_Idle_Walk_Run.blend')),'--python-exit-code','1','--python',str(ROOT/'tools/blender/apply_pose_edits.py'),'--','--edits',str(edits),'--output',str(output)]
             with (folder/'export.log').open('w') as log:
                 result=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=180,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
             if result.returncode or not output.exists():raise RuntimeError('Blender export failed; see the export log.')

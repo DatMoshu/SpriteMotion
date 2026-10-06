@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import shutil
 import sys
@@ -49,6 +50,8 @@ from spritemotion.jsonio import read_json, write_json  # noqa: E402
 from spritemotion.pipeline.fitjob import dataset_camera, read_solution, select_targets  # noqa: E402
 from spritemotion.poses.skeleton import Skeleton  # noqa: E402
 from spritemotion.sprites.dataset import Dataset  # noqa: E402
+
+LOG = logging.getLogger("silhouette-fit")
 
 SAMPLES = (0.2, 0.4, 0.6, 0.8)
 
@@ -203,6 +206,16 @@ class SilhouetteFitter(PoseFitter):
         return np.concatenate([base] + extra)
 
 
+def annotation_targets(dataset: Dataset, sequence: str, names: list[str]) -> tuple[dict, dict]:
+    """Annotated pose targets for the sequence; unreadable annotations are reported, not silently dropped."""
+    try:
+        return select_targets(dataset, sequence, names, "all", allow_dependent=True)
+    except (KeyError, ValueError, OSError) as error:   # malformed, mismatched or unreadable annotation files
+        LOG.warning("Ignoring annotations for sequence %s (%s: %s); fitting to the silhouette alone.",
+                    sequence, type(error).__name__, error)
+        return {}, {"mode": "all", "used": [], "mirrored_into_partner": []}
+
+
 def fit_one(job: dict) -> dict:
     started = time.time()
     dataset = Dataset.load(job["dataset"])
@@ -222,10 +235,7 @@ def fit_one(job: dict) -> dict:
     fitter = SilhouetteFitter(rig, mapping, projection, names, direction_rotations(dataset.directions, (0.0, -1.0)),
                               settings, edges=edges, mask_weight=job["mask_weight"], skin=skin,
                               coverage_weight=job.get("coverage_weight", 0.0))
-    try:
-        targets, selection = select_targets(dataset, sequence, names, "all", allow_dependent=True)
-    except Exception:
-        targets, selection = {}, {"mode": "all", "used": [], "mirrored_into_partner": []}
+    targets, selection = annotation_targets(dataset, sequence, names)
     if skin is not None:  # every frame, every stored view; frames without marks are fitted to the silhouette alone
         stored = [d["id"] for d in dataset.directions if dataset.mirror_source(d["id"]) is None]
         count = next(s["frame_count"] for s in dataset.sequences if s["id"] == sequence)

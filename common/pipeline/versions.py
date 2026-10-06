@@ -129,7 +129,10 @@ def restore(path: str | Path, version: int) -> dict:
     source = version_file(path, version)
     if not source.exists():
         if source_entry is history["versions"][-1] and path.exists():
-            return source_entry     # already current
+            if _sha256(path) == source_entry.get("sha256"):
+                return source_entry     # already current, verified by hash
+            raise FileNotFoundError(f"{path.name} has changed since version {version} was recorded and that version "
+                                    f"was never archived ({source.name} missing), so it cannot be restored.")
         raise FileNotFoundError(f"Version {version} was never archived ({source.name} missing).")
     archive_current(path)
     shutil.copy2(source, path)

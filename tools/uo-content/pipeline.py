@@ -61,7 +61,7 @@ def blender_path():
     found = shutil.which('blender')
     if found:
         return found
-    choices = sorted(Path('C:/Program Files/Blender Foundation').glob('Blender */blender.exe'), reverse=True)
+    choices = sorted(Path(os.environ.get('ProgramFiles', 'C:/Program Files'), 'Blender Foundation').glob('Blender */blender.exe'), reverse=True)
     if choices:
         return str(choices[0])
     raise ValueError('Set SPRITEMOTION_BLENDER to your Blender 4.2+ executable.')

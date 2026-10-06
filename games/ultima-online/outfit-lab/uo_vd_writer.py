@@ -94,7 +94,10 @@ def encode_frame(idx, cx, cy):
             x0 = x
             while x < w and row[x] >= 0 and x - x0 < 0xFFF:
                 x += 1
-            out += struct.pack("<I", (((x0 - cx) & 0x3FF) << 22) | (((y - cy - h) & 0x3FF) << 12) | (x - x0))
+            dx, dy = x0 - cx, y - cy - h
+            if not (-512 <= dx <= 511 and -512 <= dy <= 511):
+                raise ValueError(f"run offset out of 10-bit range (-512..511): dx={dx}, dy={dy} at row {y}")
+            out += struct.pack("<I", ((dx & 0x3FF) << 22) | ((dy & 0x3FF) << 12) | (x - x0))
             out += bytes(row[x0:x].astype(np.uint8))
     out += struct.pack("<I", END)
     return bytes(out)
