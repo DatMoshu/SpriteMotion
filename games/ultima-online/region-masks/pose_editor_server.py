@@ -1,6 +1,6 @@
 """Loopback-only live pose editor, local saves, and asynchronous Blender export."""
 from pathlib import Path
-import argparse, functools, json, math, os, shutil, subprocess, threading, time, uuid
+import argparse, functools, json, math, os, re, shutil, subprocess, threading, time, uuid
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
@@ -9,13 +9,26 @@ OUT=ROOT/'workspace/ultima-online/female-locomotion'
 SOURCE=Path(__file__).parent
 EDITABLE={f'{bone}_{side}' for bone in ('upperarm','lowerarm','hand','thigh','calf','foot') for side in ('l','r')}|{'LegPlate_L','LegPlate_R','Hip_L','Hip_R'}
 
-def find_blender():
-    exe=os.environ.get('SPRITEMOTION_BLENDER') or shutil.which('blender')
+def _version_key(path):
+    return tuple(int(n) for n in re.findall(r'\d+',path.parent.name))
+
+def find_blender(root=None,environ=None):
+    """SPRITEMOTION_BLENDER, then the newest tools/blender-runtime build, then PATH, then Program Files."""
+    root=Path(root) if root else ROOT;environ=os.environ if environ is None else environ
+    exe=environ.get('SPRITEMOTION_BLENDER')
     if not exe:
-        found=sorted(Path(os.environ.get('ProgramFiles','C:/Program Files'),'Blender Foundation').glob('Blender */blender.exe'))
+        runtime=sorted((root/'tools/blender-runtime').glob('*/blender.exe'),key=_version_key)
+        exe=str(runtime[-1]) if runtime else None
+    exe=exe or shutil.which('blender')
+    if not exe:
+        found=sorted(Path(environ.get('ProgramFiles','C:/Program Files'),'Blender Foundation').glob('Blender */blender.exe'),key=_version_key)
         exe=str(found[-1]) if found else None
     if not exe:raise RuntimeError('Set SPRITEMOTION_BLENDER to blender.exe.')
     return exe
+
+def write_private(path,text):
+    fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600)
+    with os.fdopen(fd,'w') as f:f.write(text)
 
 def validate(doc,scene):
     if not isinstance(doc,dict) or doc.get('version')!=1 or doc.get('assetId')!=scene['assetId']:
@@ -69,12 +82,12 @@ class Handler(SimpleHTTPRequestHandler):
             doc=validate(json.loads(self.rfile.read(size)),self.server.scene)
             if self.path=='/api/save':
                 with self.server.lock:
-                    tmp=OUT/'editor/edits.tmp';tmp.write_text(json.dumps(doc,indent=2));os.replace(tmp,OUT/'editor/edits.json')
+                    tmp=OUT/'editor/edits.tmp';write_private(tmp,json.dumps(doc,indent=2));os.replace(tmp,OUT/'editor/edits.json')
                 return self.send_json({'saved':True})
             with self.server.lock:
                 if any(j['status']=='running' for j in self.server.jobs.values()):return self.send_json({'error':'An export is already running.'},409)
                 job=uuid.uuid4().hex[:12];folder=OUT/'editor/exports'/job;folder.mkdir(parents=True)
-                edits=folder/'edits.json';edits.write_text(json.dumps(doc))
+                edits=folder/'edits.json';write_private(edits,json.dumps(doc))
                 self.server.jobs[job]={'id':job,'status':'running'}
             threading.Thread(target=self.bake,args=(job,folder,edits),daemon=True).start()
             self.send_json({'id':job},202)
