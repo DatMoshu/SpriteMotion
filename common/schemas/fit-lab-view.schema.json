@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/fit-lab-view.schema.json",
+  "title": "SpriteMotion Fit Lab outfit view (browser-local)",
+  "description": "Per-browser view state stored in localStorage key fit-lab:outfit:<origin>:<pack>. Not a fit edit; never written to lab-adjustments.json. See tools/fit-lab/README.md, 'Whole outfit while fitting one slot'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "show", "measure_outfit", "worn"],
+  "properties": {
+    "schema": {"const": "spritemotion.fit-lab-view"},
+    "schema_version": {"const": 1},
+    "show": {"type": "boolean", "description": "Show outfit: kept slots render beside the edited slot."},
+    "measure_outfit": {"type": "boolean", "description": "Body hiding and Measure slot include kept items."},
+    "worn": {
+      "type": "object",
+      "description": "Kept slots: slot id to the manifest item id it wears.",
+      "additionalProperties": {"type": "string", "minLength": 1}
+    }
+  }
+}
