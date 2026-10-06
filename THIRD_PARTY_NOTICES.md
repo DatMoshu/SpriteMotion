@@ -1,8 +1,9 @@
 # Third-party notices
 
 SpriteMotion's own code, schemas, documentation and annotations are under the
-MIT license in [LICENSE](LICENSE). The repository does not bundle any
-third-party software or content. The items below are dependencies you install
+MIT license in [LICENSE](LICENSE). The one exception is the UO_Model3D v13 body
+described below; apart from it the repository does not bundle third-party
+software or content. The items below are dependencies you install
 yourself, or software the tools talk to.
 
 ## Contributed code
@@ -13,6 +14,13 @@ scripts in `games/ultima-online/outfit-lab/` (`atlas_to_vd.py`,
 `build_item.py`, `merge_items.py`, `make_gump.py`, `make_gump_cloak.py`,
 `uo_vd_writer.py`, `vd.py`) and `tools/vd/` were contributed by Levy and are
 included with his permission.
+
+## UO_Model3D v13
+
+`third_party/UO_Model3D_v13/` holds UO_Model3D v13 by Levy, shared with the
+artist's permission (the model, its fitting pipeline and `vdtool`). It is not
+under the MIT license. It contains no data extracted from the Ultima Online
+client; see its [NOTICE](third_party/UO_Model3D_v13/NOTICE.md).
 
 ## Runtime dependencies (installed by pip)
 
