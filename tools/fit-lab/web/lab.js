@@ -430,7 +430,7 @@ function scopeChanged() {
 async function selectSlot(slot) {
   const request = ++slotRequest;
   const list = state.manifest.items.filter(i => i.slot === slot);
-  $('slotInfo').textContent = `${list.length} items · part ${list[0]?.part}`;
+  $('slotInfo').textContent = `${list.length} ${list.length === 1 ? 'item' : 'items'} · part ${list[0]?.part}`;
   await Promise.all(list.map(loadItem));
   if (request !== slotRequest) return;
   state.slot = slot;
