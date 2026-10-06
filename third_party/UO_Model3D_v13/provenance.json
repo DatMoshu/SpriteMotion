@@ -1,0 +1,11 @@
+{
+  "model": "UO_Model3D v13",
+  "artist": "Levy",
+  "license": "shared with permission of the artist (Levy)",
+  "note": "UO_Body_0x190.blend is the stripped copy: the packed original client frame atlas is removed (pipeline/strip_originals.py).",
+  "files": {
+    "model/UO_Body_0x190.blend": "9ff8c601431157943d735b358c9a1fbcb42c713c5b618c8cb01f7ff46a8a63f4",
+    "model/UO_Body_0x190.fbx": "5ae555aba7ce45cb52c6e37e602998a4a82ca496e224464dbfc7b348233dc9af",
+    "model/UO_Body_0x190.glb": "802ab9f1fefbdfba135b8d69f6c756a632d4e87f25b5a8462f9274c56a6189d2"
+  }
+}
