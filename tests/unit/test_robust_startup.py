@@ -21,6 +21,7 @@ def test_corrupt_job_status_is_skipped_and_reported(tmp_path, monkeypatch):
 
 
 def test_bad_annotations_log_a_warning_and_other_errors_propagate(monkeypatch, caplog):
+    pytest.importorskip("scipy")  # silhouette-fit needs it; the CI image doesn't install it
     run = load_module(REPO / "tools" / "silhouette-fit" / "run.py", "silhouette_fit_run_test")
 
     def bad(*args, **kwargs):
