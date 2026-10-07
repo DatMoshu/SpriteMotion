@@ -22,6 +22,7 @@ SCHEMA_FILES = {
     "spritemotion.pose-annotations": "pose-annotations.schema.json",
     "spritemotion.equipment-slots": "equipment-slots.schema.json",
     "spritemotion.asset-pack": "asset-pack.schema.json",
+    "spritemotion.transfer-artifact": "transfer-artifact.schema.json",
 }
 
 

@@ -16,11 +16,13 @@ SCHEMA_NAMES = sorted(p.name for p in schemas.SCHEMA_DIR.glob("*.schema.json"))
 STDLIB_ONLY = """
 import sys
 sys.path.insert(0, {target!r})
-import spritemotion, spritemotion.jsonio, spritemotion.schemas as s
+import spritemotion, spritemotion.jsonio, spritemotion.schemas as s, spritemotion.transfer as t
 for kind in s.SCHEMA_FILES:
     assert s.load_schema(kind)
 for name in {names!r}:
     assert s.load_file(name)
+artifact = t.read({fixture!r})
+assert len(artifact.frames) == 25 and artifact.frame(4, 4, 0).centre == (-22, -12)
 leaked = sorted(m for m in ("numpy", "PIL") if m in sys.modules)
 assert not leaked, leaked
 print(s.version(), len(s.SCHEMA_FILES))
@@ -67,7 +69,8 @@ def test_wheel_carries_every_schema_and_core_imports_without_imaging(tmp_path):
     with zipfile.ZipFile(wheel) as archive:
         archive.extractall(target)
     # -S leaves out site-packages, so numpy and Pillow could not be imported even by accident.
-    run = subprocess.run([sys.executable, "-I", "-S", "-c", STDLIB_ONLY.format(names=SCHEMA_NAMES, target=str(target))],
+    run = subprocess.run([sys.executable, "-I", "-S", "-c", STDLIB_ONLY.format(names=SCHEMA_NAMES, target=str(target),
+                                                                        fixture=str(REPO / "tests/fixtures/transfer"))],
                          capture_output=True, text=True, cwd=tmp_path)
     assert run.returncode == 0, run.stderr
     assert run.stdout.split()[0] == __version__

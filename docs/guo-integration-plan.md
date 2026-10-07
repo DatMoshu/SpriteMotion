@@ -70,6 +70,8 @@ Create schemas and a short ADR before implementing the bridge. Everything in thi
 | Acceptance | Validation report, known failures, manual-review status and intended client/shard compatibility |
 | Provenance | Source attribution and redistribution classification, separate for editable source and rendered output |
 
+The schema, reader and a synthetic fixture are described in [transfer-artifact.md](transfer-artifact.md).
+
 Use relative artifact paths and reject traversal or missing/hash-mismatched files. Local dependency paths belong in private configuration. Continue to use `SPRITEMOTION_SIDECAR`; GUO should not ingest or publish the sidecar.
 
 **Pixel contract.** Preserve UO's 256×256 authoring canvas and anchor (128,192). For a crop with bounds `(left, top, right, bottom)`, the current GUO bridge uses `center_x = 128 - left`, `center_y = 192 - bottom`. Prove this with an asymmetric synthetic sprite, empty frames and negative centres. Preserve stored directions 0–4 and the explicit 5→3, 6→2, 7→1 mirror mapping. Do not inherit the legacy outfit atlas's facing-label convention accidentally. Quantize once per animation group's chosen palette; read back decoded pixels and centres. Keep playback timing separate from the Blender sampling interval.
