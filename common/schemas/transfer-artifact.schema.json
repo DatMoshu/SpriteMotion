@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spritemotion.local/schemas/transfer-artifact.schema.json",
+  "title": "SpriteMotion transfer artifact (a finished export that another tool imports)",
+  "type": "object",
+  "required": ["schema", "schema_version", "identity", "reproducibility", "animation", "pixels", "frames", "equipment", "acceptance", "provenance"],
+  "additionalProperties": false,
+  "$defs": {
+    "relpath": {
+      "description": "Path relative to the artifact directory, forward slashes, no '..', not absolute. The reader enforces this too.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*\\\\)(?!.*(^|/)\\.\\.(/|$))[^\\\\]+$"
+    },
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file_ref": {
+      "type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+      "properties": {"path": {"$ref": "#/$defs/relpath"}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "point": {
+      "type": "object", "additionalProperties": false, "required": ["x", "y"],
+      "properties": {"x": {"type": "integer"}, "y": {"type": "integer"}}
+    },
+    "crop": {
+      "description": "Pixel bounds on the canvas: left/top inclusive, right/bottom exclusive (a PIL bounding box).",
+      "type": "object", "additionalProperties": false, "required": ["left", "top", "right", "bottom"],
+      "properties": {
+        "left": {"type": "integer", "minimum": 0, "maximum": 255},
+        "top": {"type": "integer", "minimum": 0, "maximum": 255},
+        "right": {"type": "integer", "minimum": 1, "maximum": 256},
+        "bottom": {"type": "integer", "minimum": 1, "maximum": 256}
+      }
+    },
+    "redistribution": {"enum": ["public", "private", "restricted", "unknown"]},
+    "provenance_side": {
+      "type": "object", "additionalProperties": false, "required": ["redistribution"],
+      "properties": {
+        "redistribution": {"$ref": "#/$defs/redistribution"},
+        "license": {"type": "string"},
+        "attribution": {"type": "string"},
+        "origin": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    }
+  },
+  "properties": {
+    "schema": {"const": "spritemotion.transfer-artifact"},
+    "schema_version": {"const": 1},
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["project_id", "item_id", "slot"],
+      "properties": {
+        "project_id": {"type": "string", "minLength": 1},
+        "item_id": {"type": "string", "minLength": 1},
+        "source_job": {"type": "string"},
+        "source_revision": {"type": "string"},
+        "slot": {"type": "string", "minLength": 1},
+        "body_profile": {"type": "string"}
+      }
+    },
+    "reproducibility": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "model_fingerprint": {"type": "string"},
+        "renderer_fingerprint": {"type": "string"},
+        "input_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha256"}},
+        "fit": {"$ref": "#/$defs/file_ref"},
+        "fit_hash": {"$ref": "#/$defs/sha256"},
+        "tool_versions": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "animation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mirror_map", "coverage", "actions"],
+      "properties": {
+        "mirror_map": {
+          "description": "Directions 5-7 are not stored; each is the horizontal mirror of a stored direction.",
+          "type": "object", "additionalProperties": false, "required": ["5", "6", "7"],
+          "properties": {"5": {"const": 3}, "6": {"const": 2}, "7": {"const": 1}}
+        },
+        "coverage": {"enum": ["preview", "current-action", "full"]},
+        "sampling": {
+          "description": "How Blender timeline frames were chosen. Not playback timing.",
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "first_scene_frame": {"type": "integer", "minimum": 0},
+            "scene_frame_step": {"type": "integer", "minimum": 1}
+          }
+        },
+        "actions": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["action", "frame_count", "directions"],
+            "properties": {
+              "action": {"type": "integer", "minimum": 0},
+              "name": {"type": "string"},
+              "frame_count": {"type": "integer", "minimum": 1},
+              "directions": {
+                "description": "Stored directions present for this action.",
+                "type": "array", "minItems": 1, "uniqueItems": true,
+                "items": {"type": "integer", "minimum": 0, "maximum": 4}
+              },
+              "playback": {
+                "description": "Playback timing, separate from sampling.",
+                "type": "object", "additionalProperties": false,
+                "properties": {"frame_delay_ms": {"type": "integer", "minimum": 1}}
+              }
+            }
+          }
+        }
+      }
+    },
+    "pixels": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canvas", "anchor", "alpha", "quantization"],
+      "properties": {
+        "canvas": {
+          "type": "object", "additionalProperties": false, "required": ["width", "height"],
+          "properties": {"width": {"const": 256}, "height": {"const": 256}}
+        },
+        "anchor": {
+          "type": "object", "additionalProperties": false, "required": ["x", "y"],
+          "properties": {"x": {"const": 128}, "y": {"const": 192}}
+        },
+        "alpha": {"enum": ["straight", "premultiplied", "binary"]},
+        "quantization": {
+          "type": "object", "additionalProperties": false, "required": ["policy"],
+          "properties": {
+            "policy": {"description": "per-animation-group: one palette of at most palette_size (max 256) colours per animation group, where a group is one (action, stored direction). That is what anim.mul stores per entry, so GUO encodes without requantizing.", "enum": ["none", "per-animation-group"]},
+            "palette_size": {"type": "integer", "minimum": 2, "maximum": 256}
+          }
+        }
+      }
+    },
+    "frames": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["action", "direction", "index", "empty"],
+        "properties": {
+          "action": {"type": "integer", "minimum": 0},
+          "direction": {"type": "integer", "minimum": 0, "maximum": 4},
+          "index": {"type": "integer", "minimum": 0},
+          "empty": {"type": "boolean"},
+          "png": {"$ref": "#/$defs/relpath"},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "crop": {"$ref": "#/$defs/crop"},
+          "centre": {"description": "(128 - left, 192 - bottom); optional, checked against the crop when present.", "$ref": "#/$defs/point"}
+        },
+        "if": {"properties": {"empty": {"const": false}}},
+        "then": {"required": ["png", "sha256", "crop"]},
+        "else": {"not": {"anyOf": [{"required": ["png"]}, {"required": ["sha256"]}, {"required": ["crop"]}, {"required": ["centre"]}]}}
+      }
+    },
+    "equipment": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "layer": {"type": "integer", "minimum": 1, "maximum": 25},
+        "item_art": {"$ref": "#/$defs/file_ref"},
+        "paperdoll": {
+          "description": "Declared support, not inferred. A missing key means undeclared.",
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "male": {"enum": ["supported", "unsupported", "unknown"]},
+            "female": {"enum": ["supported", "unsupported", "unknown"]}
+          }
+        },
+        "tiledata": {
+          "description": "GUO tiledata-item keys only; GUO assigns anim. layer, when present, must equal equipment.layer.",
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "flags": {"description": "Integer bit field (tiledata flags).", "type": "integer", "minimum": 0},
+            "weight": {"type": "integer", "minimum": 0},
+            "layer": {"type": "integer", "minimum": 1, "maximum": 25},
+            "count": {"type": "integer", "minimum": 0},
+            "hue": {"type": "integer", "minimum": 0},
+            "light": {"type": "integer", "minimum": 0},
+            "height": {"type": "integer", "minimum": 0},
+            "name": {"type": "string"}
+          }
+        },
+        "notes": {"type": "string"}
+      }
+    },
+    "acceptance": {
+      "type": "object", "additionalProperties": false, "required": ["manual_review"],
+      "properties": {
+        "manual_review": {"enum": ["none", "pending", "approved", "rejected"]},
+        "validation_report": {"$ref": "#/$defs/file_ref"},
+        "known_failures": {"type": "array", "items": {"type": "string"}},
+        "compatibility": {
+          "type": "object", "additionalProperties": false,
+          "properties": {"client": {"type": "string"}, "shard": {"type": "string"}}
+        }
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false, "required": ["source", "rendered"],
+      "properties": {
+        "source": {"$ref": "#/$defs/provenance_side"},
+        "rendered": {"$ref": "#/$defs/provenance_side"}
+      }
+    }
+  }
+}
