@@ -167,6 +167,10 @@ def _check_structure(manifest: dict) -> None:
         raise TransferError(f"pixels.anchor must be {ANCHOR}, found {anchor!r}.")
     if not isinstance(animation.get("actions"), list) or not animation["actions"] or not isinstance(manifest["frames"], list):
         raise TransferError("animation.actions and frames must be non-empty lists.")
+    equipment = manifest.get("equipment")
+    tiledata = equipment.get("tiledata") if isinstance(equipment, dict) else None
+    if isinstance(tiledata, dict) and "layer" in tiledata and "layer" in equipment and tiledata["layer"] != equipment["layer"]:
+        raise TransferError(f"equipment.layer {equipment['layer']!r} and equipment.tiledata.layer {tiledata['layer']!r} differ.")
 
 
 def safe_path(root: Path, rel: Any, what: str) -> Path:
@@ -268,6 +272,8 @@ def _read_frames(root: Path, manifest: dict) -> list[Frame]:
         if (width, height) != (crop.width, crop.height):
             raise TransferError(f"{what}: PNG is {width}x{height} but the crop is {crop.width}x{crop.height}.")
         stated = item.get("centre")
+        if stated is not None and not isinstance(stated, dict):
+            raise TransferError(f"{what}: centre must be an object with x and y, found {stated!r}.")
         if stated is not None and (stated.get("x"), stated.get("y")) != centre(crop):
             raise TransferError(f"{what}: centre {stated} does not match the crop (expected {centre(crop)}).")
         frames.append(Frame(action, direction, index, path, item["sha256"], crop))

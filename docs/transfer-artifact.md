@@ -35,6 +35,10 @@ declares nothing about it.
 - An empty frame has `"empty": true` and no `png`, `sha256`, `crop` or `centre`. It still counts as a frame.
 - `alpha` says how the PNG alpha is meant to be read; `quantization` says whether a palette was applied
   (`none`, or `per-animation-group` with a `palette_size`).
+- An animation group is one (action, stored direction). `per-animation-group` means one palette of at most 256 colours
+  per (action, stored direction), which is what anim.mul stores per entry, so GUO encodes without requantizing.
+- GUO stores 15-bit colour with 1-bit transparency, so `alpha: binary` imports losslessly; straight and premultiplied
+  alpha are thresholded.
 
 ### Directions and mirroring
 
@@ -46,10 +50,19 @@ A mirrored frame is the stored frame flipped about the anchor column (x = 128), 
 `(256 - right, top, 256 - left, bottom)` and its centre x becomes `right - 128`. `ResolvedFrame.crop` and
 `.centre` return those values.
 
+### Equipment tiledata
+
+`equipment.tiledata` holds exactly GUO's `tiledata-item` keys: `flags`, `weight`, `layer`, `count`, `hue`, `light`,
+`height`, `name`, and nothing else (no `anim`: GUO assigns it). The numbers are non-negative integers, `layer` is 1-25
+and `name` is a string. `flags` is an integer bit field, not a list of names: it is what the tiledata file stores, so
+no name table has to be kept in step. If `equipment.layer` and `equipment.tiledata.layer` are both present they must
+be equal; the reader raises `TransferError` when they differ.
+
 ### Timing
 
 `sampling` records which Blender timeline frames were rendered (first frame and step). `playback.frame_delay_ms`
-on an action is how fast to play it. They are separate on purpose.
+on an action is how fast to play it. They are separate on purpose. `frame_delay_ms` is metadata only: the UO client
+fixes the timing.
 
 ## Reading it
 
@@ -81,6 +94,11 @@ transfer.centre(frame.crop)                        # (128 - left, 192 - bottom)
 
 When `jsonschema` is present the manifest is also validated against the schema. Each failure is a `TransferError`
 whose message names the frame or field.
+
+## GUO importer notes
+
+GUO's first importer refuses `coverage: preview` and needs every stored direction 0-4 for each imported action. The
+reader stays permissive and accepts both; the importer enforces its own rules.
 
 ## Test fixture
 

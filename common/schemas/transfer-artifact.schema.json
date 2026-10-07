@@ -127,7 +127,7 @@
         "quantization": {
           "type": "object", "additionalProperties": false, "required": ["policy"],
           "properties": {
-            "policy": {"enum": ["none", "per-animation-group"]},
+            "policy": {"description": "per-animation-group: one palette of at most palette_size (max 256) colours per animation group, where a group is one (action, stored direction). That is what anim.mul stores per entry, so GUO encodes without requantizing.", "enum": ["none", "per-animation-group"]},
             "palette_size": {"type": "integer", "minimum": 2, "maximum": 256}
           }
         }
@@ -166,7 +166,20 @@
             "female": {"enum": ["supported", "unsupported", "unknown"]}
           }
         },
-        "tiledata": {"type": "object"},
+        "tiledata": {
+          "description": "GUO tiledata-item keys only; GUO assigns anim. layer, when present, must equal equipment.layer.",
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "flags": {"description": "Integer bit field (tiledata flags).", "type": "integer", "minimum": 0},
+            "weight": {"type": "integer", "minimum": 0},
+            "layer": {"type": "integer", "minimum": 1, "maximum": 25},
+            "count": {"type": "integer", "minimum": 0},
+            "hue": {"type": "integer", "minimum": 0},
+            "light": {"type": "integer", "minimum": 0},
+            "height": {"type": "integer", "minimum": 0},
+            "name": {"type": "string"}
+          }
+        },
         "notes": {"type": "string"}
       }
     },

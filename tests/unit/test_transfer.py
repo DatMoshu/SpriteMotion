@@ -180,3 +180,27 @@ def test_generator_is_deterministic_and_matches_the_committed_fixture(tmp_path):
                 for p in sorted(root.rglob("*")) if p.is_file()}
 
     assert digest(first) == digest(second) == digest(FIXTURE)
+
+
+def test_tiledata_accepts_guo_keys_and_rejects_unknown_ones():
+    pytest.importorskip("jsonschema")
+    manifest = json.loads((FIXTURE / "transfer.json").read_text(encoding="utf-8"))
+    manifest.setdefault("equipment", {})["tiledata"] = {"flags": 5, "weight": 1, "layer": 5, "count": 1, "hue": 0,
+                                                        "light": 0, "height": 0, "name": "flag"}
+    assert schemas.validate(manifest, KIND, required=True) == []
+    manifest["equipment"]["tiledata"]["anim"] = 12
+    assert schemas.validate(manifest, KIND, required=True)
+
+
+def test_layer_mismatch_between_equipment_and_tiledata_is_rejected(artifact_dir):
+    edit_manifest(artifact_dir, lambda m: m.setdefault("equipment", {}).update(layer=5, tiledata={"layer": 6}))
+    with pytest.raises(TransferError, match="differ"):
+        transfer.read(artifact_dir)
+    edit_manifest(artifact_dir, lambda m: m["equipment"]["tiledata"].update(layer=5))
+    transfer.read(artifact_dir)
+
+
+def test_non_object_centre_is_a_transfer_error(artifact_dir):
+    edit_manifest(artifact_dir, lambda m: frame_entry(m, 0, 0, 0).update(centre=[24, 2]))
+    with pytest.raises(TransferError, match="centre must be an object"):
+        transfer.read(artifact_dir)
