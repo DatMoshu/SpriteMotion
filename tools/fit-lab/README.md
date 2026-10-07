@@ -122,7 +122,9 @@ A body pixel counts where the body shows in front of the item by more than an al
   value the lab already uses for the preview cutout), or in clothing mode with Hide body on, the larger of that and the
   Hide body inward distance (`tools/uo-content/occlusion.py`, `blocked_pixels`), plus
 - the **6 mm push-out** (`BODY_GAP` in the same file). It is left out where the build sets it to 0: rigid items and
-  helm, weapon, shield, bow, quiver (`tools/uo-content/blender_build.py`). The push-out moves the item away from the
+  helm, weapon, shield, bow, quiver (`tools/uo-content/blender_build.py`), decided from the mapping part's
+  `studio_part` (what the build passes the renderer), not the pack part code or layer name; a part with no
+  `studio_part` counts as pushed. The push-out moves the item away from the
   body, so adding it to the allowance is an upper bound on the holes it removes.
 
 The item's occlusion mode decides what is counted, as in the renderer: **clothing** counts limb and head faces under

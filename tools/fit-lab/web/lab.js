@@ -304,7 +304,7 @@ function soloRender(item, mode) {        // mode: 'mask' | 'poke' | 'look'
   const rigid = fitFor(item.info).bind === 'rigid', meshes = rigid ? item.rigid : item.skinned;
   meshes.forEach(m => { m.visible = true; if (mode !== 'look') m.material = GREEN; });
   if (mode === 'poke') {                 // the renderer's holdout rule for this item, see poke-rules.mjs
-    const rule = pokeRule(fitFor(item.info), item.info);
+    const rule = pokeRule(fitFor(item.info), partOf(item.info).studio_part);
     bodyMeasure.geometry.setIndex(rule.measure ? (rule.faces === 'all' ? bodyIndex(new Set(), null) : bodyIndex(hiddenFor(item), coveredFor(item))) : []);
     bodyMeasure.material = pokeMaterial(rule.allowance); bodyMeasure.visible = rule.measure;
   }
