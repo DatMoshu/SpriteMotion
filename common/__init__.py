@@ -11,4 +11,3 @@ __version__ = "0.1.0"
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PACKAGE_ROOT.parent
-SCHEMA_DIR = REPO_ROOT / "schemas"

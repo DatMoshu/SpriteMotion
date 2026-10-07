@@ -40,7 +40,7 @@ does not establish correct in-game fit or replace local Blender render review.
 - Blender scripts take their arguments after `--`, must work under
   `blender -b --factory-startup`, and must guard `main()` with
   `if __name__ == "__main__":`.
-- New data files get a schema in `schemas/`, or an entry in
+- New data files get a schema in `common/schemas/`, or an entry in
   [docs/annotation-format.md](docs/annotation-format.md) if they are an internal format.
 - Add a test with each behaviour change. The sample character exists so that
   pipeline behaviour can be checked against known 3D ground truth.

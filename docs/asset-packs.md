@@ -2,7 +2,7 @@
 
 The content studio (`tools/uo-content`) can fit parts of third-party 3D asset packs (modular outfits, helmets,
 weapons) onto the UO body and export them as UO equipment. Each pack is described by one **asset-pack mapping**, a
-JSON document (`schema: spritemotion.asset-pack`, `schemas/asset-pack.schema.json`). A mapping holds two tables:
+JSON document (`schema: spritemotion.asset-pack`, `common/schemas/asset-pack.schema.json`). A mapping holds two tables:
 
 1. **Bones → target rig.** How the pack's skeleton is fitted onto the canonical UO rig (`uo-model3d-v13`).
 2. **Parts → equipment slots.** Which of the game's equipment layers each part type becomes.

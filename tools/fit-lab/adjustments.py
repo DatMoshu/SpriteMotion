@@ -15,7 +15,7 @@ class ConflictError(ValueError):
 
 
 def validate(data):
-    """Dependency-free validation matching schemas/fit-adjustments.schema.json."""
+    """Dependency-free validation matching common/schemas/fit-adjustments.schema.json."""
     def number(value):
         return type(value) in (int, float) and math.isfinite(value)
 

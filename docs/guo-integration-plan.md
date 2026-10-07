@@ -113,7 +113,7 @@ An equipment distribution system is a later GUO Asset Store contract extension. 
 
 | Repository | Proposed change |
 |---|---|
-| SpriteMotion | New bridge/export schemas under `schemas/`; service adapter and export helper under a dedicated `tools/` job directory; reuse `tools/uo-content` builds and `tools/fit-lab` adjustments. |
+| SpriteMotion | New bridge/export schemas under `common/schemas/`; service adapter and export helper under a dedicated `tools/` job directory; reuse `tools/uo-content` builds and `tools/fit-lab` adjustments. |
 | GUO | New SpriteMotion client/panel code under `godot/GUO/addons/guo_editor/`; generic importer alongside `tools/uopack/outfit.py`; orchestration under `tools/guo` or a dedicated tool following GUO conventions. |
 | Both | Synthetic contract fixtures, compatibility tests and a recorded end-to-end acceptance recipe. |
 

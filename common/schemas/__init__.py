@@ -6,10 +6,14 @@ each loader run. Tests install it and validate every bundled document.
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
-from . import SCHEMA_DIR
-from .jsonio import read_json
+from .. import __version__
+from ..jsonio import read_json
+
+# The schema files are package data that sit beside this module.
+SCHEMA_DIR = Path(__file__).resolve().parent
 
 SCHEMA_FILES = {
     "spritemotion.game": "game.schema.json",
@@ -23,6 +27,26 @@ SCHEMA_FILES = {
 
 class SchemaError(ValueError):
     pass
+
+
+def version() -> str:
+    """The SpriteMotion package version these schemas ship with."""
+    return __version__
+
+
+def path(filename: str) -> Path:
+    """Path of a schema file by name, e.g. ``fit-adjustments.schema.json``."""
+    if Path(filename).name != filename or not filename.endswith(".schema.json"):
+        raise ValueError(f"Not a schema file name: {filename!r}.")
+    file = SCHEMA_DIR / filename
+    if not file.is_file():
+        raise FileNotFoundError(f"No schema file {filename!r} in {SCHEMA_DIR}.")
+    return file
+
+
+def load_file(filename: str) -> dict:
+    """Load a schema by file name, for schemas that have no document ``kind``."""
+    return read_json(path(filename))
 
 
 @lru_cache(maxsize=None)

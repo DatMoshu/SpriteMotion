@@ -4,14 +4,14 @@ Annotations are 2D joint positions on sprite frames. They are the part of
 SpriteMotion that people build together, so the format records where each
 pose came from and which pixels it was drawn on.
 
-Schemas are in `schemas/`:
+Schemas are in `common/schemas/`:
 
 | File | Schema id | Describes |
 |---|---|---|
-| `dataset.json` | `spritemotion.dataset` ([schema](../schemas/sprite-sequence.schema.json)) | one extracted character: canvas, directions, camera, frames with fingerprints |
-| `skeleton.json` | `spritemotion.skeleton` ([schema](../schemas/skeleton.schema.json)) | joint names, drawing chains, symmetric pairs |
-| `annotations/<layer>/<sequence>.json` | `spritemotion.pose-annotations` ([schema](../schemas/pose-annotations.schema.json)) | poses of one sequence in one layer |
-| `games/<game>/game.json` | `spritemotion.game` ([schema](../schemas/game.schema.json)) | a game adapter and its characters |
+| `dataset.json` | `spritemotion.dataset` ([schema](../common/schemas/sprite-sequence.schema.json)) | one extracted character: canvas, directions, camera, frames with fingerprints |
+| `skeleton.json` | `spritemotion.skeleton` ([schema](../common/schemas/skeleton.schema.json)) | joint names, drawing chains, symmetric pairs |
+| `annotations/<layer>/<sequence>.json` | `spritemotion.pose-annotations` ([schema](../common/schemas/pose-annotations.schema.json)) | poses of one sequence in one layer |
+| `games/<game>/game.json` | `spritemotion.game` ([schema](../common/schemas/game.schema.json)) | a game adapter and its characters |
 
 All coordinates are **canvas pixels**: origin at the top left, x to the right,
 y down. The canvas has a fixed size per dataset and the character's ground

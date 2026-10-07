@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 import jsonschema
+from spritemotion import schemas
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('fit_lab_adjustments', ROOT / 'tools/fit-lab/adjustments.py')
@@ -31,7 +32,7 @@ def test_three_backups_restore_and_noop(tmp_path):
     assert store.backup(state['backups'][0]['id']) == adjustment(4)
     with pytest.raises(FileNotFoundError):
         store.backup('../lab-adjustments.json')
-    schema = json.loads((ROOT / 'schemas/fit-adjustments.schema.json').read_text())
+    schema = schemas.load_file('fit-adjustments.schema.json')
     jsonschema.validate(state['adjustments'], schema)
 
 
