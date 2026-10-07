@@ -115,10 +115,23 @@ existing manifest item format; `file` paths point into the cache. Limits: 100 GL
     the baseline, and each new run shows the change.
   - **Save** writes `<sidecar>/packs/<pack>/lab-adjustments.json`.
 
-Poke pixels count where body limb and head faces that lie under the item (within 5 cm outside or 3 cm inside it at
-rest) show in front of it. Those are the holes the renderer's body holdout would cut (the torso never holds out
-there). The renderer's 1 cm holdout margin and 6 mm push-out are not modelled, so the counts run high. Compare them,
-don't read them as absolutes.
+Poke pixels follow the renderer's body holdout (rule in `web/poke-rules.mjs`, tested by `poke-rules.test.mjs`).
+A body pixel counts where the body shows in front of the item by more than an allowance, which is:
+
+- the **1 cm holdout margin** (`HOLDOUT_MARGIN` in the installed canonical renderer's `render_uo_layer.py`; the same
+  value the lab already uses for the preview cutout), or in clothing mode with Hide body on, the larger of that and the
+  Hide body inward distance (`tools/uo-content/occlusion.py`, `blocked_pixels`), plus
+- the **6 mm push-out** (`BODY_GAP` in the same file). It is left out where the build sets it to 0: rigid items and
+  helm, weapon, shield, bow, quiver (`tools/uo-content/blender_build.py`), decided from the mapping part's
+  `studio_part` (what the build passes the renderer), not the pack part code or layer name; a part with no
+  `studio_part` counts as pushed. The push-out moves the item away from the
+  body, so adding it to the allowance is an upper bound on the holes it removes.
+
+The item's occlusion mode decides what is counted, as in the renderer: **clothing** counts limb and head faces under
+the item (within 5 cm outside or 3 cm inside it at rest; the torso never holds out there), **body** counts the whole
+body and ignores Hide body, and **none** counts nothing because the renderer cuts no holes. Counts are lower than
+before this rule, so compare runs; don't read them as absolutes. Baselines live only in the open page (Measure
+"first" resets on reload), so counts from before this rule are never mixed with new ones.
 
 ## From the lab to builds
 
