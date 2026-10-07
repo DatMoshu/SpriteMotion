@@ -6,8 +6,8 @@ The contract comes from the "Transfer artifact" and "Pixel contract" paragraphs 
 [guo-integration-plan.md](guo-integration-plan.md). This page covers the format and the reader.
 
 The schema is [`common/schemas/transfer-artifact.schema.json`](../common/schemas/transfer-artifact.schema.json)
-(kind `spritemotion.transfer-artifact`, `schema_version` 1). **Status: draft for GUO review.** Nothing writes
-this format yet: the exporter that produces it from a `tools/uo-content` build job is the next story.
+(kind `spritemotion.transfer-artifact`, `schema_version` 1). **Status: draft for GUO review.** The exporter that
+writes it from a `tools/uo-content` build job is described under [Making one](#making-one).
 
 ## What is in the manifest
 
@@ -63,6 +63,38 @@ be equal; the reader raises `TransferError` when they differ.
 `sampling` records which Blender timeline frames were rendered (first frame and step). `playback.frame_delay_ms`
 on an action is how fast to play it. They are separate on purpose. `frame_delay_ms` is metadata only: the UO client
 fixes the timing.
+
+## Making one
+
+A finished `tools/uo-content` job (status `complete`) becomes a transfer artifact with:
+
+```powershell
+python tools/transfer-export/run.py --job <job-dir> --out <new-dir>
+```
+
+It needs Pillow (`pip install "spritemotion[imaging]"`); the reader does not. The job folder is only read. `--out`
+must be a new or empty folder outside the job; the exporter refuses anything else, and a failed export removes the
+folder it created.
+
+For every stored frame in `render/clothing` it crops the PNG to its alpha bounding box on the 256 x 256 canvas and
+writes `frames/aNN-dD-fI.png`; a fully transparent frame becomes an `empty` frame with no file. It then writes
+`transfer.json` and finishes by calling `spritemotion.transfer.read` on the result: if that fails, the export failed.
+
+What the manifest takes from the job, and what it leaves out:
+
+| Manifest field | From | Notes |
+|---|---|---|
+| `identity` | `job.json` | item id and slot from `fit_item` (else `name` and `part`), `source_job` is the job folder name, `project_id` is `--project-id` (default `spritemotion`). No `body_profile`: the job does not record one |
+| `reproducibility` | `job.json` | `backend_sha256` as `model_fingerprint`, `render_fingerprint`, `asset_sha256` and `source_fingerprints` as `input_hashes` (file names only, no paths). The frozen `fit_adjustments` are written to `fit-adjustments.json` as `fit` and `fit_hash`; absent when the job has none. No `tool_versions` |
+| `animation` | `render/clothing/meta.json`, `job.json` | actions, stored directions and frame counts from the rendered blocks; `coverage` is the job's `mode` (`preview` or `full`; a `full` job missing a stored direction is refused); `sampling` is the UO rule, scene frame 1 + 3i. No `playback`: the job records no timing |
+| `pixels` | the exported PNGs | `alpha` is `binary` only if every exported alpha is 0 or 255, otherwise `straight`; `quantization` is `none` |
+| `equipment` | `job.json` | only a note naming the uo-content part. No `layer` or `tiledata`: the job records neither |
+| `acceptance` | `validation.json` | `manual_review` is `none`; the report is copied in as `validation.json`; `known_failures` lists clipped and empty frames the report names |
+| `provenance` | `job.json` | source (input file names, input kind) and rendered output (the job, its creation method) are separate. The job records no licence, so both redistribution classes are `unknown` unless you pass `--source-redistribution`, `--rendered-redistribution`, `--source-license` or `--rendered-license` |
+
+Not done by the exporter: palette quantization, VD decoding, and anything GUO-side.
+
+Job renders can include client-derived art, so an export of one is as private as the job. Do not commit or share it.
 
 ## Reading it
 

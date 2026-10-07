@@ -86,4 +86,7 @@ python -m unittest discover -s tools/uo-content -p test_content.py
 
 The example settings document shows the minimum fields. Optional `rotate_x/y/z` are degrees; `offset_x/y/z` are metres, `scale` is a uniform multiplier, `fit` is `auto` or `preserve`, `mode` is `preview` or `full`. Every job stores its resolved settings, the original prompt and input hash. A custom generator can hand off a model plus these settings without changing the renderer.
 
+To hand a finished job to another tool (GUO's importer) without its folder layout, export it as a transfer artifact:
+`python tools/transfer-export/run.py --job <job> --out <new-folder>`. See [Making one](../../docs/transfer-artifact.md#making-one).
+
 Clipping and empty frames are reported, not hidden. Cloth template binding is included; running a fresh physics cloth bake is not automated here. Mounted occlusion uses the source project's horse proxy/masks and needs visual review. The source file was saved by a later Blender 4.2 patch than the local 4.2.0 test runtime; use the author's version when investigating discrepancies.
