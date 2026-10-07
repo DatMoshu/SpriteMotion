@@ -5,6 +5,7 @@ import struct
 
 import jsonschema
 import pytest
+from spritemotion import schemas
 
 ROOT=Path(__file__).resolve().parents[2]
 ASSETS=ROOT/'examples/cc0-starter'
@@ -14,7 +15,7 @@ starters=importlib.util.module_from_spec(loader);loader.loader.exec_module(start
 
 def test_every_layer_has_an_appropriate_starter_route():
     document=json.loads((ASSETS/'catalog.json').read_text())
-    jsonschema.validate(document,json.loads((ROOT/'schemas/starter-catalog.schema.json').read_text()))
+    jsonschema.validate(document,schemas.load_file('starter-catalog.schema.json'))
     items=document['items']
     layers=json.loads((ROOT/'games/ultima-online/equipment/layers.json').read_text())['layers']
     assert {i['layer'] for i in items}=={i['id'] for i in layers}
@@ -32,7 +33,7 @@ def test_every_layer_has_an_appropriate_starter_route():
 
 def test_bundled_sources_are_self_contained_and_mappings_validate():
     mapping=json.loads((ASSETS/'outfit-mapping.json').read_text())
-    jsonschema.validate(mapping,json.loads((ROOT/'schemas/asset-pack.schema.json').read_text()))
+    jsonschema.validate(mapping,schemas.load_file('asset-pack.schema.json'))
     for path in ASSETS.glob('*.glb'):
         raw=path.read_bytes()
         magic,version,size=struct.unpack_from('<III',raw)

@@ -22,7 +22,7 @@ server; it survives reloads unless browser storage is cleared or unavailable.
 
 Disk saves atomically replace `lab-adjustments.json` and retain the previous three saved states in
 `lab-adjustments-backups/`. **Restore backup** adds an undoable edit and autosaves it. Backups use the same
-`schemas/fit-adjustments.schema.json` format as the current file. Unchanged saves do not rotate backups.
+`common/schemas/fit-adjustments.schema.json` format as the current file. Unchanged saves do not rotate backups.
 Failed writes leave the current file intact.
 If another tab or tool changes the disk file, saving pauses: choose **Use disk version** or **Keep my recovered edits**.
 The latter deliberately replaces the latest disk version, which is backed up first. The save status reports disk
@@ -50,7 +50,7 @@ the current saved fit: the status reads *Matches the saved fit* or *Fit changed 
 rendered frames. **Auto re-render** (remembered per browser) does this once the saved fit has been still for 3 s and
 the shown render is stale or missing, once per fit and pose so a failing build is not retried in a loop.
 `GET /api/renders?item=<id>` lists finished renders for an item, newest first (`$defs.renders` in
-`schemas/fit-lab-build.schema.json`); while building, `GET /api/build` adds `mode`, `started` and `progress`.
+`common/schemas/fit-lab-build.schema.json`); while building, `GET /api/build` adds `mode`, `started` and `progress`.
 
 ## In the lab
 
@@ -79,11 +79,11 @@ one selected item, not an entire group. Directory-only imports are not build sou
 `POST /api/build` takes `{item, mode: build|rebuild, coverage: preview|action|full, action}`. `GET /api/build`
 returns idle/building/complete/failed status, with item, job/review on success, or error on failure. `unchanged`
 marks a rebuild with no changed existing blocks. `lab-builds.json` maps item IDs to last-successful job IDs.
-Both contracts are described in `schemas/fit-lab-build.schema.json`. Successful reviews are served at `/builds/`.
+Both contracts are described in `common/schemas/fit-lab-build.schema.json`. Successful reviews are served at `/builds/`.
 
 Preview **Base** selects the original UO sprite, the animated 3D body, or transparent content only.
 The original is extracted from the canonical model's embedded original frames; it is a visual reference,
-not a final holdout render. `reference.json` follows `schemas/fit-reference.schema.json`, indexes
+not a final holdout render. `reference.json` follows `common/schemas/fit-reference.schema.json`, indexes
 `reference.png` by `action,frame,stored-direction`, and stays in ignored workspace data. Mirroring applies
 to the complete composite. Poke highlighting is separately switchable.
 
@@ -94,7 +94,7 @@ over every frame of checked actions and all five stored directions. The table re
 lower counts alone do not establish a better match to original artwork. Download the report for provenance.
 The downloadable contact sheet shows the pose with the largest content-pixel change for each item (before/after
 pairs); original reference pixels are composited underneath when available. JSON frame indices are zero-based,
-and printed contact-sheet frame numbers are one-based. Reports follow `schemas/fit-head-ab.schema.json`.
+and printed contact-sheet frame numbers are one-based. Reports follow `common/schemas/fit-head-ab.schema.json`.
 
 **Load fitted GLBs from a folder** accepts a local directory of already fitted, self-contained GLBs. Select the
 destination slot first. Files must have skin weights using the canonical body's bone names; raw FBX and

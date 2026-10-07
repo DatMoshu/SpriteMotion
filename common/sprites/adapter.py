@@ -1,7 +1,7 @@
 """The interface a game adapter implements.
 
 An adapter turns a user's local game installation into a normalized dataset:
-canvas-sized RGBA frames plus a manifest (see schemas/sprite-sequence.schema.json).
+canvas-sized RGBA frames plus a manifest (see common/schemas/sprite-sequence.schema.json).
 Adapters live in games/<game>/ and are loaded by file path from game.json, so
 the shared layer never imports game code by name.
 """

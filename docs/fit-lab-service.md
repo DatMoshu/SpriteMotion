@@ -6,13 +6,13 @@ error, not permission to start another server on that port. Service discovery co
 
 | Route | Contract |
 |---|---|
-| GET `/api/service` | `schemas/fit-lab-service.schema.json`; capability and pack negotiation |
+| GET `/api/service` | `common/schemas/fit-lab-service.schema.json`; capability and pack negotiation |
 | GET `/data/manifest.json` | Available item IDs, slots, actions, GLB paths and camera |
 | GET `/api/mapping` | Local pack defaults; never publish this response |
 | GET `/api/state` | Adjustment document, opaque revision and saved backups |
 | POST `/api/adjustments` | `{adjustments, base_revision}`; 409 preserves a concurrent editor's changes |
 | GET `/api/backups/<id>` | A prior document; restoring it is another revision-checked save |
-| GET, POST `/api/build` | Build state / `schemas/fit-lab-build.schema.json` request |
+| GET, POST `/api/build` | Build state / `common/schemas/fit-lab-build.schema.json` request |
 | GET `/api/renders?item=<id>` | Completed jobs, newest first, with action coverage |
 | GET `/builds/<job>/review/manifest.json` | Final sprite sequences, frame counts, playback FPS and anchor |
 

@@ -28,7 +28,7 @@ Preview builds contain actions 0, 4, 9, 22 and 25 across five stored directions.
 ### Fit corrections and selected blocks
 
 Jobs can specify `actions` and optionally exact `blocks` (`[[action, stored_direction], ...]`). Directions are 0–4;
-mirrored views share their stored block. Fit-aware settings follow `schemas/fit-build.schema.json`.
+mirrored views share their stored block. Fit-aware settings follow `common/schemas/fit-build.schema.json`.
 `fit_item: {id, slot, part}` identifies an item; `fit_adjustments` is a frozen adjustment document. When omitted,
 pack jobs look for `lab-adjustments.json` beside their mapping and identify the item from the local lab source list.
 Explicit snapshots take precedence. Unmatched item identity is an error when item/group/slot corrections need it.

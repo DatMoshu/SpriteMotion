@@ -8,7 +8,7 @@ under `games/<game>/`.
 ```text
 games/<game>/
   README.md              what is supported, where the user points the extractor, known limits
-  game.json              descriptor (schemas/game.schema.json)
+  game.json              descriptor (common/schemas/game.schema.json)
   extraction/            the adapter: local game files -> normalized dataset
   profiles/              per character: canvas, directions, camera; optional sequence catalog
   skeletons/             skeleton(s) and rig mappings

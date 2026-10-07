@@ -3,7 +3,7 @@
 A Godot 4.7 editor for reviewing and correcting 2D joint annotations on sprite
 frames. It works with any SpriteMotion dataset. The canvas size, directions and
 mirror pairs, sequences, frame counts, skeleton and colours all come from the
-dataset manifest (`dataset.json`, see `schemas/sprite-sequence.schema.json`).
+dataset manifest (`dataset.json`, see `common/schemas/sprite-sequence.schema.json`).
 Nothing is hard-coded for a particular game.
 
 ![Editor on the test fixture](../../docs/images/sprite-pose-editor.png)
