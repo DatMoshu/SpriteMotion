@@ -41,8 +41,9 @@ headless Blender run, not only a syntax check.
 
 ## Key facts
 
-- Canonical body: UO_Model3D v13 (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`), 112 bones
-  (the 2026-10 update added `weapon1h.R`, `axe2h.L`, `bow.L`, `polearm.L` to v13's 108), rig `UO_Rig`, direction = driver `-d*pi/4` on the rig's Z rotation, UO frame i = scene frame 1 + 3i.
+- Canonical body: UO_Model3D by Levy at upstream e9544f6 (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`),
+  54 bones (no twist, toe, skirt or cloak chains; `foot.L/R` is the last leg bone; weapon bones `weapon1h.R`, `axe2h.L`,
+  `bow.L`, `polearm.L`), rig `UO_Rig`, direction = driver `-d*pi/4` on the rig's Z rotation, UO frame i = scene frame 1 + 3i.
 - In item renders the body is a holdout: body poking through clothing cuts holes in the item sprite. Asset-pack
   parts can hide body faces under them (`hide_body` in the mapping, tuned in `tools/fit-lab`).
 - Asset packs are mapped 1:1 per pack: `docs/asset-packs.md`.

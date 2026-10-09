@@ -5,8 +5,8 @@
 #    that skin point and smoothed over the item (SMOOTH). "chest" moves most of the upper-arm weight to the
 #    collarbones, so the shoulders of a breastplate stay on the shoulders while the arms move under it.
 # Run it again after you change the item's shape (old weights and "uo_" corrections are replaced). Your own shape
-# keys (names not starting with "uo_") are kept. The finger, twist and toe bones of the v13 body count as the hand,
-# arm and foot in PARTS (e.g. "gloves" follows the fingers too).
+# keys (names not starting with "uo_") are kept. The rig has the 19 UO bones, the finger bones (a finger counts as the hand in PARTS: "gloves" follows them) and the
+# item-motion bones of weapons and the shield (RIGID).
 import bpy
 import numpy as np
 from mathutils import Vector
@@ -16,15 +16,17 @@ from mathutils.geometry import barycentric_transform
 PART = "all"          # kind of item, see PARTS below (e.g. "chest" for a breastplate, "gloves" for gloves)
 MAP = "under"         # "under": follow the skin right under each vertex (along its normal); "nearest": nearest skin
 SMOOTH = 4            # smoothing passes of weights and corrections over the item (0 = off)
+STIFF = 1.0           # > 1 sharpens the weights (w^STIFF, renormalised): the item bends in a narrower band at the joints, its parts stay more rigid
+                      # (plates); < 1 spreads the bend wider (soft cloth); 1 = as the skin under it
 MAX_DIST = 0.15       # m, farthest skin an item vertex may follow along its normal
 CORR_KEEP = 0.0       # 0..1: share of the skin corrections kept where FOLLOW moved weight to a parent bone
 # PART: (bones the item may follow - None = all, FOLLOW = share of a limb bone's weight that stays on it; the rest goes
-# to its parent bone: hand->forearm->upper_arm->clavicle, foot->shin->thigh->pelvis, head->neck). A FOLLOW of
+# to its parent bone: hand->forearm->upper_arm->chest, foot->shin->thigh->pelvis, head->neck). A FOLLOW of
 # (share, t0, t1) grows along the bone: `share` near its joint (up to t0 of the bone length), 1.0 from t1 on - so in
-# "chest" the pauldron on the shoulder rides on the collarbone while the sleeve further down follows the arm.
+# "chest" the thigh share 0.3 near the hip moves to the pelvis. (The shoulder used to move to the clavicle, but the clavicles do not deform: dropped.)
 PARTS = {
-    "all":       (None, {}),                                                   # robe, cloak, full suit: like the skin
-    "chest":     (None, {"upper_arm": (0.2, 0.15, 0.45), "hand": 0.0,           # breastplate / armour with
+    "all":       (None, {}),                                                   # full suit in one piece: like the skin
+    "chest":     (None, {"hand": 0.0,           # breastplate / armour with
                          "thigh": (0.3, 0.1, 0.4), "foot": 0.0, "head": 0.0}),    # pauldrons and sleeves
     "torso":     (["pelvis", "spine", "chest", "neck"], {}),                   # torso skin only
     "shoulders": (["chest", "upper_arm.L", "upper_arm.R"], {}),                # pauldrons
@@ -34,36 +36,34 @@ PARTS = {
     "boots":     (["shin.L", "foot.L", "shin.R", "foot.R"], {}),               # boots, greaves
     "helm":      (["head"], {}),                                               # helmet, hat, mask
     "neck":      (["neck", "chest", "head"], {}),                              # gorget, collar
-    # cloth (v13 body): weights from the cloth template (bone chains fitted to the original UO cloak / skirt frames)
-    "skirt":     (["pelvis", "spine", "thigh.L", "thigh.R"], {}),              # skirt, kilt: all on the skirt chains
-    "cloak":     (["chest", "spine", "neck", "clavicle.L", "clavicle.R"], {}), # cloak, cape: all on the cloak chains
-    "robe":      (None, {"hand": 0.0, "foot": 0.0, "head": 0.0}),              # robe, dress: top like the skin,
-}                                                                              # below the waist the skirt chains,
-                                                                               # sleeves on the arms at any height
-# PART -> (cloth template object, height band in m over which the item goes from the body weights to the template
-# weights below the template's top; None = template weights only)
-CLOTH = {"skirt": ("UO_Template_Skirt", None), "cloak": ("UO_Template_Cloak", None), "robe": ("UO_Template_Skirt", 0.35)}
+    "belt":      (["pelvis", "spine", "chest", "thigh.L", "thigh.R"], {}),     # belt with straps and hangers that reach down over the hips: what hangs below the waist follows the thigh under it
+    # loose garments (robe, dress, skirt, kilt): above the hips like "all"; the hanging part follows the PELVIS only (it does not stick to the legs like trousers): the weight
+    # of thighs, shins and feet goes to the pelvis. The legs push it out when they reach it: render_uo_layer.py does that per frame (custom property `uo_cloth`, set below;
+    # cloth_lib.hull_push, calibrated on the original robes, docs/qa/robe_physics.md). FOLLOW also takes (share, t0, t1, end share): share near the joint -> end share along the bone.
+    "robe":      (None, {"hand": 0.0, "foot": 0.0, "shin": 0.0, "thigh": 0.0}),
+    "skirt":     (None, {"hand": 0.0, "foot": 0.0, "shin": 0.0, "thigh": 0.0}),
+    "cloak":     (None, {"hand": 0.0, "foot": 0.0, "shin": 0.0, "thigh": 0.0}),   # cape from the shoulders: hangs from the chest, the rest follows the pelvis; swings back per action (render_uo_layer.py)
+}
 # rigid items: every vertex 100 % on one bone (they do not bend): hair and beards (UO draws them rigid on the head),
-# weapons, shields (left forearm), quivers (back). UO holds 2H weapons, staffs, bows and crossbows in the LEFT hand and 1H weapons in the right,
+# weapons, shields (left forearm), quivers (back), a sword or dagger hung from the belt (thigh). UO holds 2H weapons, staffs, bows and crossbows in the LEFT hand and 1H weapons in the right,
 # and moves them differently from the hand: they ride on the weapon bones polearm.L / axe2h.L / bow.L / weapon1h.R (uo_weapon_bones.py,
-# calibrated on the original weapons: model the shaft along the class line, see that script). "weapon" = rigid in hand.R and "weapon.L" = rigid
-# in hand.L (no calibration).
+# calibrated on the original weapons: model the shaft along the class line, see uo_place_weapon.py) and the shield on shield.L (uo_place_shield.py).
+# "weapon" = rigid in hand.R and "weapon.L" = rigid in hand.L (no calibration).
 RIGID = {"hair": "head", "beard": "head", "hat": "head", "weapon": "hand.R", "weapon.L": "hand.L", "weapon1h": "weapon1h.R", "shield": "shield.L", "quiver": "chest",
+         "hip.L": "thigh.L", "hip.R": "thigh.R",      # a sword / dagger on the belt: stiff on the thigh of its side (it moves with the leg)
          "polearm": "polearm.L", "staff": "polearm.L", "weapon2h": "polearm.L", "axe2h": "axe2h.L", "bow": "bow.L", "crossbow": "bow.L"}
-PARENT = {"hand": "forearm", "forearm": "upper_arm", "upper_arm": "clavicle", "foot": "shin", "shin": "thigh",
+PARENT = {"hand": "forearm", "forearm": "upper_arm", "upper_arm": "chest", "foot": "shin", "shin": "thigh",
           "thigh": "pelvis", "head": "neck"}
 
 body = bpy.data.objects["UO_Body"]
 rig = bpy.data.objects["UO_Rig"]
-SUB = {"upper_arm_twist": "upper_arm", "forearm_twist": "forearm", "toe": "foot"}   # extra bones -> their UO bone
 
 
 def group_of(name):
-    """UO bone a body bone belongs to: finger / twist / toe bones count as hand / arm / foot"""
+    """UO bone a body bone belongs to: the finger bones count as the hand"""
     side = name[-2:] if name.endswith((".L", ".R")) else ""
     base = name[:-2] if side else name
-    base = "hand" if base.startswith("finger") else SUB.get(base, base)
-    return base + side
+    return ("hand" if base.startswith("finger") else base) + side
 
 
 def body_regions(allowed):
@@ -74,7 +74,7 @@ def body_regions(allowed):
     for v in me.vertices:
         for g in v.groups:
             W[v.index, g.group] = g.weight
-    keep = [i for i, n in enumerate(names) if allowed is None or group_of(n) in allowed]
+    keep = [i for i, n in enumerate(names) if (allowed is None or group_of(n) in allowed) and rig.data.bones[n].use_deform]   # the clavicles do not deform
     basis = np.empty(len(me.vertices) * 3, np.float32)
     (me.shape_keys.key_blocks[0].data if me.shape_keys else me.vertices).foreach_get("co", basis)
     basis = basis.reshape(-1, 3).astype(np.float64)
@@ -86,47 +86,6 @@ def body_regions(allowed):
         raise RuntimeError("no body skin for PART %r" % PART)
     bvh = BVHTree.FromPolygons([Vector(p) for p in basis], tri.tolist())
     return bvh, tri, basis, W[:, keep], [names[i] for i in keep]
-
-
-def cloth_blend(co, wv, bones, tpl_name, band):
-    """blend the body weights with the weights of the nearest point of the cloth template (all in body space); with a
-    band (robe) the parts on the arms (sleeves) keep the body weights at any height"""
-    tpl = bpy.data.objects.get(tpl_name)
-    if tpl is None:
-        raise RuntimeError("cloth template %s not found (v13 body file)" % tpl_name)
-    me = tpl.data
-    M = body.matrix_world.inverted() @ tpl.matrix_world
-    tco = np.array([M @ v.co for v in me.vertices])
-    tn = [g.name for g in tpl.vertex_groups]
-    TW = np.zeros((len(me.vertices), len(tn)))
-    for v in me.vertices:
-        for g in v.groups:
-            TW[v.index, g.group] = g.weight
-    me.calc_loop_triangles()
-    ttri = np.array([t.vertices[:] for t in me.loop_triangles])
-    bvh = BVHTree.FromPolygons([Vector(p) for p in tco], ttri.tolist())
-    wt = np.zeros((len(co), len(tn)))
-    for i, p in enumerate(co):
-        loc, nrm, fi, dist = bvh.find_nearest(Vector(p))
-        a, b, c = ttri[fi]
-        w = barycentric_transform(loc, Vector(tco[a]), Vector(tco[b]), Vector(tco[c]),
-                                  Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1)))
-        w = np.clip(np.array(w), 0, 1); w /= max(w.sum(), 1e-9)
-        wt[i] = w[0] * TW[a] + w[1] * TW[b] + w[2] * TW[c]
-    wt /= np.maximum(wt.sum(1, keepdims=True), 1e-9)
-    if band is None:
-        h = np.ones(len(co))
-    else:
-        top = tco[:, 2].max()
-        arm = wv[:, [j for j, b in enumerate(bones) if group_of(b).split(".")[0] in ("upper_arm", "forearm", "hand")]].sum(1)
-        h = np.clip((top - co[:, 2]) / band, 0, 1)
-        h = h * h * (3 - 2 * h) * np.clip(1 - 2 * arm, 0, 1)             # smooth; sleeves stay on the arms
-    names = list(bones) + [b for b in tn if b not in bones]
-    out = np.zeros((len(co), len(names)))
-    out[:, :len(bones)] = wv * (1 - h)[:, None]
-    for j, b in enumerate(tn):
-        out[:, names.index(b)] += wt[:, j] * h
-    return out, names
 
 
 def bind(ob, allowed):
@@ -179,23 +138,31 @@ def bind(ob, allowed):
     lost = s[:, 0] <= 1e-6                                           # no weight of the part here: nearest bone of the part
     if lost.any():
         wv[lost, W[idx[lost, 0]].argmax(1)] = 1.0
+    if STIFF != 1.0:
+        wv = wv ** STIFF; wv /= np.maximum(wv.sum(1, keepdims=True), 1e-9)
+    if PART in CLOTH_PARTS:                                          # what the skin would give the legs' share (before FOLLOW sends it to the pelvis): render_uo_layer.py lays a loose
+        for nm in LEG_BONES:                                         # garment along the legs with it when the rider sits on a horse (CLOTH_MOUNTED)
+            j = [k for k, b in enumerate(bones) if b == nm]
+            at = ob.data.attributes.get("uo_leg_" + nm) or ob.data.attributes.new(name="uo_leg_" + nm, type="FLOAT", domain="POINT")
+            at.data.foreach_set("value", (wv[:, j[0]] if j else np.zeros(n)).astype(np.float32))
     moved = np.zeros(n)
     bones = list(bones)
     for base in ("hand", "forearm", "upper_arm", "foot", "shin", "thigh", "head"):   # distal first, so chains fold
         if base not in FOLLOW:
             continue
         for side in ((".L", ".R") if base != "head" else ("",)):
-            b, pb = base + side, PARENT[base] + ("" if PARENT[base] in ("pelvis", "neck") else side)
+            b, pb = base + side, PARENT[base] + ("" if PARENT[base] in ("pelvis", "chest", "neck") else side)
             if b not in rig.data.bones or pb not in rig.data.bones:
                 continue
             f = FOLLOW[base]
-            if isinstance(f, tuple):                                 # share grows along the bone (t = 0 joint, 1 end)
+            if isinstance(f, tuple):                                 # share changes along the bone (t = 0 joint, 1 end, > 1 beyond it)
                 bone = rig.data.bones[b]
                 to_body = body.matrix_world.inverted() @ rig.matrix_world
                 h, t_ = np.array(to_body @ bone.head_local), np.array(to_body @ bone.tail_local)
                 t = ((co - h) @ (t_ - h)) / max(((t_ - h) ** 2).sum(), 1e-12)
-                f = f[0] + (1 - f[0]) * np.clip((t - f[1]) / max(f[2] - f[1], 1e-6), 0, 1)
-            for j in [j for j, nm in enumerate(bones) if group_of(nm) == b]:   # the bone + its finger / twist / toe bones
+                end = f[3] if len(f) > 3 else 1.0                    # (share, t0, t1[, end share]): `share` up to t0, `end share` (default 1) from t1, linear between
+                f = f[0] + (end - f[0]) * np.clip((t - f[1]) / max(f[2] - f[1], 1e-6), 0, 1)
+            for j in [j for j, nm in enumerate(bones) if group_of(nm) == b]:   # the bone + its finger bones
                 mv = wv[:, j] * (1 - f)
                 wv[:, j] -= mv; moved += mv
                 if pb in bones:
@@ -203,11 +170,8 @@ def bind(ob, allowed):
                 else:
                     wv = np.c_[wv, mv]; bones.append(pb)
     moved = np.clip(moved, 0, 1)
-    if PART in CLOTH:
-        wv, bones = cloth_blend(co, wv, bones, *CLOTH[PART])
-        moved = np.ones(n)
     body_bones = {g.name for g in body.vertex_groups} | {b.name for b in rig.data.bones}
-    for g in [g for g in ob.vertex_groups if g.name in body_bones or g.name.startswith("clavicle")]:
+    for g in [g for g in ob.vertex_groups if g.name in body_bones]:
         ob.vertex_groups.remove(g)
     for j, name in enumerate(bones):
         nz = np.nonzero(wv[:, j] > 1e-4)[0]
@@ -263,6 +227,41 @@ def bind(ob, allowed):
     print("uo_bind_item: %s -> PART %s, bones %s, %d corrections" % (ob.name, PART, bones, len(keys)))
 
 
+CLOTH_PARTS = ("robe", "skirt", "cloak")
+LEG_BONES = ("thigh.L", "shin.L", "foot.L", "thigh.R", "shin.R", "foot.R")
+CLOTH_DROP = 1.0                           # m of radius the hem may narrow per m of height below a push (0 = hangs straight down from it, larger = tapers back in sooner)
+CLOTH_MARGIN_SHORT, CLOTH_KAPPA_SHORT = 0.02, 0.5   # a garment that ends at the knee or above (kilt, short skirt): only the thighs push it, and less (robe_calib.py on the originals 455, 971)
+CLOTH_MARGIN, CLOTH_KAPPA = 0.05, 0.8      # a long robe (hem below 0.15 m); between 0.15 and 0.30 m of hem height the values blend into the short ones; how far past the legs the hem goes, how much of the way to the legs the cloth is pushed (robe_calib.py: best of the sweep on robe 469)
+
+
+def mark_cloak(ob):
+    """custom property `uo_cloth` of type cloak: the shoulder line (top of the item, y of its top edge) and the hem height, rest pose, world"""
+    import json
+    M = np.array(ob.matrix_world)
+    co = np.empty(len(ob.data.vertices) * 3, np.float32); ob.data.vertices.foreach_get("co", co)
+    V = co.reshape(-1, 3).astype(np.float64) @ M[:3, :3].T + M[:3, 3]
+    z_top = float(V[:, 2].max()); top = V[V[:, 2] > z_top - 0.06]
+    ob["uo_cloth"] = json.dumps(dict(type="cloak", y_top=round(float(top[:, 1].mean()), 4), z_top=round(z_top, 4), z_hem=round(float(V[:, 2].min()), 4)))
+    print("uo_bind_item: %s: cloak, swings back about the shoulders (uo_cloth %s)" % (ob.name, ob["uo_cloth"]))
+
+
+def mark_cloth(ob):
+    """custom property `uo_cloth` for render_uo_layer.py: the axis of the hanging part, the waist and the hem height (rest pose, world)"""
+    import json
+    M = np.array(ob.matrix_world)
+    co = np.empty(len(ob.data.vertices) * 3, np.float32); ob.data.vertices.foreach_get("co", co)
+    V = co.reshape(-1, 3).astype(np.float64) @ M[:3, :3].T + M[:3, 3]
+    band = V[(V[:, 2] > 0.4) & (V[:, 2] < 0.9)]
+    centre = (band[:, :2].mean(0) if len(band) else V[:, :2].mean(0))
+    z_top = float(np.array(rig.matrix_world @ rig.data.bones["pelvis"].head_local)[2]) + 0.04
+    z_hem = float(V[:, 2].min())
+    t = min(max((z_hem - 0.15) / 0.15, 0.0), 1.0)                       # 0 = a long robe, 1 = a garment above the knee
+    margin, kappa = CLOTH_MARGIN + (CLOTH_MARGIN_SHORT - CLOTH_MARGIN) * t, CLOTH_KAPPA + (CLOTH_KAPPA_SHORT - CLOTH_KAPPA) * t
+    ob["uo_cloth"] = json.dumps(dict(centre=[round(float(centre[0]), 4), round(float(centre[1]), 4)], margin=round(margin, 4), kappa=round(kappa, 4), z_top=round(z_top, 4),
+                                     z_hem=round(z_hem, 4), ramp=0.15, drop=CLOTH_DROP))
+    print("uo_bind_item: %s: loose garment, legs push the hem out (uo_cloth %s)" % (ob.name, ob["uo_cloth"]))
+
+
 def bind_rigid(ob, bone):
     body_bones = {g.name for g in body.vertex_groups}
     for g in [g for g in ob.vertex_groups if g.name in body_bones]:
@@ -289,10 +288,16 @@ try:
     for ob in [o for o in bpy.context.selected_objects if o.type == "MESH" and o != body]:
         if PART in RIGID:
             bone = RIGID[PART]
-            if bone not in rig.data.bones:                           # older file without the shield / weapon bones
+            if bone not in rig.data.bones:                           # a file without the shield / weapon bones
                 bone = {"shield.L": "forearm.L", "polearm.L": "hand.L", "axe2h.L": "hand.L", "bow.L": "hand.L", "weapon1h.R": "hand.R"}.get(bone, bone)
             bind_rigid(ob, bone)
         else:
             bind(ob, PARTS[PART][0])
+            if PART == "cloak":
+                mark_cloak(ob)
+            elif PART in CLOTH_PARTS:
+                mark_cloth(ob)
+            elif "uo_cloth" in ob:
+                del ob["uo_cloth"]
 finally:
     rig.data.pose_position = pose

@@ -29,6 +29,12 @@ ANCHOR = (128, 192)                # UO anchor pixel inside the canvas (world po
                                    # 256x256 / (128, 192) holds 444 of the 449 people / equipment animations of the Nelderim client
                                    # (the original body frames are 136x120 with anchor (68, 86); use that pair for the old size)
 CLOTHING = "Clothing"              # collection with the clothing / equipment meshes
+SHADOW_SUN_K = 1.0                 # calibration of the Sun of the own shadow (uo_materials.py SHADOW): 1 = a lit surface has (1 - s) of the UO diffuse light (checked with test_shadow.py)
+CLOAK_SWING = 1.0                  # cloaks (uo_cloth type cloak): scale of the swing taken from the original cloak (0 = hangs as bound)
+CLOTH_SIM = 1                      # 1 = add the cloth simulation of uo_cloth_sim.py (cloth_sim.npz next to the .blend, if there is one) to the push of the legs
+CLOTH_MOUNTED = 1.0                # loose garments (robe, skirt: custom property uo_cloth) in the mounted actions 23-29: share in which the hanging part follows the legs (thighs above the
+                                   # knee, shins below it, like skin) instead of hanging from the pelvis with the hull of the legs. A rider sits with the thighs forward and a robe that hangs from
+                                   # the pelvis would leave them bare; the original robes lie along the legs. 0 = hang and push like on foot.
 HORSE_HOLDOUT = True               # mounted actions: the horse hides what is behind it, clipped to the exact horse sprite
 EXACT_COLORS = True                # body in the UO look: colours projected from the original UO frames packed in the file
 EXACT_BODY = True                  # body = original UO frames: the "body" layer reproduces the original exactly, and in
@@ -43,11 +49,10 @@ OCCLUDERS = ["head", "upper_arm", "forearm", "hand", "thigh", "shin", "foot"]   
 OWN_PARTS_NEVER_HIDE = True        # body parts an item is skinned to (a legs item: thighs, shins, pelvis) never hide it: the item
                                    # wraps them, so their skin in front of the item shell is the item's own edge, not an occluder
                                    # (it cut 1-px strips off the sides of trousers). False = every OCCLUDERS part may hide it
-TORSO_HIDE_MARGIN = 0.12           # m: the torso (pelvis, spine, chest, neck, clavicle) hides an item only where the item is at least this
-                                   # much behind it: a cloak hangs behind the body, so the chest must hide it; shells worn over the
-                                   # torso (up to ~3 cm thick) are never hidden. 0 = the torso never hides anything.
-                                   # Only when a cloak (cloth chains "cloak_*") is worn: UO draws other items over the torso even where
-                                   # they are behind it (a sleeve of an arm behind the chest), and hiding them cost 0.02-0.07 IoU
+TORSO_HIDE_MARGIN = 0.12           # m: the torso (pelvis, spine, chest, neck, clavicle) hides an item only where the item is at least this much behind it.
+                                   # Only when a visible item carries the custom property `uo_behind_torso` (a sword, quiver or cape hanging on the back: from the
+                                   # front the chest hides it, from the sides it stays visible). Off otherwise: UO draws other items over the torso even where they
+                                   # are behind it (a sleeve of an arm behind the chest) and hiding them cost 0.02-0.07 IoU. 0 = never.
 DESPECKLE = 28                    # clothing: single dark pixels inside the item darker than their neighbours by more
                                    # than this (0-255) take the colour around them - deep sculpt details / rivets that
                                    # turn into black dots at UO size. 0 = off
@@ -55,8 +60,7 @@ FILL_HOLES = 4                     # px: holes INSIDE an item (fully surrounded 
                                    # poking through or a gap in the item mesh, not a real occluder. 0 = off
 BODY_GAP = 0.006                   # m: every frame, parts of the bound items closer than this to the arms, hands, legs or
                                    # head of the posed body are pushed out (smoothly) before rendering - otherwise a forearm
-                                   # poking through a sleeve in motion cuts a hole in the item. Cloth-baked frames have their
-                                   # own fix (uo_cloth_bake FIX_GAP). 0 = off
+                                   # poking through a sleeve in motion cuts a hole in the item. 0 = off
 MIN_PIECE = 8                      # px: detached bits of the item smaller than this are removed (collar or cuff rims cut
                                    # off by the head or a hand read as dirt at UO size); the biggest piece always stays. 0 = off
 
@@ -66,57 +70,12 @@ W, H = CANVAS
 DX, DY = ANCHOR[0] - OANCHOR[0], ANCHOR[1] - OANCHOR[1]     # where the original frames sit inside the canvas
 
 sc = bpy.context.scene
+MIN_PIECE = int(sc.get("uo_min_piece", MIN_PIECE))       # uo_make_item.py "min_piece" of a part: an item of thin straps (a vest) needs a bigger limit than 8 px for the bits an arm cuts off
+DESPECKLE = int(sc.get("uo_despeckle", DESPECKLE))     # uo_prepare_item.py sets 0 for cloth and leather: the despeckle erased the straps, buttons and stitches of a texture (gambeson front closure)
 rig = bpy.data.objects["UO_Rig"]
 body = bpy.data.objects["UO_Body"]
 clothes = [o for o in bpy.data.collections[CLOTHING].all_objects if o.type == "MESH"] if CLOTHING in bpy.data.collections else []
-
-# items baked by uo_cloth_bake.py: their cloth simulation replaces the bound pose in the actions it covers
-CLOTH = {}
-for o in clothes:
-    if o.get("uo_cloth"):
-        p = bpy.path.abspath(o["uo_cloth"])
-        base = o.data.shape_keys.key_blocks[0].data if o.data.shape_keys else o.data.vertices
-        co = np.empty(len(o.data.vertices) * 3, np.float32); base.foreach_get("co", co)
-        sig = np.array([len(o.data.vertices), float(np.abs(co.astype(np.float64)).sum())])
-        d = np.load(p) if os.path.exists(p) else None
-        if d is not None and "item_sig" in d.files and np.allclose(d["item_sig"], sig, rtol=1e-5):
-            CLOTH[o.name] = {k: d[k] for k in d.files}
-            print("render_uo_layer: %s uses its cloth bake %s" % (o.name, p))
-        elif d is not None:
-            print("render_uo_layer: %s changed after its cloth bake - rendered as bound (bake it again)" % o.name)
-        else:
-            print("render_uo_layer: cloth bake of %s not found (%s) - rendered as bound" % (o.name, p))
-
-
-def cloth_show(o, a, i):
-    """baked cloth shape of UO action a, frame i on item o (shape key 'uo_cloth', Armature off); else the bound item"""
-    c = CLOTH.get(o.name)
-    arm = [m for m in o.modifiers if m.type == "ARMATURE"]
-    key = o.data.shape_keys.key_blocks.get("uo_cloth") if o.data.shape_keys else None
-    if c is None or ("a%d_f%d" % (a, i)) not in c:
-        for m in arm:
-            m.show_viewport = m.show_render = True
-        if key:
-            key.value = 0.0
-        return
-    co = c["a%d_f%d" % (a, i)].astype(np.float64); tris, fi = c["tris"], c["fi"]
-    A, B, C = co[tris[:, 0]], co[tris[:, 1]], co[tris[:, 2]]
-    e1 = B - A; e1 /= np.maximum(np.linalg.norm(e1, axis=1, keepdims=True), 1e-12)
-    n = np.cross(B - A, C - A); n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
-    fr = np.stack([e1, np.cross(n, e1), n], 1)[fi]
-    pos = (co[tris[fi]] * c["bc"][..., None]).sum(1) + np.einsum("nk,nkj->nj", c["off"], fr)
-    if "fix_node" in c and ("d%d_f%d_i" % (a, i)) in c:              # pushed out of the real body after the simulation
-        Dn = np.zeros((int(c["fix_node"].max()) + 1, 3)); Dn[c["d%d_f%d_i" % (a, i)]] = c["d%d_f%d_v" % (a, i)]
-        pos += Dn[c["fix_node"]]
-    if key is None:
-        if o.data.shape_keys is None:
-            o.shape_key_add(name="Basis", from_mix=False)
-        key = o.shape_key_add(name="uo_cloth", from_mix=False)
-    key.data.foreach_set("co", pos.astype(np.float32).ravel()); key.value = 1.0
-    for m in arm:
-        m.show_viewport = m.show_render = False
-    o.data.update()
-
+HAS_CLOTH = any(o.get("uo_cloth") for o in clothes if not o.hide_render)
 
 # BODY_GAP: bound items pushed out of the posed limbs / head, per UO frame (shape key "uo_fix", Armature off)
 FIX_MESH, FIX_CACHE, FIX_ON, FIX_ADDED = {}, {}, {}, set()
@@ -132,6 +91,109 @@ def fix_mesh(o):
         E = np.unique(np.sort(node[E.reshape(-1, 2)], 1), axis=0); E = E[E[:, 0] != E[:, 1]]
         FIX_MESH[o.name] = (first, node, E, np.bincount(E.ravel(), minlength=len(first)).astype(float))
     return FIX_MESH[o.name]
+
+
+# Loose garments (robe, skirt; uo_bind_item.py PART "robe" sets the custom property `uo_cloth`): the hanging part follows the pelvis only and the legs push it out to where
+# they reach (cloth_lib.hull_push, calibrated on the original robes: docs/qa/robe_physics.md). Computed per UO frame together with BODY_GAP, before it.
+CLOTH_CTX = {}
+
+
+def cloth_module():
+    if "mod" not in CLOTH_CTX:
+        here = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() else ""
+        if here and os.path.exists(os.path.join(here, "cloth_lib.py")):
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("cloth_lib", os.path.join(here, "cloth_lib.py"))
+            CLOTH_CTX["mod"] = importlib.util.module_from_spec(spec); spec.loader.exec_module(CLOTH_CTX["mod"])
+        else:
+            CLOTH_CTX["mod"] = bpy.data.texts["cloth_lib.py"].as_module()
+    return CLOTH_CTX["mod"]
+
+
+def cloth_ctx():
+    """legs as capsules (rest bones, radius from the body skin) and the rest matrices; built once"""
+    if "caps" not in CLOTH_CTX:
+        cl = cloth_module()
+        Mr0 = np.array(rig.matrix_world)
+        names = list(cl.Capsules.NAMES) + ["pelvis", "chest"]
+        heads = np.array([(Mr0 @ np.append(np.array(rig.data.bones[n].head_local), 1))[:3] for n in names])
+        tails = np.array([(Mr0 @ np.append(np.array(rig.data.bones[n].tail_local), 1))[:3] for n in names])
+        me = body.data
+        co = np.empty(len(me.vertices) * 3, np.float32)
+        (me.shape_keys.key_blocks[0].data if me.shape_keys else me.vertices).foreach_get("co", co)
+        Mb = np.array(body.matrix_world); V = co.reshape(-1, 3).astype(np.float64) @ Mb[:3, :3].T + Mb[:3, 3]
+        gn = {g.index: g.name for g in body.vertex_groups}
+        dom = np.array([gn[max(v.groups, key=lambda g: g.weight).group] if v.groups else "" for v in me.vertices])
+        CLOTH_CTX["caps"] = cl.Capsules(names, heads, tails, V, dom)
+        CLOTH_CTX["names"] = names
+        CLOTH_CTX["Mr0"] = Mr0
+        CLOTH_CTX["inv_local"] = {n: np.linalg.inv(np.array(rig.data.bones[n].matrix_local)) for n in names}
+    return CLOTH_CTX
+
+
+def cloth_sim_table():
+    """the difference the cloth simulation (uo_cloth_sim.py) makes to the kinematic cloth, per action and frame: {"a_i": (n, 3)} in the rest frame; {} when there is none"""
+    if "sim" not in CLOTH_CTX:
+        CLOTH_CTX["sim"] = {}
+        path = os.path.join(os.path.dirname(bpy.data.filepath), "cloth_sim.npz") if bpy.data.filepath else ""
+        if CLOTH_SIM and path and os.path.exists(path):
+            z = np.load(path); CLOTH_CTX["sim"] = {k: z[k] for k in z.files}
+            print("render_uo_layer: cloth simulation %s (%d frames)" % (path, len(CLOTH_CTX["sim"])))
+    return CLOTH_CTX["sim"]
+
+
+def cloak_table():
+    if "pitch" not in CLOTH_CTX:
+        here = globals().get("__file__") and os.path.dirname(os.path.abspath(__file__))
+        if here and os.path.exists(os.path.join(here, "cloak_pitch.json")):
+            CLOTH_CTX["pitch"] = json.load(open(os.path.join(here, "cloak_pitch.json")))
+        else:
+            CLOTH_CTX["pitch"] = json.loads(bpy.data.texts["cloak_pitch.json"].as_string())
+    return CLOTH_CTX["pitch"]
+
+
+def cloth_push(o, first, dg, Mw, a=0, i=0):
+    """displacement (item space, one row per welded node `first`) that the legs give a loose garment in the current pose; None when the item is not one"""
+    raw = o.get("uo_cloth")
+    if not raw:
+        return None
+    cl = cloth_module(); ctx = cloth_ctx(); prm = json.loads(raw)
+    evr = rig.evaluated_get(dg)
+    Mr0 = ctx["Mr0"]; Mre = np.array(evr.matrix_world); Dm = Mre @ np.linalg.inv(Mr0)
+    skin = {n: Mr0 @ np.array(evr.pose.bones[n].matrix) @ ctx["inv_local"][n] @ np.linalg.inv(Mr0) for n in ctx["names"]}
+    caps = ctx["caps"]
+    heads = np.array([(skin[ctx["names"][k]] @ np.append(caps.head[j], 1))[:3] for j, k in enumerate(caps.idx)])
+    tails = np.array([(skin[ctx["names"][k]] @ np.append(caps.tail[j], 1))[:3] for j, k in enumerate(caps.idx)])
+    sel = np.array(["pelvis" not in ctx["names"][k] for k in caps.idx])
+    co = np.empty(len(o.data.vertices) * 3, np.float32); o.data.vertices.foreach_get("co", co)
+    Vr = co.reshape(-1, 3).astype(np.float64); Mb_ = np.array(o.matrix_basis); Vr = (Vr @ Mb_[:3, :3].T + Mb_[:3, 3])[first]
+    if prm.get("type") == "cloak":                                            # a cape: swings back about the shoulders with the action (cloak_pitch.json from the original 468)
+        rows = cloak_table()["actions"].get(str(a))
+        if not rows:
+            return np.zeros((len(first), 3))
+        d0, d1 = (np.radians(x) * CLOAK_SWING for x in rows[min(i, len(rows) - 1)])
+        d = cl.cloak_bend(Vr, prm["z_top"], prm["z_hem"], prm["y_top"], d0, d1)
+        return ((d @ skin["chest"][:3, :3].T) @ Dm[:3, :3].T) @ np.linalg.inv(Mw[:3, :3]).T
+    if 23 <= a <= 29 and CLOTH_MOUNTED > 0:                                  # riding: the hanging part lies along the legs, as the skin under it would move it
+        Vh = np.c_[Vr, np.ones(len(Vr))]
+        nv = len(o.data.vertices); Pp = (Vh @ skin["pelvis"].T)[:, :3]; d0 = np.zeros_like(Vr)
+        have = all(("uo_leg_" + nm) in o.data.attributes for nm in cl.Capsules.NAMES)
+        if have:                                                              # the weights uo_bind_item.py kept before it sent the legs' share to the pelvis
+            for nm in cl.Capsules.NAMES:
+                w = np.empty(nv, np.float32); o.data.attributes["uo_leg_" + nm].data.foreach_get("value", w)
+                d0 += w[first][:, None] * ((Vh @ skin[nm].T)[:, :3] - Pp)
+        else:                                                                 # an item bound before: left / right of the middle, thigh above the knee, shin below
+            side = np.clip(Vr[:, 0] / 0.06, -1, 1) * 0.5 + 0.5; ws = np.clip((0.58 - Vr[:, 2]) / 0.15, 0, 1)[:, None]
+            leg = lambda sd: (1 - ws) * (Vh @ skin["thigh." + sd].T)[:, :3] + ws * (Vh @ skin["shin." + sd].T)[:, :3]
+            d0 = np.clip((prm["z_top"] - Vr[:, 2]) / 0.2, 0, 1)[:, None] * ((1 - side)[:, None] * leg("L") + side[:, None] * leg("R") - Pp)
+        d0 = d0 * CLOTH_MOUNTED
+        return (d0 @ Dm[:3, :3].T) @ np.linalg.inv(Mw[:3, :3]).T
+    d0 = cl.hull_push(Vr, skin["pelvis"], heads[sel], tails[sel], caps.radius[sel], centre_xy=tuple(prm["centre"]), margin=prm["margin"], kappa=prm["kappa"],
+                      z_top=prm["z_top"], z_hem=prm["z_hem"], ramp=prm.get("ramp", 0.15), drop=prm.get("drop", 1.0))
+    sim = cloth_sim_table().get("%d_%d" % (a, i))
+    if sim is not None and len(sim) == len(o.data.vertices):                   # the simulated cloth: what the simulation did on top of the push of the legs
+        d0 = d0 + sim[first].astype(np.float64)
+    return (d0 @ Dm[:3, :3].T) @ np.linalg.inv(Mw[:3, :3]).T
 
 
 def push_out(X, bvh, E, deg, gap):
@@ -196,7 +258,7 @@ def evaluated_co(ob, dg):
 
 def body_fix(a, i):
     """BODY_GAP for UO frame i of action a: the pose does not depend on the direction, so each frame is solved once"""
-    items = [o for o in clothes if not o.hide_render and not (o.name in CLOTH and ("a%d_f%d" % (a, i)) in CLOTH[o.name])]
+    items = [o for o in clothes if not o.hide_render and not o.get("uo_no_body_gap")]   # uo_no_body_gap: a rigid item (sword, shield) is never bent
     for o in items:
         fix_off(o)
     if not items:
@@ -208,6 +270,10 @@ def body_fix(a, i):
         me.calc_loop_triangles()
         tri = np.empty(len(me.loop_triangles) * 3, np.int32); me.loop_triangles.foreach_get("vertices", tri)
         tri = tri.reshape(-1, 3); Bi = np.array(eb.matrix_world.inverted()); eb.to_mesh_clear()
+        cbvh = None
+        if any(o.get("uo_conform") for o in todo):      # conformed garments: kept out of the skin of their own region (cloth_lib.conform_push)
+            cm = CONFORM_TRIS()
+            cbvh = [BVHTree.FromPolygons([Vector(p) for p in bco], tri[m].tolist()) for m in cm]
         if len(OCCLUDER_TRIS) == len(tri):
             tri = tri[OCCLUDER_TRIS]                    # arms, hands, legs, head: the parts that cut holes
         bvh = BVHTree.FromPolygons([Vector(p) for p in bco], tri.tolist())
@@ -219,7 +285,18 @@ def body_fix(a, i):
             continue
         if (o.name, a, i) not in FIX_CACHE:
             M = Bi @ Mw
-            D = push_out(co[first] @ M[:3, :3].T + M[:3, 3], bvh, E, deg, BODY_GAP) @ np.linalg.inv(M[:3, :3]).T
+            X = co[first] @ M[:3, :3].T + M[:3, 3]
+            Dc = cloth_push(o, first, dg, Mw, a, i)                                 # loose garment: the legs push it out first
+            if Dc is not None:
+                X = X + Dc @ M[:3, :3].T
+            if o.get("uo_conform") and cbvh is not None and "uo_region" in o.data.attributes:
+                lab = np.empty(len(o.data.vertices), np.int32); o.data.attributes["uo_region"].data.foreach_get("value", lab)
+                gap = max(float(json.loads(o["uo_conform"]).get("gap", BODY_GAP)), BODY_GAP)
+                D = cloth_module().conform_push(X, cbvh, np.clip(lab[first], 0, len(cbvh) - 1), E, deg, gap, limbs=posed_limbs(dg, Bi)) @ np.linalg.inv(M[:3, :3]).T
+            else:
+                D = (push_out(X, bvh, E, deg, BODY_GAP) if BODY_GAP > 0 else np.zeros_like(X)) @ np.linalg.inv(M[:3, :3]).T
+            if Dc is not None:
+                D = D + Dc
             idx = np.nonzero(np.abs(D).max(1) > 2e-4)[0]
             FIX_CACHE[(o.name, a, i)] = (idx.astype(np.int32), D[idx].astype(np.float32)) if len(idx) else None
         c = FIX_CACHE[(o.name, a, i)]
@@ -328,6 +405,43 @@ sc.view_settings.view_transform = "Standard"
 sc["uo_look"] = 1.0                 # UO lighting (see node group "UO_Look")
 sc["uo_exact"] = 1.0 if (EXACT_COLORS and "UO_Original_Atlas" in bpy.data.images) else 0.0   # no atlas -> model colours
 EXACT_ANY = EXACT_COLORS or EXACT_BODY
+
+
+SUN_STATE = {}
+
+
+def shadow_sun(on):
+    """own shadow of items whose materials use the node group UO_Look_NS (uo_materials.py SHADOW): a Sun with the UO light direction, in the camera frame like the UO light, that casts shadows;
+    its strength is pi * (1 - ambient) * (1 - s) so that a lit surface gets (1 - s) of the UO diffuse light from it (the rest, s, is emission in the group)"""
+    ob = bpy.data.objects.get("UO_Sun")
+    if not on:
+        if ob is not None:
+            ld = ob.data; bpy.data.objects.remove(ob, do_unlink=True); bpy.data.lights.remove(ld)
+        for m, v in SUN_STATE.pop("emission", {}).items():
+            m.cycles.emission_sampling = v
+        if "bounces" in SUN_STATE:
+            sc.cycles.diffuse_bounces = SUN_STATE.pop("bounces")
+        return
+    g = bpy.data.node_groups.get("UO_Look_NS")
+    if g is None or sc.render.engine != "CYCLES":
+        return
+    used = any(n.type == "GROUP" and n.node_tree == g for o in clothes if not o.hide_render for m in o.data.materials if m and m.node_tree for n in m.node_tree.nodes)
+    if not used:
+        return
+    from mathutils import Vector
+    Lv = Vector(next(n for n in g.nodes if n.type == "COMBXYZ").inputs[i].default_value for i in range(3))
+    if ob is None:
+        ld = bpy.data.lights.new("UO_Sun", "SUN"); ob = bpy.data.objects.new("UO_Sun", ld); sc.collection.objects.link(ob)
+    ob.data.angle = 0.0
+    ob.data.energy = SHADOW_SUN_K * 3.14159265 * (1.0 - g["uo_ambient"]) * (1.0 - g["uo_shadow"])
+    ob.rotation_euler = Vector((0, 0, 1)).rotation_difference(Lv.normalized()).to_euler()      # a Sun shines along its -Z: +Z points to the light
+    ob.hide_render = False
+    # the diffuse part must see the Sun only: emissive surfaces (the body, the items: UO_Look is emission) must not light it (that would be noise at 1 sample) and no bounces
+    if "bounces" not in SUN_STATE:
+        SUN_STATE["bounces"] = sc.cycles.diffuse_bounces; sc.cycles.diffuse_bounces = 0
+        SUN_STATE["emission"] = {m: m.cycles.emission_sampling for m in bpy.data.materials}
+        for m in bpy.data.materials:
+            m.cycles.emission_sampling = "NONE"
 if EXACT_ANY and sc.render.engine == "CYCLES":
     sc.cycles.pixel_filter_type = "BOX"          # one sample point per pixel centre, like the UO art (no blur)
     sc.cycles.filter_width = 0.01
@@ -380,6 +494,7 @@ body.hide_render = False
 body.is_holdout = LAYER == "clothing"
 for o in clothes:
     o.hide_render = LAYER == "body"
+shadow_sun(LAYER != "body")
 if LAYER == "clothing" and not any(not o.hide_render for o in clothes):
     raise RuntimeError("No visible meshes in the 'Clothing' collection")
 
@@ -414,12 +529,41 @@ def render_px():
     return px.reshape(h, w, 4)[::-1]                        # Blender pixels start at the bottom row
 
 
+LIMB_BONES = ("upper_arm.L", "forearm.L", "upper_arm.R", "forearm.R", "thigh.L", "shin.L", "thigh.R", "shin.R")
+LIMB_R = 0.07                      # m: conformed garments: a vertex inside a limb this close to its bone is pushed straight away from the bone (cloth_lib.conform_push)
+
+
+def posed_limbs(dg, Bi):
+    """(head, tail, radius) of the posed limb bones in body space"""
+    evr = rig.evaluated_get(dg); Mr = Bi @ np.array(evr.matrix_world)
+    out = []
+    for n in LIMB_BONES:
+        pb = evr.pose.bones.get(n)
+        if pb is not None:
+            out.append(((Mr @ np.append(np.array(pb.head), 1))[:3], (Mr @ np.append(np.array(pb.tail), 1))[:3], LIMB_R))
+    return out
+
+
+def CONFORM_TRIS():
+    """triangle masks of the regions of conformed garments (cloth_lib.CONFORM_BONES), computed once"""
+    if "conform" not in CLOTH_CTX:
+        me = body.data
+        names = [g.name for g in body.vertex_groups]
+        W = np.zeros((len(me.vertices), len(names)))
+        for v in me.vertices:
+            for g in v.groups:
+                W[v.index, g.group] = g.weight
+        me.calc_loop_triangles()
+        tri = np.array([t.vertices[:] for t in me.loop_triangles])
+        CLOTH_CTX["conform"] = cloth_module().conform_masks([names[k] for k in W[tri].sum(1).argmax(1)])
+    return CLOTH_CTX["conform"]
+
+
 def body_part_mask(parts):
     """body triangles (loop_triangles order) whose dominant bone is one of `parts` (names without .L / .R)"""
     me = body.data
-    sub = {"upper_arm_twist": "upper_arm", "forearm_twist": "forearm", "toe": "foot"}   # v13 extra bones
     names = [g.name.split(".")[0] for g in body.vertex_groups]
-    names = ["hand" if n.startswith("finger") else sub.get(n, n) for n in names]
+    names = ["hand" if n.startswith("finger") else n for n in names]
     W = np.zeros((len(me.vertices), len(names)))
     for v in me.vertices:
         for g in v.groups:
@@ -434,13 +578,12 @@ def worn_parts(share=0.04):
     """body parts (names without .L / .R) the visible items are skinned to: an item wraps them, so they never hide it.
     A part counts when it carries at least `share` of an item's total skin weight. Rigid items (one bone: weapons, shields,
     quivers) wrap nothing, except on the head (hair, hats), which they sit on."""
-    sub = {"upper_arm_twist": "upper_arm", "forearm_twist": "forearm", "toe": "foot"}
     out = set()
     for o in clothes:
         if o.hide_render or not o.vertex_groups:
             continue
         names = [g.name.split(".")[0] for g in o.vertex_groups]
-        names = ["hand" if n.startswith("finger") else sub.get(n, n) for n in names]
+        names = ["hand" if n.startswith("finger") else n for n in names]
         tot = {}
         for v in o.data.vertices:
             for g in v.groups:
@@ -456,8 +599,8 @@ def worn_parts(share=0.04):
 WORN = worn_parts() if (LAYER == "clothing" and OWN_PARTS_NEVER_HIDE) else set()
 OCCLUDER_TRIS = body_part_mask(set(OCCLUDERS))                 # parts BODY_GAP keeps the items away from
 HIDER_TRIS = body_part_mask(set(OCCLUDERS) - WORN)             # parts that may hide an item in the holdout
-CLOAK_WORN = any(g.name.startswith("cloak_") for o in clothes if not o.hide_render for g in o.vertex_groups)
-TORSO_TRIS = body_part_mask({"pelvis", "spine", "chest", "neck", "clavicle"}) if (TORSO_HIDE_MARGIN > 0 and CLOAK_WORN and LAYER == "clothing") else None
+BEHIND_TORSO = TORSO_HIDE_MARGIN > 0 and LAYER == "clothing" and any(o.get("uo_behind_torso") for o in clothes if not o.hide_render)
+TORSO_TRIS = body_part_mask({"pelvis", "spine", "chest", "neck", "clavicle"}) if BEHIND_TORSO else None
 print("render_uo_layer: items wrap %s; body parts that may hide them: %s" % (sorted(WORN), sorted(set(OCCLUDERS) - WORN)))
 
 
@@ -521,7 +664,7 @@ def body_occlusion(free, margin):
         zi = np.where(miss, nb, zi)
     hold = free.copy()
     hold[occ & (zb < zi - margin)] = 0.0
-    if TORSO_TRIS is not None:                           # items behind the torso (cloak): clearly behind = hidden
+    if TORSO_TRIS is not None:                           # items behind the torso (on the back): clearly behind = hidden
         occt, zt = raster([body], TORSO_TRIS)
         hold[occt & (zt < zi - TORSO_HIDE_MARGIN)] = 0.0
     return hold, cov
@@ -702,10 +845,7 @@ def frame_job():
                         raise KeyboardInterrupt("STOP file found in " + root)
                     set_tile(a, i, d)
                     sc.frame_set(1 + i * STEP)
-                    for o in clothes:
-                        if o.name in CLOTH:
-                            cloth_show(o, a, i)
-                    if BODY_GAP > 0 and LAYER != "body":
+                    if (BODY_GAP > 0 or HAS_CLOTH) and LAYER != "body":
                         body_fix(a, i)
                     orig = original(a, i, d) if EXACT_ANY else None
                     orig_m = orig[..., 3] > 0 if orig is not None else None
@@ -748,11 +888,9 @@ def frame_job():
 
 
 def restore_all():
+    shadow_sun(False)
     view_prefs.render_display_type = render_display
     set_horse(-1, 0)
-    for o in clothes:
-        if o.name in CLOTH:
-            cloth_show(o, -1, 0)                        # back to the bound item
     body.is_holdout, body.hide_render = state["holdout"], state["body_hide"]
     for o in clothes:
         o.hide_render = state["cloth"][o.name]

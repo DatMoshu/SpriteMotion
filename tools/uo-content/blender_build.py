@@ -14,9 +14,14 @@ backend, job = Path(spec['backend']), Path(spec['job'])
 bpy.ops.wm.open_mainfile(filepath=str(backend / 'model/UO_Body_0x190.blend'), load_ui=False, use_scripts=False)
 bpy.context.preferences.filepaths.save_version = 0
 rig, body = bpy.data.objects['UO_Rig'], bpy.data.objects['UO_Body']
-# v13 has 108 bones; the 2026-10 update adds four weapon bones under the hands.
-if len(rig.data.bones) not in (108, 112) or body.data.shape_keys:
-    raise ValueError('Expected the v13 108/112-bone model without corrective shape keys.')
+# The rig was 108/112 bones (twist, toe, skirt and cloak chains) and is 54 since 2026-10-09: check the bones this file
+# and the mappings use by name, not a count.
+NEEDED_BONES = ('pelvis', 'spine', 'chest', 'neck', 'head', 'clavicle.L', 'clavicle.R', 'upper_arm.L', 'upper_arm.R',
+                'forearm.L', 'forearm.R', 'hand.L', 'hand.R', 'thigh.L', 'thigh.R', 'shin.L', 'shin.R', 'foot.L', 'foot.R',
+                'shield.L')
+missing_bones = [name for name in NEEDED_BONES if name not in rig.data.bones]
+if missing_bones or body.data.shape_keys:
+    raise ValueError(f'Expected the UO_Model3D rig without corrective shape keys; missing bones: {missing_bones}')
 rig.animation_data.action = None
 rig['uo_direction'] = 0
 rig.rotation_euler = (0, 0, 0)
@@ -328,14 +333,15 @@ camera.data.ortho_scale *= 256/136
 camera.location += camera.rotation_euler.to_matrix() @ Vector((0,38/36,0))
 bpy.context.scene.render.resolution_x=256
 bpy.context.scene.render.resolution_y=256
-report={'model':'UO_Model3D v13','bones':len(rig.data.bones),'shape_keys':0,
+report={'model':'UO_Model3D','bones':len(rig.data.bones),'shape_keys':0,
     'actions':{str(int(a['uo_action'])):int(a['uo_frames']) for a in acts},'frame_start':1,'frame_step':3,
     'camera':'UO_Camera','render_canvas':[256,256],'anchor':[128,192],
     'inherit_scale':{b.name:b.inherit_scale for b in rig.data.bones if b.inherit_scale!='FULL'},
     'item_objects':[o.name for o in objects], 'auto_fit_scale':float(factor),
     'placement_note':'Automatic placement is a starting fit. Inspect all facings; adjust rotation/scale/offset or supply a prepositioned model.'}
 (job/'scene-report.json').write_text(json.dumps(report,indent=2))
-(job/'original-frames.json').write_text(bpy.data.texts['uo_original_frames.json'].as_string())
+if 'uo_original_frames.json' in bpy.data.texts:       # the stripped public .blend has no client frames
+    (job/'original-frames.json').write_text(bpy.data.texts['uo_original_frames.json'].as_string())
 bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(job/'item.blend'))
 module_spec=importlib.util.spec_from_file_location('external_vd_writer',backend/'pipeline/uo_vd_writer.py')
