@@ -83,6 +83,11 @@ shoulders 1 cm narrower with 0.95x arms. What changed here:
   `end`, so it follows `foot_*` instead of being aligned onto the whole foot bone. Same in the sidekick `asset-pack.json`
   (sidecar, local). Regenerating the sidekick mapping with the sidecar's `make_mapping.py` still emits the toe pair
   (`('ball', 'toe', None)`); change it there before regenerating.
+- Measured (cc0 shirt, actions 0/4/9/17/22/25): builds and validates on both bodies; action 17 silhouettes differ in about
+  17% of pixels (arms), action 4 in under 1% (shoulders). Fit Lab poke counts on the sidekick saved fits (actions
+  0/2/4/9/16) moved for chest (294 to 500 px), elbows (1368 to 2837), upper-arms (4451 to 13649), forearms (9417 to 11370)
+  and slightly for back, shoulders, facial-hair, gloves, hair; boots, face, helm, hips, knees, legs and the hip slots are
+  unchanged. Those slot fits were tuned on the old arms and may need a look.
 - Not shipped: `.fbx`/`.glb` (upstream has none, nothing reads them).
 - Still open upstream: action 21's right forearm in frames 4-5; actions 21/22 may have swapped names.
 
