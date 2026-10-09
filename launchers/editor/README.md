@@ -1,5 +1,7 @@
 # Content tools
 
+Every launcher, with what it does, is listed in [../README.md](../README.md).
+
 Start both services and open Content Studio:
 
 ```bat
