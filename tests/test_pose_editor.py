@@ -1,6 +1,9 @@
 """Edits accepted for Blender export must be bounded and tied to the exact asset."""
 import importlib.util
+import os
+import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 path=Path(__file__).resolve().parents[1]/'games/ultima-online/region-masks/pose_editor_server.py'
@@ -27,5 +30,38 @@ class PoseEditsValidation(unittest.TestCase):
             with self.subTest(q=q):
                 self.doc['edits']['Walk:9']['upperarm_l']=q
                 with self.assertRaises(ValueError):module.validate(self.doc,self.scene)
+
+class FindBlender(unittest.TestCase):
+    def make(self,root,*names):
+        for name in names:
+            exe=Path(root)/'tools/blender-runtime'/name/'blender.exe';exe.parent.mkdir(parents=True);exe.touch()
+    def test_env_wins(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.make(d,'blender-5.2.2-windows-x64')
+            self.assertEqual(module.find_blender(d,{'SPRITEMOTION_BLENDER':'custom.exe'}),'custom.exe')
+    def test_newest_runtime_beats_path_and_program_files(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.make(d,'blender-5.2.2-windows-x64','blender-5.10.0-windows-x64','blender-4.2.1-windows-x64')
+            with mock.patch.object(module.shutil,'which',return_value='path-blender.exe'):
+                found=module.find_blender(d,{'ProgramFiles':d})
+            self.assertIn('blender-5.10.0',found)
+    def test_path_used_without_runtime(self):
+        with tempfile.TemporaryDirectory() as d,mock.patch.object(module.shutil,'which',return_value='path-blender.exe'):
+            self.assertEqual(module.find_blender(d,{}),'path-blender.exe')
+    def test_program_files_version_sorted_numerically(self):
+        with tempfile.TemporaryDirectory() as d,mock.patch.object(module.shutil,'which',return_value=None):
+            for v in ('Blender 4.2','Blender 10.0'):
+                exe=Path(d)/'Blender Foundation'/v/'blender.exe';exe.parent.mkdir(parents=True);exe.touch()
+            self.assertIn('Blender 10.0',module.find_blender(Path(d)/'none',{'ProgramFiles':d}))
+    def test_missing_raises(self):
+        with tempfile.TemporaryDirectory() as d,mock.patch.object(module.shutil,'which',return_value=None):
+            with self.assertRaises(RuntimeError):module.find_blender(d,{'ProgramFiles':d})
+
+class PrivateWrite(unittest.TestCase):
+    def test_content_written_and_private_mode_requested(self):
+        with tempfile.TemporaryDirectory() as d:
+            target=Path(d)/'edits.json';module.write_private(target,'{}')
+            self.assertEqual(target.read_text(),'{}')
+            if os.name!='nt':self.assertEqual(target.stat().st_mode&0o777,0o600)
 
 if __name__=='__main__':unittest.main()

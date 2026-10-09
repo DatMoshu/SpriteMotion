@@ -59,3 +59,24 @@ def test_metrics_can_be_attached_later_and_listed(tmp_path, capsys):
     assert cli(["versions", "list", str(scene)]) == 0
     assert "action-022.mean_iou=0.730" in capsys.readouterr().out
     assert cli(["versions", "restore", str(scene), "--version", "9"]) == 2
+
+
+def test_restoring_the_latest_version_verifies_the_file_hash(tmp_path):
+    import pytest
+    scene = tmp_path / "model.blend"
+    save(scene, b"pass 1", "fit 1")
+    save(scene, b"pass 2", "fit 2")
+    assert versions.restore(scene, 2)["version"] == 2          # unchanged file: already current
+    scene.write_bytes(b"changed behind the history")
+    with pytest.raises(FileNotFoundError, match="has changed"):
+        versions.restore(scene, 2)
+    assert scene.read_bytes() == b"changed behind the history"
+
+
+def test_restoring_the_latest_archived_version_restores_when_file_differs(tmp_path):
+    scene = tmp_path / "model.blend"
+    save(scene, b"pass 1", "fit 1")
+    versions.archive_current(scene)                            # latest (v1) is archived too
+    scene.write_bytes(b"drifted")
+    versions.restore(scene, 1)
+    assert scene.read_bytes() == b"pass 1"

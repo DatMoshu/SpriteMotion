@@ -25,6 +25,7 @@ import argparse, hashlib, json, os, struct, sys, time
 import numpy as np
 from scipy import ndimage
 from PIL import Image, ImageDraw, ImageFont
+from region_fonts import load_font
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO = SCRIPT_DIR.parents[2]
@@ -251,8 +252,8 @@ def overlay(body_rgba, g, O, L=None, c=None):
 
 
 def sheets(out, label, results, worst, ctx, cand, distinct, actions):
-    font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 12)
-    big = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 16)
+    font = load_font(12)
+    big = load_font(16)
     order = sorted((a for a in distinct if a in results), key=lambda a: -results[a]['deepFailRate'])
     cell = 120; cols = 6; W = cols * (2 * cell + 20) + 20
     H = 70 + ((len(order) + cols - 1) // cols) * (cell + 44)

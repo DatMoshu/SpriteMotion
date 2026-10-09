@@ -10,6 +10,7 @@ import sys, json, re, shutil, hashlib
 import numpy as np
 from scipy import ndimage
 from PIL import Image, ImageDraw, ImageFont
+from region_fonts import load_font
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
@@ -278,8 +279,8 @@ def main():
     for sub in ['sheets', 'gizmos', 'compare']:
         (OUT / sub).mkdir(parents=True)
     names = action_names()
-    font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 18)
-    small = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 12)
+    font = load_font(18)
+    small = load_font(12)
     report = json.loads((ROOT / 'region-report.json').read_text())
     actions = []
     for a in range(35):

@@ -124,8 +124,11 @@ def encode_frame(idx, cx, cy):
             x0 = x
             while x < w and row[x] >= 0 and x - x0 < 0xFFF:
                 x += 1
-            dx = (x0 - cx) & 0x3FF
-            dy = (y - cy - h) & 0x3FF
+            dx, dy = x0 - cx, y - cy - h
+            if not (-512 <= dx <= 511 and -512 <= dy <= 511):
+                raise ValueError(f"run offset out of 10-bit range (-512..511): dx={dx}, dy={dy} at row {y}")
+            dx &= 0x3FF
+            dy &= 0x3FF
             out += struct.pack("<I", (dx << 22) | (dy << 12) | (x - x0))
             out += bytes(row[x0:x].astype(np.uint8))
     out += struct.pack("<I", END)
@@ -331,6 +334,10 @@ def main(argv):
     if len(argv) < 3 or argv[1] not in ("info", "extract", "pack", "verify"):
         print(__doc__); return 2
     cmd = argv[1]
+    if cmd in ("extract", "pack", "verify") and len(argv) < 4:
+        names = {"extract": "<file.vd> <out_dir> [--raw]", "pack": "<folder> <out.vd>", "verify": "<a.vd> <b.vd>"}
+        print(f"usage: vdtool.py {cmd} {names[cmd]}")
+        return 2
     if cmd == "info":
         cmd_info(argv[2])
     elif cmd == "extract":

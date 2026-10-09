@@ -126,14 +126,25 @@ class Handler(SimpleHTTPRequestHandler):
         if not (path/'job.json').exists(): raise ValueError('Job not found.')
         return path
 
+def recover_interrupted_jobs(jobs):
+    """Mark jobs left queued/building as failed. Returns [(status file, error)] for unreadable status files, which are skipped."""
+    skipped=[]
+    for file in Path(jobs).glob('*/status.json'):
+        try:
+            status=json.loads(file.read_text(encoding='utf-8'))
+            interrupted=status['state'] in ('queued','building')
+        except (OSError,ValueError,KeyError,TypeError) as e:
+            skipped.append((file,e)); continue
+        if interrupted:
+            status.update(state='failed',error='Studio stopped during build. Load the settings and build again.')
+            pipeline.write_json(file,status)
+    return skipped
+
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('--port',type=int,default=8772)
     args=p.parse_args(); (pipeline.HOME/'jobs').mkdir(parents=True,exist_ok=True)
     # Jobs interrupted by a server shutdown are never presented as still rendering.
-    for file in (pipeline.HOME/'jobs').glob('*/status.json'):
-        status=json.loads(file.read_text(encoding='utf-8'))
-        if status['state'] in ('queued','building'):
-            status.update(state='failed',error='Studio stopped during build. Load the settings and build again.')
-            pipeline.write_json(file,status)
+    for file,error in recover_interrupted_jobs(pipeline.HOME/'jobs'):
+        print(f'Skipped job {file.parent.name}: unreadable status.json ({error})',flush=True)
     print(f'SpriteMotion content studio: http://127.0.0.1:{args.port}',flush=True)
     ThreadingHTTPServer(('127.0.0.1',args.port),Handler).serve_forever()

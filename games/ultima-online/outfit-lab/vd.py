@@ -39,8 +39,10 @@ def read_vd(path):
                 hdr^=(0x200<<22)|(0x200<<12)
                 x=xb+((hdr>>22)&0x3ff); y=yb+((hdr>>12)&0x3ff); n=hdr&0xfff
                 idx=d[p:p+n]; p+=n
-                for k,ci in enumerate(idx):
-                    img[y,x+k,:3]=pal[ci]; img[y,x+k,3]=255
+                if 0<=y<h:                       # clip runs outside the declared size
+                    x0,x1=max(x,0),min(x+n,w)
+                    for k in range(x0-x,x1-x):
+                        img[y,x+k,:3]=pal[idx[k]]; img[y,x+k,3]=255
             frames.append(dict(cx=cx,cy=cy,w=w,h=h,img=img))
         anims[(a,dr)]=frames
     return at,nact,anims
