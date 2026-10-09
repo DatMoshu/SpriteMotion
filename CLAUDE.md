@@ -26,7 +26,7 @@ license and provenance hashes. This exception does not cover game-derived or com
   Extend a schema (and `docs/`) before emitting a new field.
 - `games/<game>/`: adapter, profiles, annotations, equipment slots (`equipment/layers.json`), outfit lab.
 - `tools/<job>/` with an entry point (`run.py`) per job; one subfolder per third-party program. No loose scripts.
-- `launchers/` groups `.bat` files by job; every launcher calls `launchers/_shared/common.bat` first. CRLF.
+- `launchers/` groups `.bat` files by job (`editor`, `pipeline`, `dev`; no `game` group, the launcher is `editor/sprite-pose-editor`); every launcher has a one-sentence `rem` line after `@echo off`, calls `launchers/_shared/common.bat` first, never reads stdin, and has a `.sh` twin (LF, executable, sources `_shared/common.sh`). `launchers/README.md` lists them all. `tests/integration/test_repository.py` checks the rule.
 
 ## Checks before you finish
 

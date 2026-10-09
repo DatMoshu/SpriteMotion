@@ -70,7 +70,7 @@ def test_no_game_assets_or_local_paths_are_published():
         if rel.startswith("games/") and path.suffix.lower() in {".png", ".bmp", ".gif"}:
             pytest.fail(f"image under games/ (game art must never be committed): {rel}")
         if path.suffix.lower() in {".py", ".gd", ".json", ".md", ".bat", ".toml", ".cfg", ".godot", ".tscn",
-                                  ".html", ".js", ".mjs", ".css", ".yaml", ".yml", ".txt"} \
+                                  ".html", ".js", ".mjs", ".css", ".yaml", ".yml", ".txt", ".sh"} \
                 and path.exists() and path.stat().st_size < 2_000_000:
             text = path.read_text(encoding="utf-8", errors="replace")
             match = ABSOLUTE_PATH.search(text)
@@ -90,3 +90,87 @@ def test_uo_extraction_matches_every_bundled_pose(tmp_path):
 def test_agent_routers_match_claude_sources():
     result = subprocess.run([sys.executable, str(REPO / "tools" / "agents" / "run.py"), "--check"], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr or result.stdout
+
+
+# ---- launchers: the DirectorDeck Run panel lists every .bat (rem line), and each has a .sh twin ----------------------
+
+LAUNCHER_DIR = REPO / "launchers"
+# PR #4 deletes these two; until then they are left as they were.
+LAUNCHER_EXEMPT = {"editor/mario-lab", "editor/spartan-lab"}
+COMMON_BAT = 'call "%~dp0..\\_shared\\common.bat" || exit /b 1'
+
+
+def launcher_names() -> list[str]:
+    names = sorted(p.relative_to(LAUNCHER_DIR).with_suffix("").as_posix() for p in LAUNCHER_DIR.glob("*/*.bat")
+                   if p.parent.name != "_shared")
+    return [n for n in names if n not in LAUNCHER_EXEMPT]
+
+
+def bat_lines(name: str) -> list[str]:
+    data = (LAUNCHER_DIR / f"{name}.bat").read_bytes()
+    assert b"\n" not in data.replace(b"\r\n", b""), f"{name}.bat must use CRLF line endings only"
+    return data.decode("utf-8").split("\r\n")
+
+
+def bat_header(name: str) -> tuple[str, list[str]]:
+    """The one-sentence rem line and the lines after it (after an optional `rem args:` line)."""
+    lines = bat_lines(name)
+    assert lines[0].lower() == "@echo off", f"{name}.bat: the first line must be @echo off"
+    rest = [line for line in lines[1:] if line.strip()]
+    assert rest[0].startswith("rem ") and not rest[0].startswith("rem args:"), \
+        f"{name}.bat: the first line after @echo off must be a one-sentence rem saying what it does"
+    assert rest[0].endswith("."), f"{name}.bat: the rem line is one sentence ending in a full stop"
+    after = rest[1:]
+    if after and after[0].startswith("rem args:"):
+        after = after[1:]
+    return rest[0][4:], after
+
+
+def test_launchers_follow_the_run_panel_rule():
+    names = launcher_names()
+    assert len(names) >= 30
+    for name in names:
+        desc, after = bat_header(name)
+        assert len(desc) <= 240, f"{name}.bat: shorten the rem line"
+        assert after[0] == COMMON_BAT, f"{name}.bat: call _shared\\common.bat right after the rem lines"
+        text = "\r\n".join(bat_lines(name))
+        assert not re.search(r"^\s*pause\b", text, re.IGNORECASE | re.MULTILINE), f"{name}.bat reads stdin (pause)"
+        assert not re.search(r"set\s+/p", text, re.IGNORECASE), f"{name}.bat reads stdin (set /p)"
+        assert not re.search(r"\bchoice\b", text, re.IGNORECASE), f"{name}.bat reads stdin (choice)"
+
+
+def test_every_launcher_has_a_shell_twin():
+    names = launcher_names()
+    sh_names = sorted(p.relative_to(LAUNCHER_DIR).with_suffix("").as_posix() for p in LAUNCHER_DIR.glob("*/*.sh")
+                      if p.parent.name != "_shared")
+    assert [n for n in sh_names if n not in LAUNCHER_EXEMPT] == names, "each launcher .bat needs a .sh with the same name"
+    modes = {}
+    listing = subprocess.run(["git", "ls-files", "-s", "--", "launchers"], cwd=REPO, capture_output=True, text=True).stdout
+    for line in listing.splitlines():
+        meta, path = line.split("\t")
+        modes[path] = meta.split()[0]
+    for name in names:
+        data = (LAUNCHER_DIR / f"{name}.sh").read_bytes()
+        assert b"\r" not in data, f"{name}.sh must use LF line endings"
+        lines = data.decode("utf-8").split("\n")
+        assert lines[0] == "#!/usr/bin/env bash", name
+        assert lines[1] == "# " + bat_header(name)[0].replace("\\", "/"), f"{name}.sh: description must match the .bat rem line"
+        assert "set -euo pipefail" in lines, name
+        assert any(line.endswith('/../_shared/common.sh"') for line in lines), f"{name}.sh: source _shared/common.sh"
+        if modes:  # an export without git metadata cannot say
+            assert modes.get(f"launchers/{name}.sh") in (None, "100755"), f"{name}.sh needs the executable bit in git"
+    for shared in ("common.sh", "config.sh"):
+        assert b"\r" not in (LAUNCHER_DIR / "_shared" / shared).read_bytes(), shared
+
+
+def test_gitattributes_keep_bat_crlf_and_sh_lf():
+    attributes = (REPO / ".gitattributes").read_text(encoding="utf-8").splitlines()
+    assert "*.bat text eol=crlf" in attributes
+    assert "*.sh text eol=lf" in attributes
+
+
+def test_launcher_readme_lists_every_launcher_with_its_description():
+    readme = (LAUNCHER_DIR / "README.md").read_text(encoding="utf-8")
+    for name in launcher_names():
+        assert f"`{name}`" in readme, f"launchers/README.md does not list {name}"
+        assert bat_header(name)[0] in readme, f"launchers/README.md has a stale description for {name}"

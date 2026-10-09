@@ -1,6 +1,5 @@
-@rem Create .venvs\spritemotion, install SpriteMotion (editable) with its test extras,
-@rem and download the tested Godot build into tools\godot (skipped if SPRITEMOTION_GODOT is set).
 @echo off
+rem Create .venvs\spritemotion, install SpriteMotion (editable, with test extras) and fetch the tested Godot build into tools\godot unless SPRITEMOTION_GODOT is set.
 call "%~dp0..\_shared\common.bat" || exit /b 1
 if not exist "%SPRITEMOTION_PYTHON%" (
     py -3 -m venv "%SM_ROOT%\.venvs\spritemotion" 2>nul || python -m venv "%SM_ROOT%\.venvs\spritemotion" || exit /b 1

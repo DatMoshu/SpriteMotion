@@ -1,6 +1,6 @@
-@rem THE launcher: open the Sprite Pose Editor on a dataset.
-@rem Usage: sprite-pose-editor.bat [dataset folder]   (default: SPRITEMOTION_DATASET)
 @echo off
+rem THE launcher: open the Sprite Pose Editor (a Godot window that opens and returns) on a dataset.
+rem args: [dataset folder]  (default: SPRITEMOTION_DATASET)
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\require.bat" SPRITEMOTION_GODOT "the Godot 4.7 executable (see tools\godot\README.md)" || exit /b 1
 set "DATASET=%~1"

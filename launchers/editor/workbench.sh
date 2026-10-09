@@ -1,7 +1,7 @@
-#!/usr/bin/env sh
-set -eu
-SM_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
-SM_PYTHON=${SPRITEMOTION_PYTHON:-"$SM_ROOT/.venvs/spritemotion/bin/python"}
-if [ ! -x "$SM_PYTHON" ]; then SM_PYTHON=${SPRITEMOTION_PYTHON:-python3}; fi
-cd "$SM_ROOT"
-exec "$SM_PYTHON" tools/workbench/run.py "$@"
+#!/usr/bin/env bash
+# Start Content Studio and Fit Lab together for a pack, open both in your browser, and keep them running here until Ctrl+C.
+# args: [pack]  (default: SPRITEMOTION_FIT_PACK, else the bundled cc0-starter)
+set -euo pipefail
+. "$(dirname "${BASH_SOURCE[0]}")/../_shared/common.sh"
+sm_need_python
+exec "$SPRITEMOTION_PYTHON" tools/workbench/run.py "$@"

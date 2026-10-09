@@ -1,6 +1,6 @@
-@rem Extract a character from YOUR UO client into workspace\ and apply the bundled annotations.
-@rem Usage: 1-extract-uo.bat [character, default body-400]
 @echo off
+rem Extract a character from YOUR UO client into workspace\ and apply the bundled annotations, then print its status.
+rem args: [character]  (default: body-400)
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\need-python.bat" || exit /b 1
 call "%~dp0..\_shared\require.bat" SPRITEMOTION_UO_SOURCE "your UO client folder (with anim.mul / anim.idx)" || exit /b 1

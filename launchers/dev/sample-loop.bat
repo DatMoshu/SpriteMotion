@@ -1,6 +1,5 @@
-@rem The whole loop on the procedural sample: build .blend, export rig, fit, key, render, compare.
-@rem Output in workspace\sample\.
 @echo off
+rem Run the whole loop on the procedural sample (build .blend, export rig, fit, key, render, compare) into workspace\sample, then open the wave sheet.
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\need-python.bat" || exit /b 1
 call "%~dp0..\_shared\require.bat" SPRITEMOTION_BLENDER "the Blender executable" || exit /b 1

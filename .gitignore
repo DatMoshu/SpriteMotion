@@ -36,3 +36,4 @@ __pycache__/
 # Test output
 /tests/output/
 /tools/blender-runtime/
+launchers/_shared/config.local.sh
