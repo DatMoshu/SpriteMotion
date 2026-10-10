@@ -25,7 +25,9 @@ export class FitPersistence {
     this.cache();
     if (!this.conflict && !same(this.value, this.disk)) this.schedule();
   }
-  message(text) { this.status.textContent = text + (this.localOK ? '' : ' · Browser recovery unavailable'); }
+  message(text, kind = this.conflict ? 'bad' : same(this.value, this.disk) ? 'ok' : 'busy') {
+    this.status.textContent = text + (this.localOK ? '' : ' · Browser recovery unavailable'); this.status.dataset.kind = kind;
+  }
   cache() {
     try { localStorage.setItem(this.key, JSON.stringify({ revision: this.revision, value: this.value, history: this.history.serialize() })); }
     catch { this.localOK = false; }
@@ -92,7 +94,7 @@ export class FitPersistence {
       this.revision = result.revision; this.disk = sent; this.renderBackups(result.backups); this.cache();
       this.message('Saved to disk · ' + new Date().toLocaleTimeString());
     } catch (error) {
-      failed = true; this.message(`${error.message} · Edits retained in this tab`);
+      failed = true; this.message(`${error.message} · Edits retained in this tab`, 'bad');
     } finally {
       this.saving = false;
       if (!this.conflict && !same(this.value, this.disk)) {
@@ -109,7 +111,7 @@ export class FitPersistence {
       this.conflict = false; document.getElementById('recovery').hidden = true; this.renderBackups(latest.backups);
       if (!keepLocal) { this.commit(this.disk, 'Use disk version'); this.onRestore(clone(this.value)); }
       this.cache(); this.schedule();
-    } catch (error) { this.message(error.message); }
+    } catch (error) { this.message(error.message, 'bad'); }
   }
   async restoreBackup() {
     if (this.suspended) return;
@@ -118,6 +120,6 @@ export class FitPersistence {
       const response = await fetch('api/backups/' + encodeURIComponent(id));
       if (!response.ok) throw new Error('Backup is no longer available. Save or reload to refresh the list.');
       const value = await response.json(); this.commit(value, 'Restore backup'); this.onRestore(clone(value));
-    } catch (error) { this.message(error.message); }
+    } catch (error) { this.message(error.message, 'bad'); }
   }
 }

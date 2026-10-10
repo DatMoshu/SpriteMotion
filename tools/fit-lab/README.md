@@ -106,7 +106,11 @@ existing manifest item format; `file` paths point into the cache. Limits: 100 GL
 - **Top:** pack, save status, undo/redo, save.
 - **Left:** slot and its items. Tick items to show them in 3D; click one (or its preview card) to select it.
 - **Centre:** the live 3D body through the UO camera (drag to orbit, **UO camera** resets) beside the Blender render
-  pane; below them action, direction ring 0–7 (dashed 5–7 are mirrored like the client), play and frame. Below it, scroll across enlarged 136×120 previews of every item in the
+  pane. **1 view / 2×2** (remembered per browser) switches the 3D pane to four views: the orbit view plus fixed
+  front, side and back views that turn with the character. Below them: action, the facing ring, play and frame.
+  Each ring number sits where the character faces on screen (0 faces the viewer, then 45° clockwise per step:
+  1 down-left, 2 left, 3 up-left, 4 away, 5 up-right, 6 right, 7 down-right); the needle and label show the current
+  facing, arrow keys turn one step, and dashed 5–7 are mirrored from 3–1 like the client. Below it, scroll across enlarged 136×120 previews of every item in the
   slot, with independent animation and direction cycling. Magenta marks body pixels poking through.
 - **Right**, in tabs (Fit, Corrections, Render, Measure, History):
   - Slot fit: offset, rotation, scale, skinned or rigid binding, plus an offset for one item only.

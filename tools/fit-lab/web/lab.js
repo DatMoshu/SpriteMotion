@@ -87,6 +87,48 @@ function resize() {
 }
 addEventListener('resize', resize);
 
+// ---------- directions and view layout ----------
+// Screen facing of each UO direction under the UO camera: 0 faces the viewer, then 45° clockwise per step.
+const FACING = ['down', 'down-left', 'left', 'up-left', 'up (away)', 'up-right', 'right', 'down-right'];
+const facingAngle = d => (180 + 45 * d) % 360;      // clockwise from screen-up
+// 2×2 layout: the orbit view plus fixed front, side and back views that turn with the character.
+const fixedViews = [['Front', 0], ['Side', 90], ['Back', 180]].map(([name, turn]) => ({ name, turn, cam: new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100) }));
+let layout = 'single';
+const QUAD_ZOOM = 1.45;
+function setupLayout() {
+  try { layout = localStorage.getItem('fit-lab:view-layout') === 'quad' ? 'quad' : 'single'; } catch {}
+  for (const b of $('viewModes').children) b.onclick = () => {
+    layout = b.dataset.layout; try { localStorage.setItem('fit-lab:view-layout', layout); } catch {}
+    syncLayout();
+  };
+  syncLayout();
+}
+function syncLayout() {
+  for (const b of $('viewModes').children) b.setAttribute('aria-pressed', b.dataset.layout === layout);
+  $('view').classList.toggle('quad', layout === 'quad');
+}
+function drawView() {
+  if (layout !== 'quad') { renderer.render(scene, view); return; }
+  const r = $('view').getBoundingClientRect(), w = r.width / 2, h = r.height / 2;
+  const centre = new THREE.Vector3(0, 0.9, 0), toCamera = uoCam.position.clone().sub(centre).setY(0).normalize();
+  const hh = 1.05, hw = hh * w / h;                 // fixed views frame a standing body (about 1.9 m) with a little room
+  // With a mirrored direction the whole canvas is flipped by CSS, so swap columns to keep each view in its labelled corner.
+  const flip = state.dir > 4, panes = [[view, 0, 0], ...fixedViews.map((v, i) => [v.cam, (i + 1) % 2, (i + 1) >> 1])];
+  fixedViews.forEach(v => {
+    const dir = toCamera.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), charRoot.rotation.y + v.turn * Math.PI / 180);
+    v.cam.position.copy(centre).addScaledVector(dir, 10); v.cam.lookAt(centre);
+    Object.assign(v.cam, { left: -hw, right: hw, top: hh, bottom: -hh }); v.cam.updateProjectionMatrix();
+  });
+  const zoom = view.zoom; view.zoom = zoom * QUAD_ZOOM; view.updateProjectionMatrix();   // a quarter pane needs a closer orbit view
+  renderer.setScissorTest(true);
+  for (const [cam, col, row] of panes) {
+    const x = (flip ? 1 - col : col) * w, y = (1 - row) * h;
+    renderer.setViewport(x, y, w, h); renderer.setScissor(x, y, w, h); renderer.render(scene, cam);
+  }
+  renderer.setScissorTest(false); renderer.setViewport(0, 0, r.width, r.height);
+  view.zoom = zoom; view.updateProjectionMatrix();
+}
+
 // ---------- loading ----------
 async function getJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }
 
@@ -442,7 +484,7 @@ function scopeChanged() {
 async function selectSlot(slot) {
   const request = ++slotRequest;
   const list = state.manifest.items.filter(i => i.slot === slot);
-  $('slotInfo').textContent = `${list.length} items · part ${list[0]?.part}`;
+  $('slotInfo').textContent = `${list.length} ${list.length === 1 ? 'item' : 'items'} · part ${list[0]?.part}`;
   await Promise.all(list.map(loadItem));
   if (request !== slotRequest) return;
   state.slot = slot;
@@ -534,7 +576,9 @@ function frameUI() {
   const act = state.manifest.actions[state.action];
   $('frame').max = act.frames - 1; state.frame = Math.min(state.frame, act.frames - 1); $('frame').value = state.frame;
   $('frameLabel').textContent = `${state.frame + 1}/${act.frames}`;
-  [...$('dirs').children].forEach((b, d) => b.classList.toggle('on', d === state.dir));
+  [...$('dirs').children].forEach((b, d) => { b.classList.toggle('on', d === state.dir); b.setAttribute('aria-pressed', d === state.dir); });
+  $('dirs').style.setProperty('--facing', facingAngle(state.dir) + 'deg');
+  $('dirLabel').textContent = `Faces ${FACING[state.dir]}${state.dir > 4 ? ` · mirror of ${8 - state.dir}` : ''}`;
   renderer.domElement.style.transform = state.dir > 4 ? 'scaleX(-1)' : '';
   setPose(state.action, state.frame, state.dir); drawSheet();
   buildScopedPanel(); renderPanel?.sync();
@@ -679,10 +723,17 @@ async function main() {
   $('slot').innerHTML = slots.map(s => `<option>${s}</option>`).join(''); $('slot').onchange = e => selectSlot(e.target.value);
   $('action').innerHTML = state.manifest.actions.map((a, i) => `<option value="${i}">${a.id} ${a.name.replace(/^\d+_/, '')}</option>`).join('');
   $('action').onchange = e => { state.action = +e.target.value; preview.frame = 0; frameUI(); };
-  $('dirs').innerHTML = [...Array(8).keys()].map(d => `<button style="--a:${d * 45}deg" class="${d > 4 ? 'mirror' : ''}" title="Direction ${d}${d > 4 ? `: the client mirrors direction ${8 - d}` : ''}">${d}</button>`).join('');
+  // Each button sits where the character faces on screen, so the ring reads like the client's compass.
+  $('dirs').innerHTML = [...Array(8).keys()].map(d => { const label = `Direction ${d}: faces ${FACING[d]}${d > 4 ? `, mirrored from ${8 - d} like the client` : ''}`;
+    return `<button style="--a:${facingAngle(d)}deg" class="${d > 4 ? 'mirror' : ''}" title="${label}" aria-label="${label}" aria-pressed="false">${d}</button>`; }).join('');
   [...$('dirs').children].forEach((b, d) => b.onclick = () => {
     state.dir = preview.dir = d; preview.cycling = false; $('previewCycle').checked = false; frameUI();
   });
+  $('dirs').onkeydown = e => {                     // arrow keys turn the character a step (right/down = clockwise)
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!step) return;
+    e.preventDefault(); const next = $('dirs').children[(state.dir + step + 8) % 8]; next.click(); next.focus();
+  };
+  setupLayout();
   $('frame').setAttribute('aria-label', 'Main frame');
   $('frame').oninput = e => { state.frame = preview.frame = +e.target.value; frameUI(); };
   $('play').onclick = () => { state.playing = !state.playing; $('play').textContent = state.playing ? 'Pause' : 'Play'; $('play').setAttribute('aria-label', $('play').textContent); };
@@ -737,7 +788,7 @@ async function main() {
     if (preview.cycling && t - preview.lastDir >= 2000) { preview.lastDir = t; preview.dir = (preview.dir + 1) % 8; preview.dirty = true; }
     if (state.playing && t - last > 125) { last = t; state.frame = (state.frame + 1) % state.manifest.actions[state.action].frames; $('frame').value = state.frame; $('frameLabel').textContent = `${state.frame + 1}/${state.manifest.actions[state.action].frames}`; setPose(state.action, state.frame, state.dir); renderPanel.sync(); }
     if (preview.dirty) renderSheet();
-    renderer.render(scene, view);
+    drawView();
   });
 }
 main().catch(e => { $('status').textContent = 'Error: ' + e.message; console.error(e); });
