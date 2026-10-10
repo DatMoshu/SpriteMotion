@@ -67,6 +67,7 @@ Content tools (Content Studio, Fit Lab, the workbench) are described in [editor/
 | `dev/run-tests` | Run the Python test suite (Blender tests run when Blender is found, the UO test when SPRITEMOTION_UO_SOURCE is set). | `[pytest arguments]  e.g. -k sample` |
 | `dev/sample-loop` | Run the whole loop on the procedural sample (build .blend, export rig, fit, key, render, compare) into workspace\sample, then open the wave sheet. |  |
 | `dev/transfer-fixture` | Regenerate the synthetic transfer-artifact fixture in tests\fixtures\transfer (deterministic, no game data). | `[--out dir]  (default: tests/fixtures/transfer)` |
+| `dev/worktree-venv` | Build workspace\venv for this checkout (a git worktree too), install it editable with the test extras, and fail unless spritemotion imports from this checkout. | `[--rebuild]  (default: reuse the venv and refresh the editable install)` |
 
 ## Not launchers
 

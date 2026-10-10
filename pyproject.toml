@@ -13,7 +13,8 @@ dependencies = []
 
 [project.optional-dependencies]
 imaging = ["numpy>=1.24", "Pillow>=10"]
-test = ["pytest>=7", "jsonschema>=4", "numpy>=1.24", "Pillow>=10"]
+# scipy 1.13 is the first release built for numpy 2; older ones crash on import with a current numpy.
+test = ["pytest>=7", "jsonschema>=4", "numpy>=1.24", "Pillow>=10", "scipy>=1.13"]
 
 [project.scripts]
 spritemotion = "spritemotion.pipeline.cli:main"
@@ -38,3 +39,5 @@ packages = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Test order stays fixed: pytest-randomly (if a venv has it) reshuffles shared fixtures and workspace files.
+addopts = "-p no:randomly"

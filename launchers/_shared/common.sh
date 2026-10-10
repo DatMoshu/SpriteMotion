@@ -25,6 +25,12 @@ sm_find_venv_python() {
 }
 SM_VENV_PYTHON=$(sm_find_venv_python || true)
 if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
+    # workspace/venv (launchers/dev/worktree-venv) tests THIS checkout; .venvs/spritemotion is main's editable install.
+    for _c in "$SM_ROOT/workspace/venv/bin/python" "$SM_ROOT/workspace/venv/Scripts/python.exe"; do
+        if [ -x "$_c" ]; then SPRITEMOTION_PYTHON=$_c; break; fi
+    done
+fi
+if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
     if [ -n "$SM_VENV_PYTHON" ]; then SPRITEMOTION_PYTHON=$SM_VENV_PYTHON
     else SPRITEMOTION_PYTHON=$(command -v python3 || command -v python || true); fi
 fi
