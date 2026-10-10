@@ -207,3 +207,14 @@ def test_code_has_no_hardcoded_windows_font_or_blender_paths():
             if HARDCODED_TOOL_PATH.search(line):
                 offenders.append(f"{rel}:{number}: {line.strip()[:100]}")
     assert offenders == []
+
+
+def test_every_test_that_starts_blender_is_marked_requires_blender():
+    """A machine without Blender must skip those tests with a reason, not fail them (see the CI note in ci.yml)."""
+    for path in sorted((REPO / "tests").rglob("test_*.py")):
+        text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+        if path.name == Path(__file__).name or "--factory-startup" not in text:
+            continue
+        tests = len(re.findall(r"^def test_", text, re.MULTILINE))
+        marked = len(re.findall(r"^@requires_blender\ndef test_", text, re.MULTILINE))
+        assert tests == marked, f"{path.name}: {tests - marked} test(s) start Blender without @requires_blender"

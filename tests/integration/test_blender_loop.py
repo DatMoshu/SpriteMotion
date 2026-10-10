@@ -10,23 +10,13 @@ from pathlib import Path
 
 import pytest
 
-from spritemotion.blender import find_blender
 from spritemotion.jsonio import read_json
 from spritemotion.pipeline.cli import main as cli
 
-from conftest import REPO, SAMPLE
+from conftest import REPO, SAMPLE, blender_exe, requires_blender
 
 
-def locate_blender() -> str | None:
-    try:
-        exe = find_blender()
-    except RuntimeError:
-        return None
-    return exe if Path(exe).exists() else None
-
-
-BLENDER = locate_blender()
-pytestmark = pytest.mark.skipif(BLENDER is None, reason="Blender not found (set SPRITEMOTION_BLENDER)")
+BLENDER = blender_exe()
 
 
 def blender(*args, blend: Path | None = None) -> str:
@@ -36,11 +26,13 @@ def blender(*args, blend: Path | None = None) -> str:
     return done.stdout
 
 
+@requires_blender
 def test_blender_smoke(tmp_path):
     out = blender(REPO / "tools" / "blender" / "tests" / "smoke_test.py", "--", "--out", tmp_path)
     assert "6/6 Blender checks passed" in out, out[-2000:]
 
 
+@requires_blender
 def test_sample_loop(tmp_path):
     mapping = SAMPLE / "rig" / "sample-mapping.json"
     blend, rig, fit = tmp_path / "sample.blend", tmp_path / "rig.json", tmp_path / "fit.json"
@@ -63,6 +55,7 @@ def test_sample_loop(tmp_path):
     assert min(summary["by_direction"].values()) > 0.85
 
 
+@requires_blender
 def test_rekeying_keeps_earlier_passes(tmp_path):
     """A second pass saved over the same scene keeps the first as a file version and as an action."""
     from spritemotion.pipeline import versions
