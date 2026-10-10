@@ -36,6 +36,8 @@ def test_bundled_sources_are_self_contained_and_mappings_validate():
     jsonschema.validate(mapping,schemas.load_file('asset-pack.schema.json'))
     for path in ASSETS.glob('*.glb'):
         raw=path.read_bytes()
+        if raw.startswith(b'version https://git-lfs'):
+            pytest.skip('example GLBs are git-lfs pointers; run `git lfs pull` to fetch them')
         magic,version,size=struct.unpack_from('<III',raw)
         assert (magic,version,size)==(0x46546c67,2,len(raw))
         length=struct.unpack_from('<I',raw,12)[0]
