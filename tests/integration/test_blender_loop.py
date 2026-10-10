@@ -75,3 +75,15 @@ def test_rekeying_keeps_earlier_passes(tmp_path):
                       "print('ACTIONS', sorted(a.name for a in bpy.data.actions if a.name.startswith('fit_')))\n")
     out = blender(lister, blend=blend)
     assert "ACTIONS ['fit_wave', 'fit_wave.v001']" in out
+
+
+CHECK_SCRIPTS = sorted(Path(__file__).parent.glob("blender_*_check.py"))
+
+
+@pytest.mark.parametrize("script", CHECK_SCRIPTS, ids=lambda path: path.stem)
+@requires_blender
+def test_blender_check_script(script):
+    """Every tests/integration/blender_*_check.py is a Blender script that exits non-zero when an assert fails."""
+    done = subprocess.run([BLENDER, "--background", "--factory-startup", "--python-exit-code", "1",
+                           "--python", str(script)], capture_output=True, text=True, timeout=600)
+    assert done.returncode == 0, done.stdout[-3000:] + done.stderr[-3000:]
