@@ -137,6 +137,42 @@ body and ignores Hide body, and **none** counts nothing because the renderer cut
 before this rule, so compare runs; don't read them as absolutes. Baselines live only in the open page (Measure
 "first" resets on reload), so counts from before this rule are never mixed with new ones.
 
+### Whole outfit while fitting one slot
+
+The rules live in `web/outfit.mjs` (pure logic, tested from pytest with Node in `tests/unit/test_fit_lab_outfit.py`)
+and are wired into `lab.js`.
+
+By default the 3D view shows only the slot being edited. **Keep visible** (a checkbox beside the Slot selector)
+adds that slot to the *outfit*: its worn item stays rendered in the 3D view when another slot is selected.
+The worn item is the slot's selected item; selecting another item in a kept slot changes what it wears.
+**Show outfit** (top of the left column) turns every kept slot on or off at once without forgetting them,
+so solo and whole-outfit views are one click apart. **Wear set** lists the pack's families (for Sidekick,
+one character's modular parts) and keeps, in every slot that has that family, the family's item; slots without
+it are left as they were. **Clear outfit** forgets every kept slot.
+
+Rules:
+
+- The edited slot always behaves exactly as today: its ticked items render, the selected item is the one the
+  sliders, corrections, Render tab and **Measure slot** act on. A kept slot that is also the edited slot adds
+  nothing extra.
+- Kept items render with their saved fit (`resolveFit`, current action and direction), are not selectable from
+  the 3D view, and do not appear in the item list, preview cards, A/B or builds.
+- **Body hiding and poke measurement apply only to the edited slot** (the body hides faces under the edited
+  slot's ticked items only, so kept items may show poke-through in the 3D view). **Measure outfit** (Measure tab,
+  off by default) changes that: the 3D body hides faces under every shown item, and **Measure slot** counts each
+  edited-slot item against the body with all kept items' hidden faces removed and adds one row per kept item
+  (kept rows have no baseline until measured once with the option on). Turning it off drops the kept rows.
+- Slot preview cards stay per item (solo renders). Outfit compositing in previews is out of scope for now.
+- None of this is a fit edit: no history step, no autosave, no change to `lab-adjustments.json`, no effect on
+  builds or renders. Keyboard undo/redo never changes the outfit.
+
+The outfit is remembered per browser, per server origin and pack, in `localStorage` key
+`fit-lab:outfit:<origin>:<pack>` as the document in `common/schemas/fit-lab-view.schema.json`:
+`{"schema": "spritemotion.fit-lab-view", "schema_version": 1, "show": true, "measure_outfit": false,
+"worn": {"<slot>": "<item id>"}}`. On load, entries whose slot or item is not in the manifest (removed imports,
+re-exports) are dropped; an unreadable or wrong-version document means an empty outfit. Storage failures
+(private window, blocked storage) leave the outfit working for the session only, like the other view toggles.
+
 ## From the lab to builds
 
 1. The pack's mapping generator merges `lab-adjustments.json` into the part types (`offset`, `rotate`, `scale`,

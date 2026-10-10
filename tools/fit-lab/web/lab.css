@@ -243,3 +243,8 @@ td:first-child, th:first-child { text-align: left; max-width: 140px; overflow: h
   #saveStatus { margin-right: 0; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+
+/* Whole outfit: kept slots stay visible while another slot is edited (view state only). */
+#outfit { padding-bottom: 6px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+#outfit .row { align-items: center; margin: 8px 0; }
+#outfit .field.inline select { max-width: 150px; }
