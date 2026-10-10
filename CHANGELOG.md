@@ -18,7 +18,12 @@
 ### Fit Lab
 - The poke metric models the 1 cm holdout margin, the push-out upper bound and the occlusion modes; push-out is decided
   from the mapping part's `studio_part`, as the renderer does (#21, SM-16a).
-- Portability fixes for issues #5-#12: Blender discovery, fonts and paths no longer assume one machine (#18).
+- DirectorDeck restyle, a facing ring that matches the screen, and a 2x2 3D view (#19).
+- Robustness fixes for issues #5-#11 (#18): VD offsets are bounded in `vdtool`/`uo_vd_writer`, outfit-lab `vd.py` clips
+  runs, `vdtool` prints usage on bad arguments, `jsonio` writes are atomic, `restore()` compares sha256, annotation
+  errors are narrowed and warn, and the studio skips an unreadable job status.
+- Issue #12 (portability) is partly done in #18: the `region_fonts` font fallback and `find_blender` discovery. The
+  rest is still open (SM-12).
 
 ### Canonical body
 - Vendors Levy's UO_Model3D at upstream e9544f6 (was 3eaae69): 54-bone symmetric rig (no twist, toe, skirt or cloak
