@@ -51,5 +51,8 @@ jobs:
       - name: Outfit lab tests
         working-directory: games/ultima-online/outfit-lab
         run: python -m unittest -q
+      # Blender matrix: neither job installs Blender and SPRITEMOTION_BLENDER is unset, so the tests marked
+      # `requires_blender` (tests/integration/test_blender_loop.py) report as skipped here. They run on a
+      # machine with Blender 4.2 or newer: local gates, or a runner that sets SPRITEMOTION_BLENDER.
       # Hosted runners do not prove proprietary-model renders or in-game fit.
       # Those require local acceptance evidence in the PR.

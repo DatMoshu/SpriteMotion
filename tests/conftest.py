@@ -19,6 +19,20 @@ if importlib.util.find_spec("spritemotion") is None:  # running without `pip ins
     _spec.loader.exec_module(sys.modules["spritemotion"])
 
 
+def blender_exe() -> str | None:
+    """The Blender executable (SPRITEMOTION_BLENDER first, see spritemotion.blender), or None when there is none."""
+    from spritemotion.blender import find_blender
+    try:
+        exe = find_blender()
+    except RuntimeError:
+        return None
+    return exe if Path(exe).exists() else None
+
+
+# Every test that starts Blender carries this mark; the CI jobs that have no Blender report them as skipped.
+requires_blender = pytest.mark.skipif(blender_exe() is None, reason="Blender not found (set SPRITEMOTION_BLENDER)")
+
+
 def load_module(path: Path, name: str):
     """Import a script that lives outside the package (game adapters, examples, migrations)."""
     spec = importlib.util.spec_from_file_location(name, path)
