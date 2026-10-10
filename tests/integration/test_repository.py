@@ -173,3 +173,19 @@ def test_launcher_readme_lists_every_launcher_with_its_description():
     for name in launcher_names():
         assert f"`{name}`" in readme, f"launchers/README.md does not list {name}"
         assert bat_header(name)[0] in readme, f"launchers/README.md has a stale description for {name}"
+
+
+HARDCODED_TOOL_PATH = re.compile(r"Program Files|Windows[\/]+Fonts|[A-Za-z]:[\/]+Windows|[A-Za-z]:[\/][^'\"\n]*blender", re.IGNORECASE)
+
+
+def test_code_has_no_hardcoded_windows_font_or_blender_paths():
+    """Fonts come from %WINDIR% and Blender from spritemotion.blender.find_blender; docs, launchers and tests may name paths."""
+    offenders = []
+    for path in tracked_files():
+        rel = path.relative_to(REPO).as_posix()
+        if path.suffix not in {".py", ".js", ".mjs"} or rel.startswith(("tests/", "third_party/", "workspace/", "launchers/", "docs/")):
+            continue
+        for number, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+            if HARDCODED_TOOL_PATH.search(line):
+                offenders.append(f"{rel}:{number}: {line.strip()[:100]}")
+    assert offenders == []

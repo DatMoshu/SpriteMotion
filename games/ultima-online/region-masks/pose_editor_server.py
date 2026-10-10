@@ -9,25 +9,12 @@ OUT=ROOT/'workspace/ultima-online/female-locomotion'
 # One guard for every local server; loaded by path so this script runs without an installed `spritemotion`.
 _spec=importlib.util.spec_from_file_location('local_guard',ROOT/'common/local_guard.py')
 local_guard=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(local_guard)
+_spec=importlib.util.spec_from_file_location('blender_helper',ROOT/'common/blender.py')
+blender_helper=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(blender_helper)
 SOURCE=Path(__file__).parent
 EDITABLE={f'{bone}_{side}' for bone in ('upperarm','lowerarm','hand','thigh','calf','foot') for side in ('l','r')}|{'LegPlate_L','LegPlate_R','Hip_L','Hip_R'}
 
-def _version_key(path):
-    return tuple(int(n) for n in re.findall(r'\d+',path.parent.name))
-
-def find_blender(root=None,environ=None):
-    """SPRITEMOTION_BLENDER, then the newest tools/blender-runtime build, then PATH, then Program Files."""
-    root=Path(root) if root else ROOT;environ=os.environ if environ is None else environ
-    exe=environ.get('SPRITEMOTION_BLENDER')
-    if not exe:
-        runtime=sorted((root/'tools/blender-runtime').glob('*/blender.exe'),key=_version_key)
-        exe=str(runtime[-1]) if runtime else None
-    exe=exe or shutil.which('blender')
-    if not exe:
-        found=sorted(Path(environ.get('ProgramFiles','C:/Program Files'),'Blender Foundation').glob('Blender */blender.exe'),key=_version_key)
-        exe=str(found[-1]) if found else None
-    if not exe:raise RuntimeError('Set SPRITEMOTION_BLENDER to blender.exe.')
-    return exe
+find_blender=blender_helper.find_blender
 
 def write_private(path,text):
     fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_TRUNC,0o600)

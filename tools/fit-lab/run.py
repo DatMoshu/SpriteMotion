@@ -9,6 +9,7 @@ SpriteMotion-Sidecar folder); the pack's mapping generator merges them in. Forma
 """
 import argparse
 import http.server
+import importlib.util
 import json
 import os
 import shutil
@@ -25,6 +26,10 @@ from service import describe
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 FIT_RULES = REPO / 'common' / 'web' / 'fit-rules.mjs'
+_spec = importlib.util.spec_from_file_location('blender_helper', REPO / 'common' / 'blender.py')  # by path: runs without an installed package
+_blender = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_blender)
+find_blender = _blender.find_blender
 
 
 def data_dir(pack): return REPO / 'workspace/ultima-online/fit-lab' / pack
@@ -34,12 +39,8 @@ def sidecar(): return Path(os.environ.get('SPRITEMOTION_SIDECAR', REPO.parent / 
 
 
 def blender():
-    exe = os.environ.get('SPRITEMOTION_BLENDER') or shutil.which('blender')
-    if not exe:
-        found = sorted(Path(os.environ.get('ProgramFiles', 'C:/Program Files'), 'Blender Foundation').glob('Blender */blender.exe'))
-        exe = str(found[-1]) if found else None
-    if not exe: raise SystemExit('Set SPRITEMOTION_BLENDER to blender.exe.')
-    return exe
+    try: return find_blender(REPO)
+    except RuntimeError as error: raise SystemExit(str(error))
 
 
 def export(args):

@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,10 @@ import zipfile
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+_spec = importlib.util.spec_from_file_location('blender_helper', ROOT / 'common/blender.py')  # by path: runs without an installed package
+_blender = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_blender)
+_find_blender = _blender.find_blender
 HOME = ROOT / 'workspace/ultima-online/content-studio'
 BACKEND = ROOT / 'workspace/ultima-online/canonical-model'
 PARTS = ['helm', 'chest', 'arms', 'gloves', 'legs', 'boots', 'robe', 'cloak', 'skirt', 'weapon', 'shield', 'bow', 'quiver']
@@ -58,16 +63,10 @@ def setup(source):
     return BACKEND
 
 def blender_path():
-    explicit = os.environ.get('SPRITEMOTION_BLENDER')
-    if explicit:
-        return explicit
-    found = shutil.which('blender')
-    if found:
-        return found
-    choices = sorted(Path(os.environ.get('ProgramFiles', 'C:/Program Files'), 'Blender Foundation').glob('Blender */blender.exe'), reverse=True)
-    if choices:
-        return str(choices[0])
-    raise ValueError('Set SPRITEMOTION_BLENDER to your Blender 4.2+ executable.')
+    try:
+        return _find_blender(ROOT)
+    except RuntimeError as error:
+        raise ValueError(str(error)) from None
 
 def normalize(spec):
     spec = dict(spec)
