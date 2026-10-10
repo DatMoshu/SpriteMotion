@@ -6,6 +6,7 @@ import time
 from threading import Lock, Thread
 
 from adjustments import atomic_write
+import labpaths
 from renders import RenderIndex
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,7 +38,7 @@ class Builds:
         if request['mode'] not in ('build','rebuild') or request['coverage'] not in ('preview','full','action'):
             raise ValueError('Invalid build mode.')
         if type(request['action']) is not int or not 0<=request['action']<=34: raise ValueError('Invalid action.')
-        catalog = json.loads((self.data/'lab-items.json').read_text(encoding='utf-8'))
+        catalog = labpaths.load(self.data/'lab-items.json')
         item = next((i for i in catalog['items'] if i['id']==request['item']),None)
         if item is None: raise ValueError('Builds require a mapped source item; directory imports are preview-only.')
         document = self.store.state()['adjustments']

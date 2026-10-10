@@ -8,6 +8,8 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/uo-content'))
 import pipeline
 import starters
+sys.path.insert(0,str(ROOT/'tools/fit-lab'))
+import labpaths
 
 
 def prepare():
@@ -19,8 +21,8 @@ def prepare():
     for item in starters.catalog():
         if item['kind']=='animated' and item.get('mapping'):
             items.append({'id':item['id'],'slot':item['name'].split(' — ')[0], 'part':item['id'],
-                          'family':'CC0 starter','files':[str(starters.ASSETS/item['asset'])]})
-    document={'pack':'cc0-starter','mapping':str(starters.ASSETS/'outfit-mapping.json'),'items':items}
+                          'family':'CC0 starter','files':[labpaths.relative(starters.ASSETS/item['asset'],'repo')]})
+    document={'pack':'cc0-starter','root':'repo','mapping':labpaths.relative(starters.ASSETS/'outfit-mapping.json','repo'),'items':items}
     (data/'lab-items.json').write_text(json.dumps(document,indent=2))
     return subprocess.call([pipeline.blender_path(),'-b','--factory-startup','--python-exit-code','1',
                             '--python',str(ROOT/'tools/fit-lab/export_blender.py'),'--',str(data/'lab-items.json'),str(data),'--force'])

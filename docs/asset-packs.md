@@ -75,6 +75,25 @@ One entry per part **type** (a helmet type, a left-hand type, and so on):
 
 Tune `offset`, `rotate`, `scale`, `bind` and `hide_body` per slot in the [fit lab](../tools/fit-lab/README.md).
 
+## Fit Lab catalog paths (`lab-items.json`)
+
+`workspace/ultima-online/fit-lab/<pack>/lab-items.json` lists the lab's items. It has no JSON schema (it is a local,
+ignored file written by the pack's own script), so this is its contract:
+
+| Field | Meaning |
+| --- | --- |
+| `pack` | pack name |
+| `root` | `repo` (relative to the repository, the cc0 starter) or `sidecar` (relative to `SPRITEMOTION_SIDECAR`, licensed packs) |
+| `mapping` | the pack's mapping file, a forward-slash path relative to `root`, no `..` |
+| `items[].files` | the item's source files, relative to `root` the same way |
+| `items[].id/slot/part/family/palette` | as before |
+
+Readers never join these by hand: `tools/fit-lab/labpaths.py` (`labpaths.load(path)`) returns the catalog with absolute
+paths for the checkout that reads it, so a lab folder copied to another checkout or worktree builds with that
+checkout's mapping. A catalog without `root` is the older form with absolute paths and still loads: when such a path is
+outside this checkout and the same file exists under this repository or the sidecar, that file is used and one warning
+is logged. A pack's own script writes the new form with `labpaths.relative(path, 'repo' | 'sidecar')`.
+
 ## Adding a pack
 
 1. Dump the pack's skeleton and the bones each part type is weighted to (a Blender script importing the base model and
