@@ -1,11 +1,12 @@
-# Masking cleanup: body holdout, occlusion modes and Hide body
+# Body holdout and Hide body: occlusion modes and cleanup
 
 When an item sprite has holes, a missing chunk or a pale edge where the body "shows through", the cause is the body
 holdout. This guide explains what the holdout does, what the three occlusion modes change, what Hide body (outward and
 inward) changes, and how to tell whether a fault belongs to the body or to the item. The example is the bundled CC0
 `shirt`, deliberately fitted too small so the body is in front of it.
 
-Previous guide: [Fit Lab workflow](fit-lab-workflow.md). Reference: [body occlusion](../body-occlusion.md),
+Previous guide: [Fit Lab workflow](fit-lab-workflow.md). Not this page: the UO slot masking data (region masks,
+equipment layers, armature pass) is in [UO slot masking data](uo-slot-masking.md). Reference: [body occlusion](../body-occlusion.md),
 [Fit Lab README](../../tools/fit-lab/README.md) ("Scoped corrections and masking", "How poke pixels are counted").
 
 Everything below was run on a clean worktree (Windows, Blender 4.2.0, `workspace\venv` from
