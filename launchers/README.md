@@ -68,6 +68,7 @@ Content tools (Content Studio, Fit Lab, the workbench) are described in [editor/
 | `dev/sample-loop` | Run the whole loop on the procedural sample (build .blend, export rig, fit, key, render, compare) into workspace\sample, then open the wave sheet. |  |
 | `dev/transfer-fixture` | Regenerate the synthetic transfer-artifact fixture in tests\fixtures\transfer (deterministic, no game data). | `[--out dir]  (default: tests/fixtures/transfer)` |
 | `dev/worktree-venv` | Build workspace\venv for this checkout (a git worktree too), install it editable with the test extras, and fail unless spritemotion imports from this checkout. | `[--rebuild]  (default: reuse the venv and refresh the editable install)` |
+| `dev/whole-outfit` | Build a whole outfit from a Fit Lab catalogue and composite contact sheets in client layer order (local output, prints a per-slot table). | `build, body or composite ...  (see tools\whole-outfit\run.py --help)` |
 
 ## Not launchers
 

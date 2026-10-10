@@ -14,6 +14,14 @@ def load_pack(path):
     return json.loads(Path(path).read_text(encoding='utf-8-sig'))
 
 
+def source_world(ob):
+    """An imported object's world matrix, rebuilt from its parent chain. The FBX importer can leave `matrix_world`
+    at identity (the Elven Warriors hair, in centimetres) while the parent armature carries the 0.01 unit scale."""
+    if ob.parent is None:
+        return ob.matrix_basis.copy()
+    return source_world(ob.parent) @ ob.matrix_parent_inverse @ ob.matrix_basis
+
+
 def import_fitted(spec, rig, pack, body=None):
     bones = pack['bones']
     aligned = {name: b for name, b in bones.items() if 'end' in b}
@@ -66,6 +74,7 @@ def import_fitted(spec, rig, pack, body=None):
         for ob in [o for o in imported if o.type == 'MESH' and o not in bone_shapes]:
             # The base shape is the input; source morphs use the old coordinate system.
             if ob.data.shape_keys: ob.shape_key_clear()
+            world = source_world(ob)
             groups = {g.index: resolve(g.name) for g in ob.vertex_groups}
             weights = []
             for v in ob.data.vertices:
@@ -74,7 +83,7 @@ def import_fitted(spec, rig, pack, body=None):
                     key = groups[g.group]; w[key] = w.get(key, 0)+g.weight
                 total = sum(w.values())
                 if total <= 0: raise ValueError(f'Unweighted {pack["id"]} vertex: {ob.name}')
-                point = ob.matrix_world@v.co
+                point = world@v.co
                 v.co = sum((transforms[k]@point*(x/total) for k, x in w.items()), Vector())
                 merged = {}
                 for k, x in w.items(): merged[mapping[k]] = merged.get(mapping[k], 0)+x/total
