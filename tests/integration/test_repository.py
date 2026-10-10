@@ -173,3 +173,37 @@ def test_launcher_readme_lists_every_launcher_with_its_description():
     for name in launcher_names():
         assert f"`{name}`" in readme, f"launchers/README.md does not list {name}"
         assert bat_header(name)[0] in readme, f"launchers/README.md has a stale description for {name}"
+
+
+# `[\\/]` is a backslash or a slash in a regex class; `[\/]` is the slash only. A .py file holds backslash paths
+# doubled ('C:\\Windows'), so one or more separators are matched.
+HARDCODED_TOOL_PATH = re.compile(r"Program Files|Windows[\\/]+Fonts|[A-Za-z]:[\\/]+Windows|[A-Za-z]:[\\/]+[^'\"\n]*blender", re.IGNORECASE)
+
+
+def test_hardcoded_tool_path_pattern_matches_both_separators():
+    """Lines are source text as a .py file holds them: backslashes doubled, or in a raw string."""
+    hits = [
+        r"font = 'C:\\Windows\\Fonts\\arial.ttf'",
+        r"font = r'C:\Windows\Fonts'",
+        "font = 'C:/Windows/Fonts'",
+        r"exe = 'D:\\tools\\blender.exe'",
+        "exe = 'D:/tools/blender.exe'",
+        r"base = 'C:\\Program Files\\x'",
+    ]
+    misses = ["font = Path(windir, 'Fonts')", "exe = find_blender(ROOT)"]
+    print(HARDCODED_TOOL_PATH.pattern)
+    assert [line for line in hits if not HARDCODED_TOOL_PATH.search(line)] == []
+    assert [line for line in misses if HARDCODED_TOOL_PATH.search(line)] == []
+
+
+def test_code_has_no_hardcoded_windows_font_or_blender_paths():
+    """Fonts come from %WINDIR% and Blender from spritemotion.blender.find_blender; docs, launchers and tests may name paths."""
+    offenders = []
+    for path in tracked_files():
+        rel = path.relative_to(REPO).as_posix()
+        if path.suffix not in {".py", ".js", ".mjs"} or rel.startswith(("tests/", "third_party/", "workspace/", "launchers/", "docs/")):
+            continue
+        for number, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+            if HARDCODED_TOOL_PATH.search(line):
+                offenders.append(f"{rel}:{number}: {line.strip()[:100]}")
+    assert offenders == []

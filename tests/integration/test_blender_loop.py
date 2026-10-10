@@ -10,19 +10,22 @@ from pathlib import Path
 
 import pytest
 
+from spritemotion.blender import find_blender
 from spritemotion.jsonio import read_json
 from spritemotion.pipeline.cli import main as cli
 
 from conftest import REPO, SAMPLE
 
 
-def find_blender() -> str | None:
-    candidates = [os.environ.get("SPRITEMOTION_BLENDER"), shutil.which("blender")]
-    candidates += sorted(Path("C:/Program Files/Blender Foundation").glob("Blender */blender.exe"), reverse=True)
-    return next((str(c) for c in candidates if c and Path(c).exists()), None)
+def locate_blender() -> str | None:
+    try:
+        exe = find_blender()
+    except RuntimeError:
+        return None
+    return exe if Path(exe).exists() else None
 
 
-BLENDER = find_blender()
+BLENDER = locate_blender()
 pytestmark = pytest.mark.skipif(BLENDER is None, reason="Blender not found (set SPRITEMOTION_BLENDER)")
 
 

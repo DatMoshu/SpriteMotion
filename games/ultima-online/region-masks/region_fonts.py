@@ -4,8 +4,8 @@ from pathlib import Path
 from PIL import ImageFont
 
 def candidates():
-    windir = os.environ.get('WINDIR') or os.environ.get('SystemRoot') or 'C:/Windows'
-    return [Path(windir, 'Fonts', 'arial.ttf'), Path('/Library/Fonts/Arial.ttf'),
+    windir = os.environ.get('WINDIR') or os.environ.get('SystemRoot')
+    return ([Path(windir, 'Fonts', 'arial.ttf')] if windir else []) + [Path('/Library/Fonts/Arial.ttf'),
             Path('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'), Path('/usr/share/fonts/TTF/DejaVuSans.ttf')]
 
 def load_font(size, paths=None):
