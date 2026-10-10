@@ -1,7 +1,6 @@
-@rem Export your model's rig from Blender, then fit one sequence to the dataset's annotations.
-@rem Usage: 3-fit.bat <sequence, e.g. action-022> [approved^|independent^|all]
-@rem Writes workspace\fits\rig.json and workspace\fits\<sequence>.json
 @echo off
+rem Export your model's rig from Blender, then fit one sequence to the dataset's annotations (writes workspace\fits\rig.json and workspace\fits\<sequence>.json).
+rem args: <sequence, e.g. action-022> [approved|independent|all]
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\need-python.bat" || exit /b 1
 call "%~dp0..\_shared\require.bat" SPRITEMOTION_BLENDER "the Blender executable" || exit /b 1

@@ -1,8 +1,6 @@
-@rem Saved versions of your model (SPRITEMOTION_BLEND): when, what made each one, and its scores.
-@rem Usage: versions.bat                 list
-@rem        versions.bat restore <N>     make version N current again (the current one is kept)
-@rem Earlier animation passes also stay inside the .blend as actions named <action>.v001, .v002 ...
 @echo off
+rem List the saved versions of your model (SPRITEMOTION_BLEND) with when, what made each one and its scores, or make an earlier one current again.
+rem args: [restore <N>]  (no argument lists)
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\need-python.bat" || exit /b 1
 if /i "%~1"=="restore" (

@@ -1,7 +1,6 @@
-@rem Render an action of your model from every sprite direction through the dataset camera.
-@rem Usage: 5-render-views.bat <sequence> [action, default fit_<sequence>; e.g. fit_<sequence>.v001 for an earlier pass]
-@rem Renders into workspace\renders\<action>\<sequence>\
 @echo off
+rem Render an action of your model from every sprite direction through the dataset camera into workspace\renders\<action>\<sequence>.
+rem args: <sequence> [action]  (default action: fit_<sequence>)
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\require.bat" SPRITEMOTION_BLENDER "the Blender executable" || exit /b 1
 if "%~1"=="" (

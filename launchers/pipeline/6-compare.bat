@@ -1,7 +1,6 @@
-@rem Silhouette comparison plus a contact sheet (sprite, render, difference) for one sequence.
-@rem Usage: 6-compare.bat <sequence> [action, default fit_<sequence>]
-@rem The scores are also recorded on the model's current version (versions.bat list shows them).
 @echo off
+rem Score the silhouette match and build a contact sheet (sprite, render, difference) for one sequence, then open the sheet; scores are also recorded on the model version.
+rem args: <sequence> [action]  (default action: fit_<sequence>)
 call "%~dp0..\_shared\common.bat" || exit /b 1
 call "%~dp0..\_shared\need-python.bat" || exit /b 1
 if "%~1"=="" (
