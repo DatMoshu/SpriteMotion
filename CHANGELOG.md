@@ -19,11 +19,29 @@
 - The poke metric models the 1 cm holdout margin, the push-out upper bound and the occlusion modes; push-out is decided
   from the mapping part's `studio_part`, as the renderer does (#21, SM-16a).
 - DirectorDeck restyle, a facing ring that matches the screen, and a 2x2 3D view (#19).
+- Whole-outfit view: Keep visible holds a slot's selected item in the 3D view while another slot is fitted; Show
+  outfit, Wear set and Clear outfit manage the kept slots, and Measure outfit makes body hiding and Measure slot count
+  the kept items. It is view state only (no history step, no autosave, no change to saved fits), remembered per
+  browser and pack; its document is the schema `spritemotion.fit-lab-view` v1 in the package (#20).
 - Robustness fixes for issues #5-#11 (#18): VD offsets are bounded in `vdtool`/`uo_vd_writer`, outfit-lab `vd.py` clips
   runs, `vdtool` prints usage on bad arguments, `jsonio` writes are atomic, `restore()` compares sha256, annotation
   errors are narrowed and warn, and the studio skips an unreadable job status.
 - Issue #12 (portability) is partly done in #18: the `region_fonts` font fallback and `find_blender` discovery. The
   rest is still open (SM-12).
+
+### Local servers (security)
+- Content Studio, Fit Lab and the live pose editor bind to the loopback interface only and check `Host` and `Origin`
+  on every GET, HEAD and POST (blocks DNS rebinding and cross-site requests). Studio and the pose editor share one
+  guard, `common/local_guard.py`; Fit Lab has the same rule.
+- A POST needs a local `Origin` (pose editor) and a JSON body; the pose editor caps the body size. No server lists a
+  directory, and static files are served only from the tool's own folders. Studio gained `HEAD` with the same check.
+- `SECURITY.md` lists every local server, how to report a vulnerability, and the two features that take a path from the
+  request on purpose (Fit Lab `/api/assets`, Studio `/api/stage`; trusted local user) (#4).
+- Failed client staging and failed rebuilds now remove their half-written output folder, so a retry works; the Fit Lab
+  render index ignores patch-only jobs.
+- The franchise-named outfit-lab examples are now generic: `mario-lab`/`spartan-lab` became `overalls-lab` and
+  `plate-armor-lab` (launchers, `build_overalls.py`, `build_plate_armor.py`, tests), and the `lightsaber` item is
+  `energy blade`. Rerun the renamed launchers and scripts; the old names are gone.
 
 ### Canonical body
 - Vendors Levy's UO_Model3D at upstream e9544f6 (was 3eaae69): 54-bone symmetric rig (no twist, toe, skirt or cloak
