@@ -56,7 +56,10 @@ def test_no_game_assets_or_local_paths_are_published():
         assert not rel.startswith("workspace/") or rel == "workspace/README.md", rel
         if path.parent == starter and path.name in approved:
             assert path.suffix == '.glb'
-            assert hashlib.sha256(path.read_bytes()).hexdigest() == approved[path.name]['sha256'], rel
+            data = path.read_bytes()                      # a git-lfs pointer carries the sha256 of the real file
+            pointer = re.search(rb'^oid sha256:([0-9a-f]{64})$', data, re.MULTILINE) if data.startswith(b'version https://git-lfs') else None
+            digest = pointer.group(1).decode() if pointer else hashlib.sha256(data).hexdigest()
+            assert digest == approved[path.name]['sha256'], rel
         elif rel.startswith('third_party/UO_Model3D_v13/') and rel.removeprefix('third_party/UO_Model3D_v13/') in model_approved:
             data = path.read_bytes()                      # a git-lfs pointer carries the sha256 of the real file
             pointer = re.search(rb'^oid sha256:([0-9a-f]{64})$', data, re.MULTILINE) if data.startswith(b'version https://git-lfs') else None

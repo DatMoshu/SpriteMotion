@@ -17,6 +17,8 @@ not a commercial-quality outfit collection. See [Kenney's license](License.txt),
 [Quaternius's license](License-Quaternius.txt), [supplement license](supplement-license.txt),
 and [per-file provenance](provenance.json).
 
+The GLBs are stored with Git LFS. After cloning, run `git lfs install` once and `git lfs pull` to fetch them; without that the files are small text pointers, and the tests that read the GLBs skip with a reason.
+
 Every GLB includes its textures. No account or asset download is required. Source clothing has exposed
 skin faces removed; no geometry from the UO body is bundled. Shirts and tunics intentionally reuse the
 same example shape on different layers. These are starting fits, not approved game-ready exports.
