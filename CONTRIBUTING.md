@@ -83,3 +83,5 @@ Findings about a game's projection, conventions or animation quirks go in
 `games/<game>/research/`. State what was measured, how, and how confident you
 are. Label candidates as candidates. Numbers such as silhouette IoU need their
 method next to them.
+
+Large binaries (example GLBs) are in Git LFS: `git lfs pull` after cloning, `git lfs track` before adding a new binary.

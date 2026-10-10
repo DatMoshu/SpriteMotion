@@ -156,3 +156,7 @@ Code, schemas, documentation and annotations: **MIT**, see [LICENSE](LICENSE).
 Third-party software is listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 Game names are trademarks of their owners. This project is not affiliated with
 or endorsed by them.
+
+## Large files
+
+Example GLBs live in Git LFS: run `git lfs install` once, then `git lfs pull` after cloning.
