@@ -24,6 +24,7 @@ from service import describe
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
+FIT_RULES = REPO / 'common' / 'web' / 'fit-rules.mjs'
 
 
 def data_dir(pack): return REPO / 'workspace/ultima-online/fit-lab' / pack
@@ -66,6 +67,8 @@ def serve(args):
             path = unquote(urlsplit(path).path)
             root = d if path.startswith('/data/') else HERE / 'web'
             relative = path[6:] if path.startswith('/data/') else path.lstrip('/') or 'index.html'
+            if path == '/' + FIT_RULES.name:  # one source: the package file, not a copy under web/
+                root, relative = FIT_RULES.parent, FIT_RULES.name
             if path.startswith('/builds/'):
                 root = REPO/'workspace/ultima-online/content-studio/jobs'
                 relative = path.removeprefix('/builds/')

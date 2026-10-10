@@ -33,6 +33,7 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
+"spritemotion" = ["web/*.mjs"]
 "spritemotion.schemas" = ["*.schema.json"]
 
 [tool.pytest.ini_options]

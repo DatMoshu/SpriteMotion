@@ -47,7 +47,7 @@ history tests passed. The production adjustment file's hash was unchanged across
 
 `lab-adjustments.json` gained optional `groups` and `corrections` (pack/slot/group/item, optionally per action and/or
 stored direction; mirrored directions share). Lab and build resolve them with the same rules
-(`tools/fit-lab/fit_rules.py`, `web/fit-rules.mjs`, parity-tested). `occlusion` (clothing/body/none) picks which body
+(`common/fit_rules.py`, `common/web/fit-rules.mjs`, parity-tested; `tools/fit-lab/fit_rules.py` is a shim). `occlusion` (clothing/body/none) picks which body
 parts hide an item; back/quiver default to whole-body. The lab can **Build item** and **Rebuild changed blocks**
 (`tools/uo-content/rebuild.py`); see `tools/fit-lab/README.md` and `tools/uo-content/README.md`. The preview's Euler
 order now matches Blender (XYZ), so saved multi-axis rotations preview differently than before — correctly.
