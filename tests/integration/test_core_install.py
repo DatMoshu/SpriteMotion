@@ -16,7 +16,8 @@ SCHEMA_NAMES = sorted(p.name for p in schemas.SCHEMA_DIR.glob("*.schema.json"))
 STDLIB_ONLY = """
 import sys
 sys.path.insert(0, {target!r})
-import spritemotion, spritemotion.jsonio, spritemotion.schemas as s, spritemotion.transfer as t
+import spritemotion, spritemotion.jsonio, spritemotion.schemas as s, spritemotion.transfer as t, spritemotion.fit_rules as fr
+assert fr.resolve({{}}, {{}}, {{'id': 'i', 'part': 'p'}})['scale'] == 1
 for kind in s.SCHEMA_FILES:
     assert s.load_schema(kind)
 for name in {names!r}:
@@ -62,6 +63,7 @@ def test_wheel_carries_every_schema_and_core_imports_without_imaging(tmp_path):
     for name in SCHEMA_NAMES:
         assert f"spritemotion/schemas/{name}" in names, name
     assert not any(n.startswith("schemas/") for n in names)
+    assert "spritemotion/fit_rules.py" in names and "spritemotion/web/fit-rules.mjs" in names
     assert "Requires-Dist: numpy" not in metadata.split("Provides-Extra: imaging")[0]
 
     # Import from the unpacked wheel, not the checkout, with the standard library only.

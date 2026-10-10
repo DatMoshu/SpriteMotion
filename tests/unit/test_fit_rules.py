@@ -9,7 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/fit-lab'))
-from fit_rules import resolve
+from spritemotion.fit_rules import resolve
 from adjustments import validate
 
 
@@ -68,7 +68,7 @@ def test_browser_resolver_matches_build_resolver(tmp_path):
                                {'target':'group','key':'a','fit':{'occlusion':'body'}}])
     fixture=tmp_path/'cases.json';fixture.write_text(json.dumps(cases))
     runner=tmp_path/'run.mjs'
-    runner.write_text("import fs from 'node:fs'; import {resolveFit} from "+json.dumps((ROOT/'tools/fit-lab/web/fit-rules.mjs').as_uri())+"; console.log(JSON.stringify(JSON.parse(fs.readFileSync(process.argv[2],'utf8')).map(c=>resolveFit(c.document,c.mapping,c.item,c.action,c.direction))));")
+    runner.write_text("import fs from 'node:fs'; import {resolveFit} from "+json.dumps((ROOT/'common/web/fit-rules.mjs').as_uri())+"; console.log(JSON.stringify(JSON.parse(fs.readFileSync(process.argv[2],'utf8')).map(c=>resolveFit(c.document,c.mapping,c.item,c.action,c.direction))));")
     result=subprocess.run([node,str(runner),str(fixture)],capture_output=True,text=True,check=True)
     assert json.loads(result.stdout)==[resolve(**case) for case in cases]
 
