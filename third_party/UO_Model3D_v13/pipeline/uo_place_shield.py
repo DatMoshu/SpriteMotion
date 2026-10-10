@@ -27,7 +27,7 @@ def arm_skin_bvh():
     ev = body.evaluated_get(dg); me = ev.to_mesh()
     V = [ev.matrix_world @ v.co for v in me.vertices]
     names = [g.name for g in body.vertex_groups]
-    fa = [i for i, n in enumerate(names) if n in ("forearm.L", "forearm_twist.L")]
+    fa = [i for i, n in enumerate(names) if n == "forearm.L"]
     W = np.zeros(len(me.vertices))
     for v in body.data.vertices:
         for g in v.groups:

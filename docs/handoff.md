@@ -64,7 +64,34 @@ in `jobs/` (listed as a partial job by the studio). Studio pack
 jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
 corrections.
 
-## UO_Model3D 2026-10 update (installed)
+## UO_Model3D e9544f6 (2026-10-09, vendored, SM-MODEL3)
+
+`third_party/UO_Model3D_v13/` now holds Levy's repo at e9544f6 (was 3eaae69), stripped as in its NOTICE. The rig is 54
+bones: `upper_arm_twist.*`, `forearm_twist.*`, `toe.*`, `skirt_*` and `cloak_*` and the `UO_Template_Cloak/Skirt` objects are
+gone; same body mesh, 35 actions, frame_end 28. Visible changes: action 17 arms (symmetric, left elbow 7-70 deg) and
+shoulders 1 cm narrower with 0.95x arms. What changed here:
+
+- `blender_build.py` checks the bones it uses by name (`NEEDED_BONES`), builds cloak/skirt/robe shells from the body
+  without the templates, and no longer needs `uo_original_frames.json` in the .blend (the stripped copy has none; the
+  review atlas then shows the item alone).
+- `pipeline.py setup` also copies `cloth_lib.py` and `cloak_pitch.json` when present: the renderer loads both from its
+  own folder, else from texts embedded in the .blend (they are there too).
+- `fit_runtime.py` is unchanged: it still rebuilds `OCCLUDER_TRIS` through the renderer's `body_part_mask`, and the lab's
+  `BodyHoldout` replaces `body_occlusion(free, margin)`, whose signature is the same. The renderer's `HIDER_TRIS`,
+  `WORN` and `TORSO_TRIS` (behind-torso rule, only for items with `uo_behind_torso`) are bypassed by that holdout.
+- Mappings: `toe.L/R` targets became `foot.L/R` in the cc0 mapping and `layers.json`. The toe bone (`ball_*`) lost its
+  `end`, so it follows `foot_*` instead of being aligned onto the whole foot bone. Same in the sidekick `asset-pack.json`
+  (sidecar, local). Regenerating the sidekick mapping with the sidecar's `make_mapping.py` still emits the toe pair
+  (`('ball', 'toe', None)`); change it there before regenerating.
+- Measured (cc0 shirt, actions 0/4/9/17/22/25): builds and validates on both bodies; action 17 silhouettes differ in about
+  17% of pixels (arms), action 4 in under 1% (shoulders). Fit Lab poke counts on the sidekick saved fits (actions
+  0/2/4/9/16) moved for chest (294 to 500 px), elbows (1368 to 2837), upper-arms (4451 to 13649), forearms (9417 to 11370)
+  and slightly for back, shoulders, facial-hair, gloves, hair; boots, face, helm, hips, knees, legs and the hip slots are
+  unchanged. Those slot fits were tuned on the old arms and may need a look.
+- Not shipped: `.fbx`/`.glb` (upstream has none, nothing reads them).
+- Still open upstream: action 21's right forearm in frames 4-5; actions 21/22 may have swapped names.
+
+## UO_Model3D 2026-10 update (earlier, superseded by the section above)
 
 The upstream update (unpacked under `workspace/uo-model-review/v2/`, installed with `pipeline.py setup`) changes the
 body `.blend` (same 13,380-vertex topology, four new weapon bones under the hands: 112 bones), `render_uo_layer.py`,

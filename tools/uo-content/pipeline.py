@@ -34,8 +34,8 @@ def sha(path):
 def render_fingerprint():
     paths = [HERE/name for name in ('blender_build.py','fit_runtime.py','occlusion.py','pack_fit.py')]
     paths += [ROOT/'tools/fit-lab/fit_rules.py']
-    paths += [BACKEND/'pipeline'/name for name in ('render_uo_layer.py','uo_bind_item.py','uo_vd_writer.py')]
-    return hashlib.sha256(''.join(sha(path) for path in paths).encode()).hexdigest()
+    paths += [BACKEND/'pipeline'/name for name in ('render_uo_layer.py','cloth_lib.py','uo_bind_item.py','uo_vd_writer.py')]
+    return hashlib.sha256(''.join(sha(path) for path in paths if path.exists()).encode()).hexdigest()
 
 def setup(source):
     source = Path(source).resolve()
@@ -43,7 +43,10 @@ def setup(source):
              'pipeline/render_uo_layer.py', 'pipeline/uo_vd_writer.py', 'vdtool/vdtool.py', 'README_EN.md']
     for name in files:
         if not (source / name).is_file():
-            raise ValueError(f'Missing v13 backend file: {name}')
+            raise ValueError(f'Missing UO_Model3D backend file: {name}')
+    # Newer renderers load cloth_lib.py and cloak_pitch.json from their own folder (else from texts embedded in the
+    # .blend); older ones have neither.
+    files += [name for name in ('pipeline/cloth_lib.py', 'pipeline/cloak_pitch.json') if (source / name).is_file()]
     BACKEND.mkdir(parents=True, exist_ok=True)
     for name in files:
         dest = BACKEND / name
@@ -243,7 +246,9 @@ def finish(job):
                 raise ValueError(f'VD round-trip alpha/anchor mismatch: {key}, frame {i}')
             total += 1
     # Original pixels are a reference only, never substituted for the new item layer.
-    orig = json.loads((job / 'original-frames.json').read_text(encoding='utf-8'))['frames']
+    # The public (stripped) model carries no original frames; the review atlas then shows the item alone.
+    originals = job / 'original-frames.json'
+    orig = json.loads(originals.read_text(encoding='utf-8'))['frames'] if originals.is_file() else {}
     review = job / 'review'
     review.mkdir(exist_ok=True)
     items = []

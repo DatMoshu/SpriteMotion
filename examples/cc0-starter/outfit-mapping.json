@@ -381,13 +381,12 @@
     "ball_l": {
       "parent": "foot_l",
       "role": "deform",
-      "target": "toe.L",
-      "end": "ball_leaf_l"
+      "target": "foot.L"
     },
     "ball_leaf_l": {
       "parent": "ball_l",
       "role": "finger",
-      "target": "toe.L",
+      "target": "foot.L",
       "follows": "ball_l"
     },
     "thigh_r": {
@@ -411,13 +410,12 @@
     "ball_r": {
       "parent": "foot_r",
       "role": "deform",
-      "target": "toe.R",
-      "end": "ball_leaf_r"
+      "target": "foot.R"
     },
     "ball_leaf_r": {
       "parent": "ball_r",
       "role": "finger",
-      "target": "toe.R",
+      "target": "foot.R",
       "follows": "ball_r"
     }
   },

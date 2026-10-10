@@ -17,7 +17,7 @@ included with his permission.
 
 ## UO_Model3D v13
 
-`third_party/UO_Model3D_v13/` holds UO_Model3D v13 by Levy, shared with the
+`third_party/UO_Model3D_v13/` holds UO_Model3D by Levy (upstream commit e9544f6), shared with the
 artist's permission (the model, its fitting pipeline and `vdtool`). It is not
 under the MIT license. It contains no data extracted from the Ultima Online
 client; see its [NOTICE](third_party/UO_Model3D_v13/NOTICE.md).

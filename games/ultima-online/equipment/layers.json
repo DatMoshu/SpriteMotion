@@ -8,7 +8,7 @@
  "layers": [
   {"id": 1,  "name": "OneHanded",   "kind": "held", "animated": true,  "studio_part": "weapon", "rig_bones": ["hand.R"], "regions": ["hands"], "examples": ["swords", "maces", "one-handed axes", "staves held in one hand"]},
   {"id": 2,  "name": "TwoHanded",   "kind": "held", "animated": true,  "studio_part": "shield", "rig_bones": ["shield.L", "hand.L"], "regions": ["hands", "forearms"], "examples": ["shields", "bows", "crossbows", "two-handed weapons"], "notes": "Shields and two-handed weapons share this layer, so a mobile can never hold both."},
-  {"id": 3,  "name": "Shoes",       "kind": "worn", "animated": true,  "studio_part": "boots", "rig_bones": ["foot.L", "foot.R", "toe.L", "toe.R"], "regions": ["feet"], "examples": ["boots", "sandals", "shoes"]},
+  {"id": 3,  "name": "Shoes",       "kind": "worn", "animated": true,  "studio_part": "boots", "rig_bones": ["foot.L", "foot.R"], "regions": ["feet"], "examples": ["boots", "sandals", "shoes"]},
   {"id": 4,  "name": "Pants",       "kind": "worn", "animated": true,  "studio_part": "legs", "rig_bones": ["pelvis", "thigh.L", "thigh.R", "shin.L", "shin.R"], "regions": ["hips", "thighs", "shins"], "examples": ["long pants", "short pants"]},
   {"id": 5,  "name": "Shirt",       "kind": "worn", "animated": true,  "studio_part": "chest", "rig_bones": ["spine", "chest", "upper_arm.L", "upper_arm.R"], "regions": ["torso", "upper_arms"], "examples": ["shirts", "fancy shirts"]},
   {"id": 6,  "name": "Helm",        "kind": "worn", "animated": true,  "studio_part": "helm", "rig_bones": ["head"], "regions": ["head"], "examples": ["helmets", "hats", "bandanas"]},

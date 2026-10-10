@@ -1,6 +1,6 @@
 # SpriteMotion content studio
 
-This is the active UO item-authoring path. It uses the **shared UO_Model3D v13 model** from `UO_Model3D-main.zip`, with its original actions and bone scale inheritance. SpriteMotion's older fitted model is historical research, not the default for new content.
+This is the active UO item-authoring path. It uses the **shared UO_Model3D model** (Levy's repo, vendored in `third_party/UO_Model3D_v13/`, 54-bone rig), with its original actions and bone scale inheritance. SpriteMotion's older fitted model is historical research, not the default for new content.
 
 ## Start
 
