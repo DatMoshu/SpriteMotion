@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas (Discussions)
+    url: https://github.com/DatMoshu/SpriteMotion/discussions
+    about: Ask setup questions, share results and discuss ideas before opening an issue.
+  - name: Wiki
+    url: https://github.com/DatMoshu/SpriteMotion/wiki
+    about: Setup walkthroughs and guides.

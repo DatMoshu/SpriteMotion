@@ -23,8 +23,8 @@ ITEMS = [('sword',0xF5E),('staff',0xE89),('robe',0x1F03),
 FACING = [3,4,5,6,7]
 DESIGN_CELLS = dict(zip(['sword','staff','robe','hat','hair','shirt','pants','shoes','gloves','backpack','familiar'],range(11)))
 
-def fit_lightsaber(original, design, labels, width_ratio=.15, thickness_px=None, state=None):
-    """Register the generated straight saber to the source weapon axis and grip.
+def fit_energy_blade(original, design, labels, width_ratio=.15, thickness_px=None, state=None):
+    """Register the generated straight energy blade to the source weapon axis and grip.
 
     Hand-mask proximity chooses the hilt end. Native brightness breaks ties or
     handles frames without visible hands. The source's projected length retains
@@ -72,7 +72,7 @@ def fit_lightsaber(original, design, labels, width_ratio=.15, thickness_px=None,
     return design.transform(original.size,Image.Transform.AFFINE,coeff,Image.Resampling.BICUBIC)
 
 def fit_planar(original, design, state=None):
-    """Lay a whole flat picture (shield, banner) onto the original item, like fit_lightsaber does for a shaft.
+    """Lay a whole flat picture (shield, banner) onto the original item, like fit_energy_blade does for a shaft.
 
     The item's silhouette gives a long axis (design top -> bottom) and a cross extent (design left -> right);
     the picture is warped onto that frame, so foreshortening comes from the silhouette. The original alpha is kept
@@ -248,11 +248,11 @@ def build(args):
         box=tile.getbbox()
         if not box: raise ValueError(f'Empty design: {key}')
         designs[key]=tile.crop(box);designs[key].save(out/'designs'/f'{key}.png')
-    saber=Image.open(args.lightsaber).convert('RGBA')
+    blade=Image.open(args.energy_blade).convert('RGBA')
     # Ignore nearly invisible halo pixels when deriving the asset registration.
-    support=saber.getchannel('A').point(lambda a:255 if a>24 else 0).getbbox()
-    if support is None: raise ValueError('Lightsaber design is empty')
-    designs['sword']=saber.crop(support)
+    support=blade.getchannel('A').point(lambda a:255 if a>24 else 0).getbbox()
+    if support is None: raise ValueError('Energy blade design is empty')
+    designs['sword']=blade.crop(support)
     designs['sword'].save(out/'designs/sword.png')
     # Other slender hand-held items can use the same axis fit (config: axisFit, axisImages, axisRatio).
     axis=set(cfg.get('axisFit',['sword']))
@@ -263,7 +263,7 @@ def build(args):
         designs[k]=img;designs[k].save(out/'designs'/f'{k}.png')
     root=Path(args.source);reader=UOReader(root)
     items=[dict(key=k,**reader.item(g)) for k,g in items_cfg]
-    items[0]['displayName']=cfg.get('displayNames',{}).get(items[0]['key'],'Red lightsaber')
+    items[0]['displayName']=cfg.get('displayNames',{}).get(items[0]['key'],'Red energy blade')
     for it in items:
         if it['key'] in cfg.get('displayNames',{}): it['displayName']=cfg['displayNames'][it['key']]
     refs={k:static_art(root,g) for k,g in items_cfg if k in props}
@@ -273,7 +273,7 @@ def build(args):
       'items':items,'actions':[],'rows':{'body':0,'mask':1},
       **{k:cfg[k] for k in ('drawOrder','defaultOff','exclusive') if k in cfg},
       'limitations':['Body 400 only; estimated region labels are not ground-truth depth.',
-      'Clothes retain original equipment alpha; generated textures are fitted in 2D. The lightsaber uses the original weapon axis and estimated hand anchor.',
+      'Clothes retain original equipment alpha; generated textures are fitted in 2D. The energy blade uses the original weapon axis and estimated hand anchor.',
       *(['Backpack has no usable wearable animation here: static item reference, custom anchored overlay.'] if 'backpack' in props else []),
       'Facing layer policies are experimental, not a full ClassicUO equipment renderer.',
       'Playback FPS is adjustable; client movement/combat timing is not simulated.']}
@@ -281,7 +281,7 @@ def build(args):
     for filename in ['anim.idx','tiledata.mul','Equipconv.def']:
         report['hashes'][filename]=hashlib.sha256((root/filename).read_bytes()).hexdigest()
     report['hashes']['design']=hashlib.sha256(Path(args.design).read_bytes()).hexdigest()
-    report['hashes']['lightsaber']=hashlib.sha256(Path(args.lightsaber).read_bytes()).hexdigest()
+    report['hashes']['energy_blade']=hashlib.sha256(Path(args.energy_blade).read_bytes()).hexdigest()
     masks=Path(args.masks)
     try:
       for action in actions:
@@ -314,7 +314,7 @@ def build(args):
                 new=prop(designs[k],labels,k,f,facing)
               else:
                 original=canvas(seqs[k][f]) if len(seqs[k])==n else Image.new('RGBA',(256,256))
-                new=fit_lightsaber(original,designs[k],labels,cfg.get('axisRatio',{}).get(k,args.width_ratio),cfg.get('axisThickness',{}).get(k),astate.get(k)) if k in axis else fit_texture(original,designs[k])
+                new=fit_energy_blade(original,designs[k],labels,cfg.get('axisRatio',{}).get(k,args.width_ratio),cfg.get('axisThickness',{}).get(k),astate.get(k)) if k in axis else fit_texture(original,designs[k])
               # Preserve exposed hands/face where a new cloth texture overlaps.
               ids=hide.get(k,[])
               before=np.count_nonzero(np.array(new)[:,:,3]);new=occlude(new,labels,ids)
@@ -341,7 +341,7 @@ if __name__=='__main__':
     p.add_argument('--source',default=os.environ.get('SPRITEMOTION_UO_SOURCE'))
     p.add_argument('--out',default=str(REPO/'workspace/ultima-online/outfit-lab'))
     p.add_argument('--design',default=str(REPO/'workspace/ultima-online/outfit-lab/design.png'))
-    p.add_argument('--lightsaber',default=str(REPO/'workspace/ultima-online/outfit-lab/lightsaber.png'))
+    p.add_argument('--energy-blade',default=str(REPO/'workspace/ultima-online/outfit-lab/energy-blade.png'))
     p.add_argument('--masks',default=str(REPO/'workspace/ultima-online/region-audit/all-actions-region-pass/frames'))
     p.add_argument('--actions',nargs='+',type=int)
     p.add_argument('--config',help='JSON: items [[key,graphic]], cells {key:index}, props, hide {key:[region ids]}, drawOrder, defaultOff, exclusive, title, displayNames')

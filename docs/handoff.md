@@ -54,13 +54,14 @@ order now matches Blender (XYZ), so saved multi-axis rotations preview different
 
 Verified 2026-10-02 against a scratch copy of the adjustments: item+pose correction, Ctrl+Z / Ctrl+Shift+Z (undo
 removes it from disk, redo restores it), mirrored direction 5 showing direction 3's correction and 4 not, a named
-group from checked items with a per-action group correction. Lab build of the Elven back item, action 9: the scene
+group from checked items with a per-action group correction. Lab build of a back item, action 9: the scene
 report shows +5 cm only in direction 3 and the group's +2 cm in all five; item-only frames keep just the parts outside
 the body except in the back view. Changing only the direction-3 correction and rebuilding re-rendered block (9,3)
 alone; the other four VD blocks were byte-identical and the revision validated.
 
 Not verified: a full 35-action lab build or a rebuild whose base slot fit changed. Each rebuild leaves its patch job
-in `jobs/` (listed as a partial job by the studio). Studio pack
+in `jobs/` (listed as a partial job by the studio); the fit lab's render index ignores patch-only jobs (`blocks` in
+`job.json`), and a failed merge removes its `staging/<id>` folder. Studio pack
 jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
 corrections.
 
@@ -102,13 +103,13 @@ native 256x256 canvas with anchor (128,192) and cuts items along the original bo
 well as `OCCLUDER_TRIS` per block, because hidden body faces change the triangle count. Body masking now includes
 the clavicles in the torso set. The fit lab was re-exported from the new model (reference, body, 72 items).
 
-Verified 2026-10-02 on the new model: the Elven back item (action 9, scoped test corrections) built and validated with
-the same canvas/anchor and per-block fits as on v13, frames within two pixels of the v13 build; the Elven torso
+Verified 2026-10-02 on the new model: a back item (action 9, scoped test corrections) built and validated with
+the same canvas/anchor and per-block fits as on v13, frames within two pixels of the v13 build; a torso item
 (actions 0/4, saved fits, hide-body on) hid 655 faces per block and validated, frames within ±2% pixels of a v13
 build of the same job (shading differs: new lighting); a non-pack template chest (actions 4/9) built and validated.
 Not verified: full 35-action builds, mounted actions, cloaks (`TORSO_TRIS`), weapons on the new weapon bones.
-Rollback: `pipeline.py setup --source workspace/uo-model-review/main`, and restore the lab export from
-`workspace/uo-model-review/fitlab-synty-sidekick-v13/`.
+Rollback: `pipeline.py setup --source workspace/uo-model-review/main`, and restore the lab export from the
+local v13 fit-lab export backup kept under `workspace/uo-model-review/`.
 
 ## Verified in the takeover check
 
@@ -145,7 +146,7 @@ Rollback: `pipeline.py setup --source workspace/uo-model-review/main`, and resto
 
 ## Housekeeping
 
-- Local branch `backup/pre-sidekick-removal` holds the pre-rewrite history; delete it once the rewrite is accepted.
+- A local backup branch holds the pre-rewrite history; delete it once the rewrite is accepted. Never push it.
 - Public repository: [DatMoshu/SpriteMotion](https://github.com/DatMoshu/SpriteMotion), configured as `origin`.
   Licensed-pack material lives only in the local sidecar repo (`SPRITEMOTION_SIDECAR`), which must never be pushed.
 - Publish only the reviewed `main` branch, never all branches or a mirror.

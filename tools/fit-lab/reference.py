@@ -30,4 +30,4 @@ def write_reference(document, directory):
     png = b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', cols * width, rows * height, 8, 6, 0, 0, 0))
     png += chunk(b'IDAT', zlib.compress(scanlines)) + chunk(b'IEND', b'')
     (directory / 'reference.png').write_bytes(png)
-    (directory / 'reference.json').write_text(json.dumps({'image': 'reference.png', 'tile': [width, height], 'tiles': tiles}))
+    (directory / 'reference.json').write_text(json.dumps({'image': 'reference.png', 'tile': [width, height], 'tiles': tiles}), encoding='utf-8')

@@ -37,3 +37,6 @@ __pycache__/
 /tests/output/
 /tools/blender-runtime/
 launchers/_shared/config.local.sh
+
+# Browser automation scratch
+/.playwright-mcp/

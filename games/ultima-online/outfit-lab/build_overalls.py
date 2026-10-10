@@ -1,4 +1,4 @@
-"""Mario-inspired clothing preview. Cap unavailable: generator rejected its render."""
+"""Plumber-style overalls clothing preview. Cap unavailable: generator rejected its render."""
 import json
 import os
 import hashlib
@@ -7,9 +7,9 @@ import numpy as np
 from PIL import Image
 from uo import client_source
 from build import REPO,HERE,UOReader,canvas,fit_texture,occlude
-from build_spartan import crop_asset
+from build_plate_armor import crop_asset
 
-OUT=REPO/'workspace/ultima-online/mario-lab'
+OUT=REPO/'workspace/ultima-online/overalls-lab'
 MASKS=REPO/'workspace/ultima-online/region-audit/all-actions-region-pass/frames'
 SOURCE=os.environ.get('SPRITEMOTION_UO_SOURCE')
 PARTS=[('torso','Overalls bib and shirt',0x1517),('arms','Red sleeves',0x13CD),
@@ -40,8 +40,8 @@ def main():
     # Leather sleeves are the full-arm shape reference used by the mask pipeline.
     next(i for i in items if i['key']=='arms')['animId']=544
     items.append(dict(key='mustache',displayName='Mustache',graphic=0,animId=0,label='Custom face overlay; no original animation'))
-    m=dict(title='Mario Outfit',body=400,canvas=256,origin=[128,192],items=items,actions=[],drawOrder=['legs','shoes','torso','arms','gloves','mustache'],
-      limitations=['Cap is missing: both image-generation attempts were rejected. This is an incomplete Mario-inspired outfit.',
+    m=dict(title='Overalls Outfit',body=400,canvas=256,origin=[128,192],items=items,actions=[],drawOrder=['legs','shoes','torso','arms','gloves','mustache'],
+      limitations=['Cap is missing: both image-generation attempts were rejected. This is an incomplete plumber-style overalls outfit.',
       'Original body 400 animation with generated artwork fitted to native clothing silhouettes; not independent per-frame redraws.',
       'Mustache is a custom overlay clipped to estimated visible head regions and omitted on rear views.',
       'Extreme poses, true depth and garment deformation remain approximate; mounted actions have no mount.'])
@@ -77,7 +77,7 @@ def main():
     m['report']=report
     (OUT/'manifest.json').write_text(json.dumps(m,indent=2));(OUT/'data.js').write_text('window.OUTFIT='+json.dumps(m)+';')
     for name in ['index.html','viewer.js','style.css']:shutil.copyfile(HERE/name,OUT/name)
-    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Mario Outfit').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Red shirt, blue overalls, white gloves, brown shoes and mustache. Cap unavailable: its render was rejected.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full outfit</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','Mustache is a custom layer with no original UO counterpart.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
+    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Overalls Outfit').replace('Red energy blade and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Red shirt, blue overalls, white gloves, brown shoes and mustache. Cap unavailable: its render was rejected.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full outfit</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','Mustache is a custom layer with no original UO counterpart.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
     print(json.dumps(report))
 
 if __name__=='__main__':main()

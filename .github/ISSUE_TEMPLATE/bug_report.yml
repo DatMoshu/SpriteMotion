@@ -1,0 +1,64 @@
+name: Bug report
+description: Something in SpriteMotion crashes, errors or behaves differently than documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please do not attach UO client files, extracted sprites, renders of original game art
+        or commercial asset-pack content. Screenshots of SpriteMotion's own UI and output are fine.
+        Security problems go through private vulnerability reporting instead (see SECURITY.md).
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Tool
+      options:
+        - Content Studio
+        - Fit Lab
+        - Blender build pipeline
+        - Client staging tools
+        - Outfit lab
+        - Sprite Pose Editor
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run launchers\editor\fit-lab.bat cc0-starter
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output or logs
+      description: Paste console output. Replace personal folder names with placeholders.
+      render: text
+  - type: input
+    id: commit
+    attributes:
+      label: Commit or branch
+      placeholder: main @ abc1234
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, Blender version, browser.
+      placeholder: Windows 11, Python 3.12, Blender 4.2, Chrome
+  - type: checkboxes
+    id: content
+    attributes:
+      label: Content rules
+      options:
+        - label: I did not attach original client art, client files or commercial asset-pack content.
+          required: true

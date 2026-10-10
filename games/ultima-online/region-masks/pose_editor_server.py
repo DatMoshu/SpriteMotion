@@ -1,11 +1,14 @@
 """Loopback-only live pose editor, local saves, and asynchronous Blender export."""
 from pathlib import Path
-import argparse, functools, json, math, os, re, shutil, subprocess, threading, time, uuid
+import argparse, functools, importlib.util, json, math, os, re, shutil, subprocess, threading, time, uuid
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
 ROOT=Path(__file__).resolve().parents[3]
 OUT=ROOT/'workspace/ultima-online/female-locomotion'
+# One guard for every local server; loaded by path so this script runs without an installed `spritemotion`.
+_spec=importlib.util.spec_from_file_location('local_guard',ROOT/'common/local_guard.py')
+local_guard=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(local_guard)
 SOURCE=Path(__file__).parent
 EDITABLE={f'{bone}_{side}' for bone in ('upperarm','lowerarm','hand','thigh','calf','foot') for side in ('l','r')}|{'LegPlate_L','LegPlate_R','Hip_L','Hip_R'}
 
@@ -52,6 +55,17 @@ class EditorServer(ThreadingHTTPServer):
         super().__init__(('127.0.0.1',port),functools.partial(Handler,directory=str(OUT)))
 
 class Handler(SimpleHTTPRequestHandler):
+    # Loopback only: Host is checked on every request, Origin on GET/HEAD when sent and always on POST.
+    def local(self,post=False):
+        return local_guard.is_local(self.headers,self.server.server_port,require_origin=post)
+    def list_directory(self,path):
+        self.send_error(404,'Not found')  # only named files are served, never a listing
+    def translate_path(self,path):
+        target=Path(super().translate_path(path)).resolve()
+        return str(target) if target.is_relative_to(OUT.resolve()) else str(OUT/'__not_found__')
+    def do_HEAD(self):
+        if not self.local():return self.send_json({'error':'Local requests only.'},403)
+        return super().do_HEAD()
     def end_headers(self):
         self.send_header('Cache-Control','no-store')
         self.send_header('X-Content-Type-Options','nosniff')
@@ -59,6 +73,7 @@ class Handler(SimpleHTTPRequestHandler):
     def send_json(self,value,status=200):
         data=json.dumps(value).encode();self.send_response(status);self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
     def do_GET(self):
+        if not self.local():return self.send_json({'error':'Local requests only.'},403)
         parsed=urlparse(self.path)
         if parsed.path=='/api/edits':
             p=OUT/'editor/edits.json'
@@ -73,9 +88,10 @@ class Handler(SimpleHTTPRequestHandler):
             raw=(SOURCE/source).read_bytes();self.send_response(200);self.send_header('Content-Type',{'html':'text/html','js':'text/javascript','css':'text/css'}[source.rsplit('.',1)[1]]);self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw);return
         return super().do_GET()
     def do_POST(self):
+        if not self.local(post=True):return self.send_json({'error':'Local requests only.'},403)
         if self.path not in ('/api/save','/api/bake'):return self.send_json({'error':'Unknown route'},404)
-        origin=self.headers.get('Origin')
-        if origin and origin!=f'http://127.0.0.1:{self.server.server_port}':return self.send_json({'error':'Origin rejected'},403)
+        # JSON-only requests prevent cross-origin forms from changing local edits.
+        if self.headers.get_content_type()!='application/json':return self.send_json({'error':'Expected JSON.'},415)
         try:
             size=int(self.headers.get('Content-Length','0'))
             if not 0<size<500_000:raise ValueError('Invalid request size.')

@@ -46,7 +46,7 @@ def read_gump(client, gump_id):
 
 
 def butt_marker(shape, alpha, where):
-    """Label image with one 'hand' pixel at the butt end; fit_lightsaber puts the item's left end there."""
+    """Label image with one 'hand' pixel at the butt end; fit_energy_blade puts the item's left end there."""
     ys, xs = np.nonzero(alpha)
     labels = np.zeros(shape, np.uint8)
     if where == 'bottom':
@@ -99,7 +99,7 @@ def main(a):
         design = design.rotate(-90, expand=True)
     old_image = Image.fromarray(old)
     labels = butt_marker(old.shape[:2], old[..., 3] > 0, a.butt)
-    fitted = np.array(build.fit_lightsaber(old_image, design, labels, a.ratio, a.thickness))
+    fitted = np.array(build.fit_energy_blade(old_image, design, labels, a.ratio, a.thickness))
     fitted[..., 3] = np.where(fitted[..., 3] >= 128, 255, 0)
     if a.outline:
         solid = Image.fromarray(fitted[..., 3])
@@ -134,8 +134,8 @@ if __name__ == '__main__':
     p.add_argument('--thickness', type=float, default=None, help='item thickness in gump px (staff ~26)')
     p.add_argument('--ratio', type=float, default=.15, help='thickness as a fraction of length when --thickness is not given')
     p.add_argument('--butt', choices=['bottom', 'top', 'left', 'right'], default='bottom', help='which end of the original gump is the butt/hilt')
-    p.add_argument('--shift', default='0,0', help='dx,dy shift in px after fitting (e.g. 3,-9 for the saber)')
-    p.add_argument('--front-below', type=int, default=None, help='row from which the hand covers the item (saber: 106)')
+    p.add_argument('--shift', default='0,0', help='dx,dy shift in px after fitting (e.g. 3,-9 for the energy blade)')
+    p.add_argument('--front-below', type=int, default=None, help='row from which the hand covers the item (energy blade: 106)')
     p.add_argument('--outline', action='store_true', help='add a 1 px dark outline')
     a = p.parse_args(); a.client = client_source(a.client)
     main(a)

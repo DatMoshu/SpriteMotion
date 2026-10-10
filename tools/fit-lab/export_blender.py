@@ -44,7 +44,7 @@ for o in list(bpy.data.objects):
 acts = sorted((a for a in bpy.data.actions if 'uo_action' in a), key=lambda a: int(a['uo_action']))
 scene = bpy.context.scene
 manifest_path = OUT / 'manifest.json'
-manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+manifest = json.loads(manifest_path.read_text(encoding='utf-8')) if manifest_path.exists() else {}
 manifest.update({
     'model': MODEL.name, 'rig': 'uo-model3d-v13', 'fps': scene.render.fps, 'frame_step': STEP,
     'camera': {**CAMERA,
@@ -103,7 +103,7 @@ for n, item in enumerate(items_doc['items']):
             if x.users == 0: block.remove(x)
     print(f"FITLAB item {n + 1}/{len(items_doc['items'])} {item['id']}", flush=True)
     manifest['items'] = sorted(known.values(), key=lambda i: (i.get('slot', ''), i['id']))
-    manifest_path.write_text(json.dumps(manifest, indent=1))
+    manifest_path.write_text(json.dumps(manifest, indent=1), encoding='utf-8')
 manifest['items'] = sorted(known.values(), key=lambda i: (i.get('slot', ''), i['id']))
-manifest_path.write_text(json.dumps(manifest, indent=1))
+manifest_path.write_text(json.dumps(manifest, indent=1), encoding='utf-8')
 print('FITLAB done', len(manifest['items']), 'items', flush=True)

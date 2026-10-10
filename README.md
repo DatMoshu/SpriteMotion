@@ -1,5 +1,10 @@
 # SpriteMotion
 
+[![CI](https://github.com/DatMoshu/SpriteMotion/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DatMoshu/SpriteMotion/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+<!-- hero-gif -->
+
 **Create, fit and render equipment for Ultima Online's classic 2D characters.**
 
 SpriteMotion is a local content-authoring toolkit. Bring a 3D item, artwork or a
@@ -117,11 +122,23 @@ To explore the original reconstruction workflow without game assets, use the
 [reconstruction workflow](docs/reconstruction-workflow.md) and
 [annotation format](docs/annotation-format.md) remain documented separately.
 
+## Help wanted: toward UO parity
+
+The tools work; proving that every item looks right in every animation, facing and client is the open part.
+[ROADMAP.md](ROADMAP.md) lists the render acceptance gates, what is already done and where help is wanted:
+acceptance matrices across all 35 actions, rig targets for twist bones and cloth chains, complete-outfit reviews
+and in-game client tests. Setup walkthroughs live in the [wiki](https://github.com/DatMoshu/SpriteMotion/wiki);
+questions go to [Discussions](https://github.com/DatMoshu/SpriteMotion/discussions). Report a pose that does not
+match original equipment with the **Parity gap** issue template, and read [CONTRIBUTING.md](CONTRIBUTING.md)
+before opening a pull request.
+
 ## Contributing
 
 Use a branch or fork and submit a pull request. Protected `main` requires the
 `guard` and `build` checks and maintainer code-owner approval; administrators
-retain a bypass. See [CONTRIBUTING.md](CONTRIBUTING.md) for review and content rules.
+retain a bypass. See [CONTRIBUTING.md](CONTRIBUTING.md) for review and content rules,
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards and [SECURITY.md](SECURITY.md) for
+reporting vulnerabilities.
 
 ```powershell
 python -m pytest -q

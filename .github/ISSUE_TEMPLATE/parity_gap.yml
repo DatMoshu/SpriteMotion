@@ -1,0 +1,76 @@
+name: Parity gap
+description: A rendered item does not match how original UO equipment looks or moves in a specific pose.
+labels: [parity]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Parity gaps drive the [roadmap](https://github.com/DatMoshu/SpriteMotion/blob/main/ROADMAP.md).
+        **Do not attach original client art** (extracted frames, sprite sheets, screenshots of the original game's
+        artwork) or commercial asset-pack content. Attach SpriteMotion output only and describe the original in words.
+  - type: input
+    id: action
+    attributes:
+      label: Action id
+      description: UO people animation action, 0-34.
+      placeholder: "9"
+    validations:
+      required: true
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Direction
+      description: Stored directions are 0-4; 5-7 are mirrored views.
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "4"
+        - "5 (mirrored)"
+        - "6 (mirrored)"
+        - "7 (mirrored)"
+        - "All / several"
+    validations:
+      required: true
+  - type: input
+    id: slot
+    attributes:
+      label: Slot
+      description: Equipment slot or UO layer.
+      placeholder: chest / helm / cloak / weapon ...
+    validations:
+      required: true
+  - type: input
+    id: item
+    attributes:
+      label: Item
+      description: Item id or name (CC0 starter item, your own model, or a generic description of a private pack item).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: How original equipment looks or behaves in this pose, in words.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      description: What SpriteMotion produced (lab preview or Blender render, which build/job).
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drop a screenshot of SpriteMotion output here. Never original client art.
+  - type: checkboxes
+    id: content
+    attributes:
+      label: Content rules
+      options:
+        - label: My attachments show only SpriteMotion output, not original client art or commercial pack content.
+          required: true

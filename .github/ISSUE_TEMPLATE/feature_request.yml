@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest a new tool capability, workflow or documentation improvement.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For open-ended ideas or questions, the Discussions board may be a better first stop.
+        Check [ROADMAP.md](https://github.com/DatMoshu/SpriteMotion/blob/main/ROADMAP.md) to see whether it is already planned.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should it work? Mention the tool (Content Studio, Fit Lab, build pipeline, ...) it affects.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: dropdown
+    id: help
+    attributes:
+      label: Can you help build it?
+      options:
+        - "Yes, I can open a pull request"
+        - "I can test or review"
+        - "No"

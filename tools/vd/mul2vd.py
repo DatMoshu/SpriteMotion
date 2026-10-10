@@ -9,7 +9,8 @@ def base_index(body):
     return 35000 + (body - 400) * 175, 35, 2      # people and equipment (35 actions), vd type 2
 
 def extract(idx_path, mul_path, body, out):
-    idx = open(idx_path, "rb").read()
+    with open(idx_path, "rb") as f:
+        idx = f.read()
     base, n_act, vtype = base_index(body)
     entries = [struct.unpack_from("<iii", idx, 12 * (base + i)) for i in range(n_act * 5)]
     with open(mul_path, "rb") as f:
@@ -26,7 +27,8 @@ def extract(idx_path, mul_path, body, out):
             table += struct.pack("<iii", -1, -1, -1)
         else:
             table += struct.pack("<iii", pos + len(data), len(b), 0); data += b
-    open(out, "wb").write(head + table + data)
+    with open(out, "wb") as f:
+        f.write(head + table + data)
     return sum(b is not None for b in blobs)
 
 if __name__ == "__main__":

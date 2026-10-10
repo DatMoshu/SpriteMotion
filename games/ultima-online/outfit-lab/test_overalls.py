@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
 from PIL import Image
-from build_mario import mustache
+from build_overalls import mustache
 
-class MarioTests(unittest.TestCase):
+class OverallsTests(unittest.TestCase):
     def test_mustache_clips_to_head_and_hides_on_back(self):
         labels=np.zeros((256,256),np.uint8);labels[100:111,122:133]=1
         design=Image.new('RGBA',(40,15),'black')

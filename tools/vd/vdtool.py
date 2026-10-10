@@ -52,7 +52,8 @@ def action_name(anim_type, a):
 
 
 def read_vd(path):
-    d = open(path, "rb").read()
+    with open(path, "rb") as fh:
+        d = fh.read()
     magic, anim_type = struct.unpack_from("<hh", d, 0)
     if magic != MAGIC:
         raise ValueError(f"{path}: not a .vd file (header {magic}, expected {MAGIC})")
@@ -255,7 +256,8 @@ def cmd_extract(path, out, raw=False):
 
 
 def cmd_pack(folder, out):
-    meta = json.load(open(os.path.join(folder, "meta.json"), encoding="utf-8"))
+    with open(os.path.join(folder, "meta.json"), encoding="utf-8") as fh:
+        meta = json.load(fh)
     anim_type, raw = meta["anim_type"], meta["mode"] == "raw"
     ax, ay = meta["anchor"]
     blocks = []
@@ -325,7 +327,8 @@ def cmd_verify(p1, p2):
             if not np.array_equal(ca, cb):
                 diff += 1
                 print(f"  action {x['action']} dir {x['dir']} frame {i}: pixels differ")
-    same_bytes = open(p1, "rb").read() == open(p2, "rb").read()
+    with open(p1, "rb") as f1, open(p2, "rb") as f2:
+        same_bytes = f1.read() == f2.read()
     print("IDENTICAL BYTE FOR BYTE" if same_bytes else ("IMAGE IDENTICAL (different encoding)" if not diff else f"DIFFERENCES: {diff}"))
     return 0 if not diff else 1
 
