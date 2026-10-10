@@ -35,8 +35,8 @@ Status legend: **done** (verified locally with evidence), **partial** (works on 
 
 - Not yet verified: a full 35-action lab build, a rebuild whose base slot fit changed, mounted actions, cloaks
   (torso mask), and weapons on the new weapon bones.
-- The lab's poke-through metric does not model the renderer's holdout margin or push-out; compare numbers, don't
-  read them as absolutes.
+- The lab's poke-through metric models the renderer's 1 cm holdout margin, its push-out (reported as an upper
+  bound) and the occlusion modes. It is still a measure on the lab's 3D body, so compare numbers between fits.
 - Untested outfit-lab options: `merge_items.py`, `make_gump_cloak.py`, `build_item.py --planar/--cut`,
   `atlas_to_vd.py --body/--outline`.
 - Release path: reproducible clean-checkout setup, a procedural Blender regression scene for CI, then an alpha

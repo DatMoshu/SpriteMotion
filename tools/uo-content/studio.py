@@ -4,6 +4,7 @@ import base64
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import importlib.util
 import json
 from pathlib import Path
 import tempfile
@@ -12,6 +13,9 @@ import pipeline
 import starters
 
 pool=ThreadPoolExecutor(max_workers=1)
+# One guard for every local server; loaded by path so the studio also runs where `spritemotion` is not installed.
+_spec=importlib.util.spec_from_file_location('local_guard',Path(__file__).resolve().parents[2]/'common/local_guard.py')
+local_guard=importlib.util.module_from_spec(_spec); _spec.loader.exec_module(local_guard)
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):
@@ -24,10 +28,11 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers(); self.wfile.write(raw)
 
     def local(self):
-        expected={f'127.0.0.1:{self.server.server_port}',f'localhost:{self.server.server_port}'}
-        if self.headers.get('Host') not in expected: return False
-        origin=self.headers.get('Origin')
-        return not origin or origin in {'http://'+h for h in expected}
+        return local_guard.is_local(self.headers,self.server.server_port)
+
+    def do_HEAD(self):
+        if not self.local(): return self.reply({'error':'Local requests only.'},403)
+        return super().do_HEAD()
 
     def do_GET(self):
         if not self.local(): return self.reply({'error':'Local requests only.'},403)

@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from PIL import Image
-from build import canvas, fit_texture, fit_lightsaber, occlude
+from build import canvas, fit_texture, fit_energy_blade, occlude
 
 class FittingTests(unittest.TestCase):
     def test_ground_origin(self):
@@ -27,18 +27,18 @@ class FittingTests(unittest.TestCase):
         im=Image.new('RGBA',(256,256))
         self.assertIsNone(fit_texture(im,Image.new('RGBA',(10,10),'red')).getbbox())
 
-    def test_saber_grip_faces_hand_and_blade_reaches_tip(self):
+    def test_blade_grip_faces_hand_and_blade_reaches_tip(self):
         src=Image.new('RGBA',(256,256))
         pixels=np.array(src);pixels[100,80:111]=[190,190,190,255]
         design=Image.new('RGBA',(100,10),'red')
         patch=np.array(design);patch[:,:20]=[0,255,0,255]
         labels=np.zeros((256,256),np.uint8);labels[100,111]=5
-        result=np.array(fit_lightsaber(Image.fromarray(pixels),Image.fromarray(patch),labels))
+        result=np.array(fit_energy_blade(Image.fromarray(pixels),Image.fromarray(patch),labels))
         self.assertGreater(result[100,109,1],result[100,109,0])
         self.assertGreater(result[100,82,0],result[100,82,1])
 
-    def test_empty_saber_does_not_invent_blade(self):
-        result=fit_lightsaber(Image.new('RGBA',(256,256)),Image.new('RGBA',(100,10),'red'),np.zeros((256,256),np.uint8))
+    def test_empty_blade_does_not_invent_blade(self):
+        result=fit_energy_blade(Image.new('RGBA',(256,256)),Image.new('RGBA',(100,10),'red'),np.zeros((256,256),np.uint8))
         self.assertIsNone(result.getbbox())
 
 if __name__=='__main__':unittest.main()

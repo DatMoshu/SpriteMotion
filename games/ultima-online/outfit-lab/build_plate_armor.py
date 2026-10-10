@@ -6,7 +6,7 @@ import shutil
 import numpy as np
 from PIL import Image
 from uo import client_source
-from build import REPO, HERE, UOReader, canvas, fit_texture, fit_lightsaber, occlude
+from build import REPO, HERE, UOReader, canvas, fit_texture, fit_energy_blade, occlude
 
 OUT=REPO/'workspace/ultima-online/plate-armor-lab'
 MASKS=REPO/'workspace/ultima-online/region-audit/all-actions-region-pass/frames'
@@ -69,7 +69,7 @@ def main():
             atlas.paste(Image.fromarray(vis),(f*256,256))
             for j,item in enumerate(items):
               k=item['key'];original=canvas(seq[k][f])
-              if k=='sword':new=fit_lightsaber(original,designs[k],labels,width_ratio=.42)
+              if k=='sword':new=fit_energy_blade(original,designs[k],labels,width_ratio=.42)
               elif k=='helmet':new=fit_helmet(original,helmets[stored])
               else:new=fit_texture(original,designs['back'] if k=='chest' and stored>=3 else designs[k])
               exclude={'chest':[1,5],'arms':[1,5],'legs':[5],'boots':[5],'helmet':[5],'sword':[5]}.get(k,[])
@@ -87,7 +87,7 @@ def main():
     m['report']=report
     (OUT/'manifest.json').write_text(json.dumps(m,indent=2));(OUT/'data.js').write_text('window.OUTFIT='+json.dumps(m)+';')
     for name in ['index.html','viewer.js','style.css']:shutil.copyfile(HERE/name,OUT/name)
-    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Sci-fi Plate Armor').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Sci-fi green plate armor and directional gold-visored helmet. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full armor</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','Pane A uses original UO plate armor, helmet and broadsword animations.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
+    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Sci-fi Plate Armor').replace('Red energy blade and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Sci-fi green plate armor and directional gold-visored helmet. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full armor</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','Pane A uses original UO plate armor, helmet and broadsword animations.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
     print(json.dumps(report))
 
 if __name__=='__main__':main()

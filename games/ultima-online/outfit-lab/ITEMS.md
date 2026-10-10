@@ -54,7 +54,7 @@ Examples measured on one shard's client. Check yours, because shards and client 
 |---|---|---|
 | Clothing, armour, robes: the shape stays, the material changes | texture transfer, `fit_texture` | `build_item.py` (one item) or `build.py` |
 | Flat item: shield, banner | whole picture laid on the item, `fit_planar` | `build_item.py --planar` |
-| Slender hand-held weapon: sword, staff, spear (long straight axis) | axis fit, `fit_lightsaber` | `build.py --config` with `axisFit` |
+| Slender hand-held weapon: sword, staff, spear (long straight axis) | axis fit, `fit_energy_blade` | `build.py --config` with `axisFit` |
 | Helmet with different views | one picture per direction (`fit_helmet`) | see `build_plate_armor.py` |
 | Shorter or ragged hanging item (cloak) | shape step, `shorten_frayed` | `build_item.py --cut/--fray` |
 
@@ -121,12 +121,12 @@ a BOM is fine. PowerShell 5.1's `Set-Content -Encoding utf8` writes one. To writ
 Start with a few actions (0 walk, 4 idle, 9 slash 1h, 13 slash 2h, 16 spell), then build all 35.
 
 ```powershell
-& $py games\ultima-online\outfit-lab\build.py --out "$w\lab" --design sheet.png --lightsaber sword.png --config my.json --actions 0 4 9 13
+& $py games\ultima-online\outfit-lab\build.py --out "$w\lab" --design sheet.png --energy-blade sword.png --config my.json --actions 0 4 9 13
 & $py games\ultima-online\outfit-lab\verify.py "$w\lab"
 & $py -m http.server 8780 --bind 127.0.0.1 --directory "$w\lab"      # then http://127.0.0.1:8780
 ```
 
-`--design` and `--lightsaber` must point to existing files even when the config does not use them.
+`--design` and `--energy-blade` must point to existing files even when the config does not use them.
 `verify.py` must report `"errors": []` and `missingSequences: 0`. It exits with 1 when an item's
 pixels did not change at all. After rebuilding, reload the viewer with Ctrl+F5 or `?v=N`.
 

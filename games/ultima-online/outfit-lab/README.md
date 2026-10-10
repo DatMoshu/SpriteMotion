@@ -3,7 +3,7 @@
 The Astral Wayfarer prototype uses original body-400 animations and equipment
 silhouettes, transfers a generated outfit design onto them, and previews original
 and custom artwork side by side. Every item has Off / UO / New controls.
-The robe and separates share a design; staff and red lightsaber are alternative
+The robe and separates share a design; staff and red energy blade are alternative
 weapons. The UO side retains the original broadsword for A/B comparison. The hat
 is excluded from the current demo, presets, design gallery and polish scope.
 A flag backpack and a floating crystal familiar demonstrate attached props.
@@ -42,7 +42,7 @@ the entire composited canvas, matching the x=127.5 pixel reflection.
 
 The historical design sheet is a regular 4-by-3 grid, indexed by DESIGN_CELLS,
 with the final cell reserved for a character concept. Its hat cell is skipped.
-The separate `--lightsaber` transparent image replaces the original sword design.
+The separate `--energy-blade` transparent image replaces the original sword design.
 It is registered to each native weapon's principal axis, with the nearest visible
 hand choosing the hilt end (brightness is the fallback). Source projected length
 preserves foreshortening; generated red blade and halo can extend outside the

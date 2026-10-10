@@ -25,7 +25,9 @@ Content tools (Content Studio, Fit Lab, the workbench) are described in [editor/
 | `editor/fit-lab` | Start Fit Lab (asset-pack slot fitting and body hiding) for a pack on http://127.0.0.1:8774 and keep it running here until Ctrl+C. | `<pack>  (or set SPRITEMOTION_FIT_PACK)` |
 | `editor/open-godot-project` | Open the Sprite Pose Editor's source project in the Godot editor (starts the editor window and returns). |  |
 | `editor/outfit-lab` | Open the outfit lab page (workspace\ultima-online\outfit-lab\index.html) in your browser, or say how to build it when it is missing. |  |
+| `editor/overalls-lab` | Open the overalls lab page (workspace\ultima-online\overalls-lab\index.html) in your browser, or say how to build it when it is missing. |  |
 | `editor/sample-character` | Open the Sprite Pose Editor (a Godot window) on the bundled, redistributable sample character. |  |
+| `editor/plate-armor-lab` | Open the sci-fi plate armor lab page (workspace\ultima-online\plate-armor-lab\index.html) in your browser, or say how to build it when it is missing. |  |
 | `editor/sprite-pose-editor` | THE launcher: open the Sprite Pose Editor (a Godot window that opens and returns) on a dataset. | `[dataset folder]  (default: SPRITEMOTION_DATASET)` |
 | `editor/tracksuit-lab` | Open the tracksuit lab page (workspace\ultima-online\tracksuit-lab\index.html) in your browser, or say how to build it when it is missing. |  |
 | `editor/workbench` | Start Content Studio and Fit Lab together for a pack, open both in your browser, and keep them running here until Ctrl+C. | `[pack]  (default: SPRITEMOTION_FIT_PACK, else the bundled cc0-starter)` |
@@ -68,7 +70,6 @@ Content tools (Content Studio, Fit Lab, the workbench) are described in [editor/
 
 ## Not launchers
 
-- `editor/mario-lab.bat` and `editor/spartan-lab.bat` are left as they were; PR #4 replaces them.
 - Fit Lab's poke **Measure** runs in the browser (there is no command line for it), so it has no launcher: start `editor/fit-lab` and press Measure.
 - `tools/vd/vdtool.py`, `tools/vd/mul2vd.py` and `tools/godot/fetch.py` are helper scripts with their own usage in `tools/vd/README.md` and `tools/godot/README.md` (`pipeline/0-setup` calls `fetch.py`).
 - `games/ultima-online/outfit-lab/build_*.py` take per-outfit arguments and are documented in that folder's README.

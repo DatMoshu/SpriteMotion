@@ -95,8 +95,7 @@ def test_agent_routers_match_claude_sources():
 # ---- launchers: the DirectorDeck Run panel lists every .bat (rem line), and each has a .sh twin ----------------------
 
 LAUNCHER_DIR = REPO / "launchers"
-# PR #4 deletes these two; until then they are left as they were.
-LAUNCHER_EXEMPT = {"editor/mario-lab", "editor/spartan-lab"}
+LAUNCHER_EXEMPT: set[str] = set()
 COMMON_BAT = 'call "%~dp0..\\_shared\\common.bat" || exit /b 1'
 
 

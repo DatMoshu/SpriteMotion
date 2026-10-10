@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 from uo import client_source
-from build import REPO, HERE, UOReader, canvas, fit_texture, fit_lightsaber, occlude
+from build import REPO, HERE, UOReader, canvas, fit_texture, fit_energy_blade, occlude
 
 OUT=REPO/'workspace/ultima-online/tracksuit-lab'
 MASKS=REPO/'workspace/ultima-online/region-audit/all-actions-region-pass/frames'
@@ -83,7 +83,7 @@ def main():
             originals['chain']=Image.new('RGBA',(256,256))
             for j,item in enumerate(items):
               k=item['key'];original=originals[k]
-              if k=='sword':new=fit_lightsaber(original,designs[k],labels,width_ratio=.42)
+              if k=='sword':new=fit_energy_blade(original,designs[k],labels,width_ratio=.42)
               elif k=='chain':new=chain_image(designs[k],labels,facing)
               elif k=='shirt':new=cloth(original,designs[k],np.array(originals['sleeves'])[:,:,3]>0)
               elif k=='pants':new=cloth(original,designs[k],np.array(original)[:,:,3]>0)
@@ -103,7 +103,7 @@ def main():
     m['report']=report
     (OUT/'manifest.json').write_text(json.dumps(m,indent=2));(OUT/'data.js').write_text('window.OUTFIT='+json.dumps(m)+';')
     for name in ['index.html','viewer.js','style.css']:shutil.copyfile(HERE/name,OUT/name)
-    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Crimson Runner').replace('Red lightsaber and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Red tracksuit, white arm and leg stripes, gold chain and sci-fi energy sword. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full outfit</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','The gold chain is a new torso overlay with no original UO animation. The original top combines a shirt and leather sleeves.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
+    p=OUT/'index.html';s=p.read_text(encoding='utf-8').replace('Astral Wayfarer','Crimson Runner').replace('Red energy blade and staff are alternatives. Robe covers the shirt and pants. Hide it to inspect the separates.','Red tracksuit, white arm and leg stripes, gold chain and sci-fi energy sword. Toggle each piece independently.').replace('<button id="robed">Robed</button>','<button id="robed" hidden>Robed</button>').replace('<button id="separates">Separates</button>','<button id="separates">Full outfit</button>').replace('Backpack and familiar originals are static item art placed at the same attachment point.','The gold chain is a new torso overlay with no original UO animation. The original top combines a shirt and leather sleeves.').replace('<label><input id="orbit" type="checkbox" checked> Familiar follows player</label>','<label hidden><input id="orbit" type="checkbox"> Familiar follows player</label>');p.write_text(s,encoding='utf-8')
     print(json.dumps(report))
 
 if __name__=='__main__':main()
