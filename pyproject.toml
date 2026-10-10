@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spritemotion"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reconstruct editable 3D characters and animations from existing 2D sprites."
 readme = "README.md"
 requires-python = ">=3.10"
