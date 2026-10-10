@@ -3,6 +3,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import pytest
+from spritemotion import schemas
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -64,6 +65,6 @@ assert.deepEqual(O.families(items),[{family:'A',slots:2},{family:'B',slots:1},{f
 
 def test_view_document_matches_its_schema():
     jsonschema = pytest.importorskip('jsonschema')
-    schema = json.loads((ROOT / 'schemas/fit-lab-view.schema.json').read_text(encoding='utf-8'))
+    schema = schemas.load_file('fit-lab-view.schema.json')
     jsonschema.validate({'schema': 'spritemotion.fit-lab-view', 'schema_version': 1, 'show': True,
                          'measure_outfit': False, 'worn': {'Shoes': 'a-boots'}}, schema)

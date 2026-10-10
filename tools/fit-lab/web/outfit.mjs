@@ -1,5 +1,5 @@
 // Whole-outfit view: kept slots stay visible while another slot is edited. View state only, never a fit edit.
-// Document: schemas/fit-lab-view.schema.json. Rules: tools/fit-lab/README.md, "Whole outfit while fitting one slot".
+// Document: common/schemas/fit-lab-view.schema.json. Rules: tools/fit-lab/README.md, "Whole outfit while fitting one slot".
 export const SCHEMA = 'spritemotion.fit-lab-view';
 
 export function emptyOutfit() { return { schema: SCHEMA, schema_version: 1, show: true, measure_outfit: false, worn: {} }; }

@@ -45,6 +45,7 @@ def test_schema_files_live_only_in_the_package():
 def test_load_file_and_path_reject_other_names():
     assert schemas.load_file("fit-adjustments.schema.json")["type"] == "object"
     assert schemas.path("starter-catalog.schema.json").is_file()
+    assert schemas.load_file("fit-lab-view.schema.json")["properties"]["schema"]["const"] == "spritemotion.fit-lab-view"
     for bad in ("../pyproject.toml", "missing.schema.json", "game.json"):
         with pytest.raises((ValueError, FileNotFoundError)):
             schemas.path(bad)

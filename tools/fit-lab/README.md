@@ -163,7 +163,7 @@ Rules:
   builds or renders. Keyboard undo/redo never changes the outfit.
 
 The outfit is remembered per browser, per server origin and pack, in `localStorage` key
-`fit-lab:outfit:<origin>:<pack>` as the document in `schemas/fit-lab-view.schema.json`:
+`fit-lab:outfit:<origin>:<pack>` as the document in `common/schemas/fit-lab-view.schema.json`:
 `{"schema": "spritemotion.fit-lab-view", "schema_version": 1, "show": true, "measure_outfit": false,
 "worn": {"<slot>": "<item id>"}}`. On load, entries whose slot or item is not in the manifest (removed imports,
 re-exports) are dropped; an unreadable or wrong-version document means an empty outfit. Storage failures
