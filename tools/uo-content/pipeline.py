@@ -124,7 +124,8 @@ def snapshot_fit(spec):
         sources = {str(Path(p).resolve()).casefold() for p in spec.get('source_files', [])}
         matches = []
         for path in (ROOT / 'workspace/ultima-online/fit-lab').glob('*/lab-items.json'):
-            catalog = json.loads(path.read_text(encoding='utf-8'))
+            import labpaths
+            catalog = labpaths.load(path)
             if Path(catalog.get('mapping','')).resolve() != Path(spec['pack_mapping']).resolve(): continue
             matches.extend(i for i in catalog['items'] if sources and sources == {str(Path(p).resolve()).casefold() for p in i['files']})
         if len(matches) == 1: spec['fit_item'] = {k: matches[0][k] for k in ('id','slot','part')}

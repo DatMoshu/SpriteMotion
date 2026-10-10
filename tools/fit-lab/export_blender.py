@@ -18,11 +18,12 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from reference import write_reference
+import labpaths
 sys.path.insert(0, str(REPO / 'tools' / 'uo-content'))
 import pack_fit  # noqa: E402
 
 argv = sys.argv[sys.argv.index('--') + 1:]
-items_doc = json.loads(Path(argv[0]).read_text(encoding='utf-8'))
+items_doc = labpaths.load(argv[0])
 OUT = Path(argv[1]); FORCE = '--force' in argv
 (OUT / 'items').mkdir(parents=True, exist_ok=True)
 MODEL = Path(items_doc.get('model', REPO / 'workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend'))
@@ -52,7 +53,7 @@ manifest.update({
                'anchor_px': [68, 86], 'up': 'Z'},
     'directions': {'stored': 5, 'rotation_z_deg_per_step': -45, 'mirrored': {'5': 3, '6': 2, '7': 1}},
     'actions': [{'id': int(a['uo_action']), 'name': a.name, 'frames': int(a['uo_frames'])} for a in acts],
-    'pack': items_doc.get('pack'), 'mapping': items_doc.get('mapping'),
+    'pack': items_doc.get('pack'),  # the mapping is resolved from lab-items.json by the reader, never pinned here
 })
 
 

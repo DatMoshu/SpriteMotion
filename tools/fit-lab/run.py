@@ -21,6 +21,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 from adjustments import AdjustmentStore, ConflictError
 from assets import import_directory
 from builds import Builds
+import labpaths
 from service import describe
 
 HERE = Path(__file__).resolve().parent
@@ -35,7 +36,7 @@ find_blender = _blender.find_blender
 def data_dir(pack): return REPO / 'workspace/ultima-online/fit-lab' / pack
 
 
-def sidecar(): return Path(os.environ.get('SPRITEMOTION_SIDECAR', REPO.parent / 'SpriteMotion-Sidecar'))
+sidecar = labpaths.sidecar
 
 
 def blender():
@@ -97,7 +98,7 @@ def make_handler(pack, d, store, builds):
                     item = parse_qs(urlsplit(self.path).query).get('item', [''])[0]
                     return self.reply(200, json.dumps({'renders': builds.renders.renders(item)}).encode())
                 if path == '/api/mapping':
-                    mapping = Path(self.manifest().get('mapping') or '')
+                    mapping = Path(labpaths.load(d / 'lab-items.json').get('mapping') or '')
                     return self.reply(200, mapping.read_bytes()) if mapping.is_file() else self.reply(404, b'{}')
                 if path == '/api/state':
                     return self.reply(200, json.dumps(store.state()).encode())
