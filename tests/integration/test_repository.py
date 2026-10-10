@@ -175,7 +175,25 @@ def test_launcher_readme_lists_every_launcher_with_its_description():
         assert bat_header(name)[0] in readme, f"launchers/README.md has a stale description for {name}"
 
 
-HARDCODED_TOOL_PATH = re.compile(r"Program Files|Windows[\/]+Fonts|[A-Za-z]:[\/]+Windows|[A-Za-z]:[\/][^'\"\n]*blender", re.IGNORECASE)
+# `[\\/]` is a backslash or a slash in a regex class; `[\/]` is the slash only. A .py file holds backslash paths
+# doubled ('C:\\Windows'), so one or more separators are matched.
+HARDCODED_TOOL_PATH = re.compile(r"Program Files|Windows[\\/]+Fonts|[A-Za-z]:[\\/]+Windows|[A-Za-z]:[\\/]+[^'\"\n]*blender", re.IGNORECASE)
+
+
+def test_hardcoded_tool_path_pattern_matches_both_separators():
+    """Lines are source text as a .py file holds them: backslashes doubled, or in a raw string."""
+    hits = [
+        r"font = 'C:\\Windows\\Fonts\\arial.ttf'",
+        r"font = r'C:\Windows\Fonts'",
+        "font = 'C:/Windows/Fonts'",
+        r"exe = 'D:\\tools\\blender.exe'",
+        "exe = 'D:/tools/blender.exe'",
+        r"base = 'C:\\Program Files\\x'",
+    ]
+    misses = ["font = Path(windir, 'Fonts')", "exe = find_blender(ROOT)"]
+    print(HARDCODED_TOOL_PATH.pattern)
+    assert [line for line in hits if not HARDCODED_TOOL_PATH.search(line)] == []
+    assert [line for line in misses if HARDCODED_TOOL_PATH.search(line)] == []
 
 
 def test_code_has_no_hardcoded_windows_font_or_blender_paths():
