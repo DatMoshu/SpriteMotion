@@ -97,7 +97,7 @@ tab) rather than moving the base:
 - **When**: all poses, this animation, this direction or this animation and direction.
 - Correction X/Y/Z, rotate, scale and depth are deltas added to the base. Choosing a pose scope pauses playback.
 - **Body masking** overrides the occlusion mode for that scope (`Inherit`, `Clothing: limbs/head`,
-  `Attachment: whole body`, `No body masking`); see the masking guide.
+  `Attachment: whole body`, `No body masking`); see the [masking guide](masking-cleanup.md).
 - **Remove this correction** deletes it. Directions 5-7 share the corrections of 3-1.
 
 ![Corrections tab with the 2x2 view and facing ring](../images/spritemotion_GUIDE-02_corrections-tab_screenshot_20261010-0237.png)
