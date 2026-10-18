@@ -32,13 +32,14 @@ license and provenance hashes. This exception does not cover game-derived or com
 ## Checks before you finish
 
 ```powershell
-launchers\dev\worktree-venv.bat   # once per checkout or git worktree: workspace\venv that tests THIS checkout's common/
-launchers\dev\all-gates.bat       # pytest, outfit-lab unittest, agents check (uses workspace\venv when it exists)
+launchers\dev\worktree-venv.bat   # once per checkout: shared-area venv keyed to THIS checkout
+launchers\dev\all-gates.bat       # pytest, outfit-lab unittest, agents check (selects that checkout's venv)
 ```
 
 Never run a worktree's tests with `.venvs\spritemotion`: it is an editable install of the main checkout, so pytest
 silently tests main's `common/`. The launcher prints `spritemotion.__file__` and fails if it is not this checkout's.
-By hand: `workspace\venv\Scripts\python.exe -m pytest -q`, then `python -m unittest -q` in
+Find the environment with `python tools/worktree-venv/run.py --path` (`SPRITEMOTION_WORK_ROOT` overrides its shared work root).
+By hand: run that environment's Python with `-m pytest -q`, then `python -m unittest -q` in
 `games\ultima-online\outfit-lab`, then `python tools/agents/run.py --check`.
 
 Report what you verified and what you did not. Blender-side changes (`tools/uo-content`, `tools/fit-lab`) need a

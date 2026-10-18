@@ -29,6 +29,9 @@
 
 # Generated packages, portable builds and their node_modules.
 /outputs/
+/out/
+/tmp/
+/.claude/worktrees/
 
 # Python
 __pycache__/

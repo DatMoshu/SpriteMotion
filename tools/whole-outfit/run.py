@@ -68,7 +68,8 @@ def composite(args):
     layer_of = {p['code']: p.get('uo_layer') for p in read_json(catalog_doc['mapping'])['parts']}
     stamp = time.strftime('%Y%m%d-%H%M')
     items = sorted(jobs, key=lambda i: ORDER.index(catalog[i]['slot']))
-    jobs_dir = ROOT/'workspace/ultima-online/content-studio/jobs'
+    import pipeline
+    jobs_dir = pipeline.HOME/'jobs'
 
     def frames(base, action, direction):
         return sorted((base/ACTIONS[action]/f'dir{direction}').glob('*.png'))

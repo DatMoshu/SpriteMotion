@@ -12,7 +12,7 @@ python tools/whole-outfit/run.py composite --catalog lab-items.json --work DIR -
 
 - `--catalog` is a Fit Lab `lab-items.json`, `--adjustments` its saved fits (or a copy to experiment on).
 - `build` needs the canonical model installed in this checkout (`tools/uo-content/pipeline.py setup`) and Blender
-  (`SPRITEMOTION_BLENDER`). Jobs land in `workspace/ultima-online/content-studio/jobs/`; their names go to `DIR/jobs.json`.
+  (`SPRITEMOTION_BLENDER`). Jobs land in the configured content-studio home (see [storage settings](../uo-content/README.md#outputs-and-importing)); their names go to `DIR/jobs.json`.
 - `composite` writes one contact sheet per action (5 directions x frames), an all-actions overview, walk and spell GIFs
   and a per-slot table (`validated`, clipped, empty and edge-touching frame counts). Names follow
   `spritemotion_<story>_<subject>_<kind>_<YYYYMMDD-HHMM>.<ext>`.

@@ -1,4 +1,4 @@
-"""Create workspace/venv in this checkout and prove it imports spritemotion from this checkout.
+"""Create a shared-area venv for this checkout and verify its editable install.
 
 The shared venv (.venvs/spritemotion) is an editable install of the MAIN checkout, so pytest run from a git worktree
 with it silently tests main's common/. This builds a venv of the checkout it is run from (main or a worktree):
@@ -12,6 +12,7 @@ numpy/scipy/Pillow/jsonschema/pytest imports the gates need work. A second run r
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import os
 import shutil
 import subprocess
@@ -21,7 +22,10 @@ import venv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-VENV = ROOT / "workspace" / "venv"
+_spec = importlib.util.spec_from_file_location('workpaths', ROOT / 'common/workpaths.py')
+_paths = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_paths)
+VENV = _paths.checkout_venv(ROOT)
 
 CHECK = (
     "import sys, spritemotion, numpy, scipy, PIL, jsonschema, pytest;"
@@ -36,8 +40,12 @@ def venv_python() -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--rebuild", action="store_true", help="delete workspace/venv and build it again")
+    parser.add_argument("--rebuild", action="store_true", help="recreate this checkout's shared-area venv")
+    parser.add_argument("--path", action="store_true", help="print the venv directory without creating it")
     args = parser.parse_args(argv)
+    if args.path:
+        print(VENV)
+        return 0
 
     if args.rebuild and VENV.exists():
         print(f"Removing {VENV}")
@@ -47,6 +55,11 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print(f"Creating {VENV}")
         venv.EnvBuilder(with_pip=True, clear=False).create(VENV)
+    (VENV / 'README.md').write_text(
+        '# SpriteMotion checkout environment\n\n'
+        'Regenerate from its checkout with `python tools/worktree-venv/run.py`. '
+        'The checkout path determines this directory key. Do not reuse this editable install '
+        'for another checkout. `--path` prints the directory without creating it.\n', encoding='utf-8')
     python = str(venv_python())
     env = dict(os.environ, PIP_DISABLE_PIP_VERSION_CHECK="1")
 
