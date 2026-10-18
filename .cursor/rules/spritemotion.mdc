@@ -22,3 +22,13 @@ Cursor, Copilot and others). Before working:
 | `uo-outfit-review` | Review animated UO outfit fitting with per-piece original/new/off comparisons and capture reproducible still evidence for a video-maker handoff. | [.claude/skills/uo-outfit-review/SKILL.md](.claude/skills/uo-outfit-review/SKILL.md) |
 
 <!-- skills:end -->
+
+## Evidence
+Save all evidence in `D:/_agentShared/runs/<project>/<run-id>/`; run-id is `<YYYYMMDD>_<seat-or-story>_<topic>` (UTC, lower-case kebab).
+Name files by `D:/_agentShared/rules/evidence_naming.md`; storage and retention follow `D:/_agentShared/rules/evidence_central.md`.
+Start: `python D:/_fable/tools/evidence/run.py start --project PROJECT --seat SEAT --story STORY --topic TOPIC --repo REPO` (prints the folder).
+Capture there or use `python D:/_fable/tools/evidence/run.py add FILE --seat SEAT --subject SUBJECT --kind KIND`; finish with `python D:/_fable/tools/evidence/run.py done --seat SEAT --summary RESULT` and put the run id in DONE.
+Never save evidence in this repo/worktree; product source assets and test fixtures keep their own paths. Weekly purge removes only reviewed done runs older than 14 days; working/blocked/unreviewed runs are protected.
+
+## Evidence emitter follow-up
+TODO (project owner): inspect these evidence/capture candidates and route capture outputs through `evidence add` or the folder printed by `evidence start`; preserve product assets and operational logs: `tools/blender/apply_pose_edits.py`, `tools/blender/export_pose_editor.py`, `tools/blender/female_locomotion.py`, `tools/blender/fit_female_proportions.py`, `tools/blender/render_fitted_female.py`, `tools/blender/smblender.py`, `tools/blender/verify_female_locomotion.py`, `tools/blender/verify_pose_editor.py`, `tools/fit-lab/web/lab.js`, `tools/silhouette-fit/preview.py`, `tools/silhouette-fit/run.py`, `tools/transfer-export/run.py`, `tools/uo-content/equipment.py`, `tools/uo-content/pipeline.py`, `tools/vd/vdtool.py`, `tools/whole-outfit/run.py`, `tools/worktree-venv/run.py`.

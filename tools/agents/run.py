@@ -46,7 +46,14 @@ TARGETS = {
 }
 
 
-def render(intro): return intro + body() + '\n'
+def render(intro):
+    text = intro + body() + '\n'
+    source = (REPO / 'CLAUDE.md').read_text(encoding='utf-8')
+    for heading in ('Evidence', 'Evidence emitter follow-up'):
+        section = re.search(r'^## ' + re.escape(heading) + r'\n.*?(?=^## |\Z)', source, re.M | re.S)
+        if section:
+            text += '\n' + section.group(0).strip() + '\n'
+    return text
 
 
 def main():
