@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build workspace/venv for this checkout (a git worktree too), install it editable with the test extras, and fail unless spritemotion imports from this checkout.
+# Build a shared-area venv for this checkout, install it editable with the test extras, and verify its import path.
 # args: [--rebuild]  (default: reuse the venv and refresh the editable install)
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/../_shared/common.sh"

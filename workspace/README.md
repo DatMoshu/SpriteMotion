@@ -1,5 +1,14 @@
 # workspace/
 
+Generated payloads now belong under `SPRITEMOTION_WORK_ROOT` (Windows default:
+`D:/_agentShared/work/spritemotion`); review screenshots, logs and clips belong in
+central evidence runs. New content-studio jobs and checkout-specific Python
+environments use shared work automatically. Run `python tools/worktree-venv/run.py --path`
+to find this checkout's environment. Existing authoring inputs and manually edited
+scenes below are retained; the conventional layout below documents legacy data.
+Historical top-level review PNGs were centralized by CLEANUP-01; their original
+paths and new filenames are recorded in that evidence run's move receipts.
+
 Your local working area. **Everything here except this README is
 gitignored** and must never be committed or shared. That covers extracted game
 frames, your models and `.blend` files, fits, renders and comparison sheets.

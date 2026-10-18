@@ -19,7 +19,10 @@ _spec = importlib.util.spec_from_file_location('blender_helper', ROOT / 'common/
 _blender = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_blender)
 _find_blender = _blender.find_blender
-HOME = ROOT / 'workspace/ultima-online/content-studio'
+_paths_spec = importlib.util.spec_from_file_location('workpaths', ROOT / 'common/workpaths.py')
+_paths = importlib.util.module_from_spec(_paths_spec)
+_paths_spec.loader.exec_module(_paths)
+HOME = _paths.content_home()
 BACKEND = ROOT / 'workspace/ultima-online/canonical-model'
 PARTS = ['helm', 'chest', 'arms', 'gloves', 'legs', 'boots', 'robe', 'cloak', 'skirt', 'weapon', 'shield', 'bow', 'quiver']
 MODELS = {'.glb', '.gltf', '.fbx', '.obj', '.stl', '.blend'}

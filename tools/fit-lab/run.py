@@ -20,7 +20,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 from adjustments import AdjustmentStore, ConflictError
 from assets import import_directory
-from builds import Builds
+from builds import Builds, pipeline
 import labpaths
 from service import describe
 
@@ -75,7 +75,7 @@ def make_handler(pack, d, store, builds):
             if path == '/' + FIT_RULES.name:  # one source: the package file, not a copy under web/
                 root, relative = FIT_RULES.parent, FIT_RULES.name
             if path.startswith('/builds/'):
-                root = REPO/'workspace/ultima-online/content-studio/jobs'
+                root = pipeline.HOME/'jobs'
                 relative = path.removeprefix('/builds/')
             target = (root / relative).resolve()
             return str(target) if target.is_relative_to(root.resolve()) else str(root / '__not_found__')

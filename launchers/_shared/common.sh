@@ -4,7 +4,7 @@
 
 SM_ROOT=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)
 _sm_here="$SM_ROOT/launchers/_shared"
-_sm_keys="SPRITEMOTION_UO_SOURCE SPRITEMOTION_DATASET SPRITEMOTION_GODOT SPRITEMOTION_GODOT_CONSOLE SPRITEMOTION_BLENDER SPRITEMOTION_BLEND SPRITEMOTION_ARMATURE SPRITEMOTION_MAPPING SPRITEMOTION_FRAME_START SPRITEMOTION_FRAME_STEP SPRITEMOTION_PYTHON"
+_sm_keys="SPRITEMOTION_UO_SOURCE SPRITEMOTION_DATASET SPRITEMOTION_GODOT SPRITEMOTION_GODOT_CONSOLE SPRITEMOTION_BLENDER SPRITEMOTION_BLEND SPRITEMOTION_ARMATURE SPRITEMOTION_MAPPING SPRITEMOTION_FRAME_START SPRITEMOTION_FRAME_STEP SPRITEMOTION_PYTHON SPRITEMOTION_WORK_ROOT SPRITEMOTION_CONTENT_HOME"
 
 # Remember what the environment already says (a blank value counts as unset, like in common.bat).
 _sm_env=""
@@ -24,6 +24,16 @@ sm_find_venv_python() {
     return 1
 }
 SM_VENV_PYTHON=$(sm_find_venv_python || true)
+export SPRITEMOTION_WORK_ROOT SPRITEMOTION_CONTENT_HOME
+if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
+    _sm_bootstrap=$(command -v python3 || command -v python || true)
+    if [ -n "$_sm_bootstrap" ]; then
+        SM_CHECKOUT_VENV=$("$_sm_bootstrap" "$SM_ROOT/tools/worktree-venv/run.py" --path 2>/dev/null || true)
+        for _c in "$SM_CHECKOUT_VENV/bin/python" "$SM_CHECKOUT_VENV/Scripts/python.exe"; do
+            if [ -x "$_c" ]; then SPRITEMOTION_PYTHON=$_c; break; fi
+        done
+    fi
+fi
 if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
     # workspace/venv (launchers/dev/worktree-venv) tests THIS checkout; .venvs/spritemotion is main's editable install.
     for _c in "$SM_ROOT/workspace/venv/bin/python" "$SM_ROOT/workspace/venv/Scripts/python.exe"; do

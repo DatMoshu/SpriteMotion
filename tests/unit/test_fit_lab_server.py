@@ -66,3 +66,14 @@ def test_directories_are_not_listed(lab):
 def test_missing_manifest_returns_json_error(lab):
     status, body = request(lab, 'GET', '/api/mapping')
     assert status == 404 and 'error' in json.loads(body)
+
+
+def test_build_urls_use_configured_content_home(lab, monkeypatch, tmp_path):
+    home = tmp_path / 'relocated-studio'
+    job = home / 'jobs' / 'test-job'
+    job.mkdir(parents=True)
+    (job / 'validation.json').write_text('{"ok":true}', encoding='utf-8')
+    monkeypatch.setattr(run.pipeline, 'HOME', home)
+    status, body = request(lab, 'GET', '/builds/test-job/validation.json')
+    assert status == 200 and json.loads(body) == {'ok': True}
+    assert request(lab, 'GET', '/builds/')[0] == 404

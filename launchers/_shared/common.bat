@@ -4,7 +4,10 @@
 for %%I in ("%~dp0..\..") do set "SM_ROOT=%%~fI"
 call "%~dp0config.bat"
 
-@rem workspace\venv (launchers\dev\worktree-venv) tests THIS checkout; .venvs\spritemotion is main's editable install.
+@rem Prefer the shared-area venv keyed to THIS checkout, then legacy environments.
+set "SM_CHECKOUT_VENV="
+for /f "delims=" %%V in ('python "%SM_ROOT%\tools\worktree-venv\run.py" --path 2^>nul') do set "SM_CHECKOUT_VENV=%%V"
+if not defined SPRITEMOTION_PYTHON if defined SM_CHECKOUT_VENV if exist "%SM_CHECKOUT_VENV%\Scripts\python.exe" set "SPRITEMOTION_PYTHON=%SM_CHECKOUT_VENV%\Scripts\python.exe"
 if not defined SPRITEMOTION_PYTHON if exist "%SM_ROOT%\workspace\venv\Scripts\python.exe" set "SPRITEMOTION_PYTHON=%SM_ROOT%\workspace\venv\Scripts\python.exe"
 if not defined SPRITEMOTION_PYTHON set "SPRITEMOTION_PYTHON=%SM_ROOT%\.venvs\spritemotion\Scripts\python.exe"
 if not defined SPRITEMOTION_GODOT if exist "%SM_ROOT%\tools\godot\Godot_v4.7-stable_win64.exe" set "SPRITEMOTION_GODOT=%SM_ROOT%\tools\godot\Godot_v4.7-stable_win64.exe"

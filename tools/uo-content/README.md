@@ -55,7 +55,16 @@ collision regions for skinned clothes; the separate pristine-body depth pass con
 
 ## Outputs and importing
 
-Each job under `workspace/ultima-online/content-studio/jobs/<id>` includes:
+New jobs live under `<SPRITEMOTION_WORK_ROOT>/content-studio/jobs/<id>`.
+On Windows the work root defaults to `D:/_agentShared/work/spritemotion`; elsewhere it defaults to
+`~/.cache/spritemotion`. Set `SPRITEMOTION_CONTENT_HOME` to override the entire content-studio directory.
+The studio, Fit Lab render URLs and whole-outfit composites use the same setting.
+Existing jobs and manually edited scenes in the old `workspace/ultima-online/content-studio` remain there;
+set `SPRITEMOTION_CONTENT_HOME` to that directory to browse them, or pass their full job path to the CLI.
+Do not delete or automatically migrate these authoring scenes. Restart local servers after changing settings.
+Backend setup and saved Fit Lab adjustments keep their existing locations.
+
+Each job includes:
 
 * `item.blend`: item mounted on the new rig, editable and with packed images.
 * `item.vd`: UOFiddler people/equipment export, available for collaborators.
