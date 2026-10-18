@@ -52,3 +52,10 @@ headless Blender run, not only a syntax check.
 - In item renders the body is a holdout: body poking through clothing cuts holes in the item sprite. Asset-pack
   parts can hide body faces under them (`hide_body` in the mapping, tuned in `tools/fit-lab`).
 - Asset packs are mapped 1:1 per pack: `docs/asset-packs.md`.
+
+## Evidence
+Save all evidence in `D:/_agentShared/runs/<project>/<run-id>/`; run-id is `<YYYYMMDD>_<seat-or-story>_<topic>` (UTC, lower-case kebab).
+Name files by `D:/_agentShared/rules/evidence_naming.md`; storage and retention follow `D:/_agentShared/rules/evidence_central.md`.
+Start: `python D:/_fable/tools/evidence/run.py start --project PROJECT --seat SEAT --story STORY --topic TOPIC --repo REPO` (prints the folder).
+Capture there or use `python D:/_fable/tools/evidence/run.py add FILE --seat SEAT --subject SUBJECT --kind KIND`; finish with `python D:/_fable/tools/evidence/run.py done --seat SEAT --summary RESULT` and put the run id in DONE.
+Never save evidence in this repo/worktree; product source assets and test fixtures keep their own paths. Weekly purge removes only reviewed done runs older than 14 days; working/blocked/unreviewed runs are protected.
