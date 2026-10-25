@@ -33,8 +33,13 @@ rebuild sources are excluded. Protected/unknown contents abort the deletion
 plan before any candidate is removed. Links are never traversed for deletion.
 
 `python tools/storage/run.py check` reports current use; `prune` runs the same
-retention policy immediately. Locks serialize builds and cleanup. After a
-crash, verify the PID in `.storage.lock` or `.storage.pin` is no longer active
+retention policy immediately. Locks serialize builds and cleanup. An acquired
+pin protects the source across separately locked
+create/render/merge sessions. Creating a pin uses the same store lock as the
+entire retention selection/deletion pass. If cleanup already owns that lock,
+pin acquisition fails before the rebuild enters its body; retry after cleanup.
+No store lock is held across the pin body, so rebuild sessions do not deadlock.
+After a crash, verify the PID in `.storage.lock` or `.storage.pin` is no longer active
 before removing that marker. There is no unattended timer or stale-lock bypass.
 
 This is a producer guard, not an operating-system disk quota. A child can

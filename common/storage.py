@@ -109,17 +109,28 @@ def remove_derived(job, initial_scene=False):
 @contextmanager
 def pin(job):
     """Keep an immutable rebuild source alive across patch/render/merge sessions."""
-    marker = Path(job) / '.storage.pin'
+    job = Path(job).resolve()
+    if job.parent.name != 'jobs':
+        raise ValueError('A rebuild pin must belong to an external store jobs directory.')
+    marker = job / '.storage.pin'
+    fd = None
     try:
-        fd = os.open(marker, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-    except FileExistsError:
-        raise ValueError('This source job is already pinned by another rebuild.')
-    try:
-        os.write(fd, str(os.getpid()).encode())
+        # Serialize marker creation with the ENTIRE retention plan/delete pass.
+        # Release the store lock before yielding so rebuild create/run sessions
+        # can acquire it while the persistent marker protects their source.
+        with Store(job.parent.parent).lock():
+            try:
+                fd = os.open(marker, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            except FileExistsError:
+                raise ValueError('This source job is already pinned by another rebuild.')
+            os.write(fd, str(os.getpid()).encode())
         yield
     finally:
-        os.close(fd)
-        marker.unlink()
+        if fd is not None:
+            os.close(fd)
+            # The source is no longer in use. Removing its marker needs no
+            # store lock and must not fail merely because another build started.
+            marker.unlink()
 
 
 class Store:
@@ -137,6 +148,11 @@ class Store:
         return size
 
     def prune(self, protect=()):
+        with self.lock():
+            return self._prune(protect)
+
+    def _prune(self, protect=()):
+        """Plan and delete while the caller owns this store's lock."""
         protected = {Path(p).resolve() for p in protect}
         jobs = []
         if linked(self.home / 'jobs'):
@@ -166,7 +182,7 @@ class Store:
         return removed
 
     @contextmanager
-    def session(self, protect=()):
+    def lock(self):
         self.home.mkdir(parents=True, exist_ok=True)
         lock = self.home / '.storage.lock'
         try:
@@ -175,12 +191,17 @@ class Store:
             raise ValueError('Another content build/cleanup holds .storage.lock. Wait; after a crash verify no build is active before removing the lock.')
         try:
             os.write(fd, str(os.getpid()).encode())
-            self.prune(protect)
-            self.require()
             yield self
         finally:
             os.close(fd)
             lock.unlink()
+
+    @contextmanager
+    def session(self, protect=()):
+        with self.lock():
+            self._prune(protect)
+            self.require()
+            yield self
 
     def process(self, command, job, **kwargs):
         """Stop the child on overflow; polling may allow one write interval of overshoot."""

@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 
 import pytest
 
@@ -94,6 +96,102 @@ def test_rebuild_pin_protects_old_source_between_sessions(tmp_path):
     assert not (old / '.storage.pin').exists()
     store.prune()
     assert not (old / 'render').exists()
+
+
+@pytest.mark.parametrize('entry', ['prune', 'session'])
+def test_retention_plan_blocks_late_pin_before_rebuild_body(tmp_path, monkeypatch, entry):
+    home = tmp_path / 'content'
+    old = job(home, 1)
+    job(home, 2, age=0)
+    planned, resume = Event(), Event()
+    guard = storage.protected_guard
+
+    def paused_guard(candidates):
+        # Retention has already selected this source but has not deleted it.
+        assert old / 'render' in candidates
+        planned.set()
+        assert resume.wait(10), 'test never released retention barrier'
+        guard(candidates)
+
+    monkeypatch.setattr(storage, 'protected_guard', paused_guard)
+
+    def prune():
+        store = storage.Store(home, storage.Policy(max_bytes=100000, keep=1))
+        if entry == 'prune':
+            store.prune()
+        else:
+            with store.session():
+                pass
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        future = pool.submit(prune)
+        try:
+            assert planned.wait(10), 'retention did not reach planned-deletion barrier'
+            with pytest.raises(ValueError, match='Another content build'):
+                with storage.pin(old):
+                    pytest.fail('rebuild entered while its source was selected for deletion')
+            assert not (old / '.storage.pin').exists()
+            assert (old / 'render/frame.png').exists()
+        finally:
+            resume.set()
+        future.result(timeout=10)
+    assert not (old / 'render').exists()
+    assert not (home / '.storage.lock').exists()
+    assert (old / 'item.blend').read_bytes() == b'authored scene'
+
+
+def test_acquired_pin_survives_concurrent_prune_and_releases_without_store_lock(tmp_path):
+    home = tmp_path / 'content'
+    old = job(home, 1)
+    job(home, 2, age=0)
+    acquired, release = Event(), Event()
+
+    def rebuild():
+        with storage.pin(old):
+            acquired.set()
+            assert release.wait(10), 'test never released pinned rebuild'
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        future = pool.submit(rebuild)
+        try:
+            assert acquired.wait(10), 'rebuild never acquired pin'
+            store = storage.Store(home, storage.Policy(max_bytes=100000, keep=1))
+            store.prune()
+            with store.session():
+                assert (old / 'render/frame.png').exists()
+                # Releasing a finished rebuild must not contend with this lock.
+                release.set()
+                future.result(timeout=10)
+                assert not (old / '.storage.pin').exists()
+        finally:
+            release.set()
+        future.result(timeout=10)
+    store.prune()
+    assert not (old / 'render').exists()
+
+
+def test_pinned_source_allows_real_create_and_run_sessions(tmp_path, monkeypatch):
+    import pipeline
+    home = tmp_path / 'content'
+    old = job(home, 1)
+    backend = tmp_path / 'backend'
+    (backend / 'model').mkdir(parents=True)
+    (backend / 'model/UO_Body_0x190.blend').write_bytes(b'synthetic model')
+    (backend / 'provenance.json').write_text('{}')
+    monkeypatch.setattr(pipeline, 'HOME', home)
+    monkeypatch.setattr(pipeline, 'BACKEND', backend)
+    monkeypatch.setattr(pipeline, 'render_fingerprint', lambda: 'synthetic renderer')
+    monkeypatch.setenv('SPRITEMOTION_KEEP_OUTPUT_JOBS', '1')
+    def render(path, store):
+        assert (home / '.storage.lock').exists()
+        assert (old / 'render/frame.png').exists()
+        return 'render entered'
+    monkeypatch.setattr(pipeline, '_run_job', render)
+    with storage.pin(old):
+        patch = pipeline.create_job({'name': 'Synthetic patch'})
+        assert pipeline.run_job(patch) == 'render entered'
+    assert not (home / '.storage.lock').exists()
+    assert not (old / '.storage.pin').exists()
 
 
 @pytest.mark.parametrize('existing_scene', [False, True])
