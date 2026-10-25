@@ -56,7 +56,7 @@ def test_anim_stage_missing_client_file_fails_before_output(tmp_path):
 def test_equipment_failure_after_staging_removes_partial_output(tmp_path, monkeypatch):
     folder = job(tmp_path)
 
-    def fake_stage(vd, source, body, out):
+    def fake_stage(vd, source, body, out, **kwargs):
         Path(out).mkdir(); (Path(out) / 'anim.mul').write_bytes(b'partial')
         return {'source_hashes': {}, 'staged_hashes': {}}
 

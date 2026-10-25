@@ -1,4 +1,4 @@
-"""Download the Godot build the Sprite Pose Editor is tested with into tools/godot/.
+"""Download the tested Godot build into the external shared work area.
 
     python tools/godot/fetch.py            # this platform
     python tools/godot/fetch.py --force    # replace an existing download
@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import platform
 import sys
 import tempfile
@@ -21,7 +22,13 @@ from pathlib import Path
 
 VERSION = "4.7-stable"
 RELEASE = f"https://github.com/godotengine/godot/releases/download/{VERSION}/"
-HERE = Path(__file__).resolve().parent
+_spec = importlib.util.spec_from_file_location('workpaths', Path(__file__).resolve().parents[2] / 'common/workpaths.py')
+_paths = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_paths)
+HERE = _paths.work_root() / 'godot'
+_guard_spec = importlib.util.spec_from_file_location('storage', Path(__file__).resolve().parents[2] / 'common/storage.py')
+_storage = importlib.util.module_from_spec(_guard_spec)
+_guard_spec.loader.exec_module(_storage)
 
 # platform -> (zip name, sha512, files it must contain)
 BUILDS = {
@@ -58,6 +65,7 @@ def download(url: str, target: Path) -> str:
         total = int(response.headers.get("Content-Length") or 0)
         done = 0
         while block := response.read(1 << 20):
+            _storage.Store(HERE).require(len(block))
             out.write(block)
             digest.update(block)
             done += len(block)
@@ -72,18 +80,29 @@ def main(argv=None) -> int:
     parser.add_argument("--platform", choices=sorted(BUILDS), default=None)
     parser.add_argument("--force", action="store_true", help="download even if Godot is already here")
     args = parser.parse_args(argv)
+    with _storage.Store(HERE).session() as store:
+        return install(args, store)
+
+
+def install(args, store):
     name, sha512, files = BUILDS[args.platform or current_platform()]
     if all((HERE / f).exists() for f in files) and not args.force:
         print(f"Godot {VERSION} is already in {HERE}")
         return 0
     print(f"Downloading {RELEASE}{name}")
-    with tempfile.TemporaryDirectory() as tmp:
+    HERE.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=HERE) as tmp:
         archive = Path(tmp) / name
         actual = download(RELEASE + name, archive)
         if actual != sha512:
             print(f"Checksum mismatch for {name}:\n  expected {sha512}\n  got      {actual}", file=sys.stderr)
             return 1
         with zipfile.ZipFile(archive) as zf:
+            for info in zf.infolist():
+                target = (HERE / info.filename).resolve()
+                if HERE.resolve() not in target.parents:
+                    raise ValueError('Archive member escapes the external Godot directory.')
+            store.require(sum(info.file_size for info in zf.infolist()))
             zf.extractall(HERE)
             if sys.platform != "win32":      # zipfile drops the executable bit
                 for info in zf.infolist():

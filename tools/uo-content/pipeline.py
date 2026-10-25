@@ -23,13 +23,22 @@ _paths_spec = importlib.util.spec_from_file_location('workpaths', ROOT / 'common
 _paths = importlib.util.module_from_spec(_paths_spec)
 _paths_spec.loader.exec_module(_paths)
 HOME = _paths.content_home()
-BACKEND = ROOT / 'workspace/ultima-online/canonical-model'
+_storage_spec = importlib.util.spec_from_file_location('content_storage', ROOT / 'common/storage.py')
+storage = importlib.util.module_from_spec(_storage_spec)
+_storage_spec.loader.exec_module(storage)
+BACKEND = _paths.backend_home()
 PARTS = ['helm', 'chest', 'arms', 'gloves', 'legs', 'boots', 'robe', 'cloak', 'skirt', 'weapon', 'shield', 'bow', 'quiver']
 MODELS = {'.glb', '.gltf', '.fbx', '.obj', '.stl', '.blend'}
 IMAGES = {'.png', '.jpg', '.jpeg', '.webp'}
 
 def write_json(path, value):
-    Path(path).write_text(json.dumps(value, indent=2), encoding='utf-8')
+    path = Path(path)
+    text = json.dumps(value, indent=2)
+    # Status must remain writable after a limit error (bounded metadata only).
+    if path.resolve().is_relative_to(HOME.resolve()) and not (path.name == 'status.json' and len(text) < 4096):
+        old = path.stat().st_size if path.exists() else 0
+        storage.Store(HOME).require(max(0, len(text.encode('utf-8')) - old))
+    path.write_text(text, encoding='utf-8')
 
 def sha(path):
     h = hashlib.sha256()
@@ -142,6 +151,20 @@ def snapshot_fit(spec):
 
 
 def create_job(spec, asset=None):
+    with storage.Store(HOME).session() as store:
+        inputs = []
+        if asset:
+            source = Path(asset).resolve()
+            inputs.append(source)
+            if source.suffix.lower() in ('.obj', '.gltf'):
+                inputs.extend(p for p in source.parent.iterdir() if p.is_file() and p.suffix.lower() in IMAGES | {'.bin', '.mtl'})
+        if spec.get('pack_mapping'):
+            inputs.append(Path(spec['pack_mapping']))
+        store.require(sum(p.stat().st_size for p in set(inputs)) + len(json.dumps(spec).encode('utf-8')) + 8192)
+        return _create_job(spec, asset)
+
+
+def _create_job(spec, asset=None):
     spec = normalize(spec)
     snapshot_fit(spec)
     if not (BACKEND / 'provenance.json').exists():
@@ -184,23 +207,54 @@ def create_job(spec, asset=None):
 
 def run_job(job):
     job = Path(job).resolve()
+    if job.parent != (HOME / 'jobs').resolve():
+        raise ValueError('Build jobs must be inside the configured external content home.')
+    had_scene = (job / 'item.blend').exists()
+    if had_scene:
+        raise ValueError('Existing editable scene present. Create a fresh job; builds never overwrite an authored scene.')
+    with storage.Store(HOME).session(protect=[job]) as store:
+        try:
+            return _run_job(job, store)
+        except storage.StorageLimit as error:
+            # This build's newly generated scene is reproducible from retained
+            # spec/input. Never discard a pre-existing editable scene.
+            storage.remove_derived(job, initial_scene=not had_scene)
+            spec = json.loads((job / 'job.json').read_text(encoding='utf-8'))
+            write_json(job / 'status.json', dict(state='failed', name=spec.get('name', job.name), error=str(error)))
+            raise
+
+
+def _run_job(job, store):
     spec = json.loads((job / 'job.json').read_text(encoding='utf-8'))
     write_json(job / 'status.json', dict(state='building', name=spec['name']))
     try:
         with (job / 'build.log').open('w', encoding='utf-8') as log:
-            process = subprocess.run([blender_path(), '--background', '--factory-startup', '--disable-autoexec',
+            returncode = store.process([blender_path(), '--background', '--factory-startup', '--disable-autoexec',
                 '--threads', os.environ.get('SPRITEMOTION_RENDER_THREADS','0'),
-                '--python-exit-code', '1', '--python', str(HERE / 'blender_build.py'), '--', str(job / 'job.json')],
+                '--python-exit-code', '1', '--python', str(HERE / 'blender_build.py'), '--', str(job / 'job.json')], job,
                 stdout=log, stderr=subprocess.STDOUT, cwd=ROOT)
-        if process.returncode:
+        if returncode:
             raise RuntimeError('Blender build failed; see build.log.')
-        finish(job)
+        finish(job, _store=store)
         write_json(job / 'status.json', dict(state='complete', name=spec['name'], mode=spec['mode']))
     except Exception as e:
         write_json(job / 'status.json', dict(state='failed', name=spec['name'], error=str(e)))
         raise
 
-def finish(job):
+def finish(job, _store=None):
+    job = Path(job).resolve()
+    if not job.is_relative_to(HOME.resolve()):
+        raise ValueError('Finish output must be inside the external content home.')
+    if _store is None:
+        with storage.Store(HOME).session(protect=[job]) as store:
+            return finish(job, _store=store)
+    _store.require()
+    result = _finish(job)
+    _store.require()
+    return result
+
+
+def _finish(job):
     import base64
     import zlib
     import numpy as np
@@ -311,11 +365,14 @@ def finish(job):
         "An animation ID is not the static item graphic ID. Female body conversion is not supplied.\n"
         "Partial previews are rejected by the importer. Review all facings, mounted poses and clipping before deployment.\n",
         encoding='utf-8')
+    package_files = [p for p in job.rglob('*') if p.is_file() and (p.parent == review or render in p.parents or p.name in
+        {'item.vd','validation.json','IMPORT-README.txt','job.json','scene-report.json','contact-sheet.png','inventory.png'})]
+    # Reserve a conservative uncompressed ZIP upper bound before opening it.
+    estimate = sum(p.stat().st_size + p.stat().st_size // 1000 + len(str(p.relative_to(job)).encode('utf-8')) * 2 + 256 for p in package_files) + 1024
+    storage.Store(HOME).require(estimate)
     with zipfile.ZipFile(job / 'import-package.zip', 'w', zipfile.ZIP_DEFLATED) as z:
-        for p in job.rglob('*'):
-            if p.is_file() and (p.parent == review or render in p.parents or p.name in
-                    {'item.vd','validation.json','IMPORT-README.txt','job.json','scene-report.json','contact-sheet.png','inventory.png'}):
-                z.write(p, p.relative_to(job))
+        for p in package_files:
+            z.write(p, p.relative_to(job))
     write_json(job / 'status.json', dict(state='complete', name=spec['name'], mode=spec['mode']))
 
 def main():
@@ -326,6 +383,7 @@ def main():
     f = sub.add_parser('finish'); f.add_argument('job')
     r = sub.add_parser('rebuild'); r.add_argument('job'); r.add_argument('--adjustments',required=True)
     args = p.parse_args()
+    storage.startup(ROOT, sys.executable)
     if args.command == 'setup':
         print(setup(args.source))
     elif args.command == 'finish':

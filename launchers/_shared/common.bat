@@ -3,13 +3,17 @@
 @echo off
 for %%I in ("%~dp0..\..") do set "SM_ROOT=%%~fI"
 call "%~dp0config.bat"
+python "%SM_ROOT%\tools\storage\run.py" startup --checkout "%SM_ROOT%" --paths-only >nul || exit /b 1
 
-@rem Prefer the shared-area venv keyed to THIS checkout, then legacy environments.
+@rem Use only the external environment keyed to THIS checkout or an explicit override.
 set "SM_CHECKOUT_VENV="
 for /f "delims=" %%V in ('python "%SM_ROOT%\tools\worktree-venv\run.py" --path 2^>nul') do set "SM_CHECKOUT_VENV=%%V"
 if not defined SPRITEMOTION_PYTHON if defined SM_CHECKOUT_VENV if exist "%SM_CHECKOUT_VENV%\Scripts\python.exe" set "SPRITEMOTION_PYTHON=%SM_CHECKOUT_VENV%\Scripts\python.exe"
-if not defined SPRITEMOTION_PYTHON if exist "%SM_ROOT%\workspace\venv\Scripts\python.exe" set "SPRITEMOTION_PYTHON=%SM_ROOT%\workspace\venv\Scripts\python.exe"
-if not defined SPRITEMOTION_PYTHON set "SPRITEMOTION_PYTHON=%SM_ROOT%\.venvs\spritemotion\Scripts\python.exe"
+if not defined SPRITEMOTION_PYTHON if defined SM_CHECKOUT_VENV set "SPRITEMOTION_PYTHON=%SM_CHECKOUT_VENV%\Scripts\python.exe"
+if exist "%SPRITEMOTION_PYTHON%" "%SPRITEMOTION_PYTHON%" "%SM_ROOT%\tools\storage\run.py" startup --checkout "%SM_ROOT%" --python "%SPRITEMOTION_PYTHON%" >nul || exit /b 1
+for /f "delims=" %%G in ('python "%SM_ROOT%\tools\storage\run.py" godot-path') do set "SM_GODOT_CACHE=%%G"
+if not defined SPRITEMOTION_GODOT if exist "%SM_GODOT_CACHE%\Godot_v4.7-stable_win64.exe" set "SPRITEMOTION_GODOT=%SM_GODOT_CACHE%\Godot_v4.7-stable_win64.exe"
+if not defined SPRITEMOTION_GODOT_CONSOLE if exist "%SM_GODOT_CACHE%\Godot_v4.7-stable_win64_console.exe" set "SPRITEMOTION_GODOT_CONSOLE=%SM_GODOT_CACHE%\Godot_v4.7-stable_win64_console.exe"
 if not defined SPRITEMOTION_GODOT if exist "%SM_ROOT%\tools\godot\Godot_v4.7-stable_win64.exe" set "SPRITEMOTION_GODOT=%SM_ROOT%\tools\godot\Godot_v4.7-stable_win64.exe"
 if not defined SPRITEMOTION_GODOT_CONSOLE if exist "%SM_ROOT%\tools\godot\Godot_v4.7-stable_win64_console.exe" set "SPRITEMOTION_GODOT_CONSOLE=%SM_ROOT%\tools\godot\Godot_v4.7-stable_win64_console.exe"
 if not defined SPRITEMOTION_GODOT_CONSOLE set "SPRITEMOTION_GODOT_CONSOLE=%SPRITEMOTION_GODOT%"

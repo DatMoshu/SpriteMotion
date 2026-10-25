@@ -47,5 +47,7 @@ def test_partial_rebuild_rejects_changed_inputs(tmp_path,monkeypatch,change,reas
     if change=='model': spec['backend_sha256']='old'
     elif change=='renderer': spec['render_fingerprint']='old'
     else: source.write_bytes(b'changed')
-    (tmp_path/'job.json').write_text(json.dumps(spec))
-    with pytest.raises(ValueError,match=reason): rebuild_job(tmp_path,{'parts':{},'items':{}})
+    home=tmp_path/'content'; job=home/'jobs/000000000001'; job.mkdir(parents=True)
+    monkeypatch.setattr(pipeline,'HOME',home)
+    (job/'job.json').write_text(json.dumps(spec))
+    with pytest.raises(ValueError,match=reason): rebuild_job(job,{'parts':{},'items':{}})

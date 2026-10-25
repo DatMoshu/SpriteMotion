@@ -18,7 +18,6 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import venv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,6 +25,9 @@ _spec = importlib.util.spec_from_file_location('workpaths', ROOT / 'common/workp
 _paths = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_paths)
 VENV = _paths.checkout_venv(ROOT)
+_guard_spec = importlib.util.spec_from_file_location('storage', ROOT / 'common/storage.py')
+_storage = importlib.util.module_from_spec(_guard_spec)
+_guard_spec.loader.exec_module(_storage)
 
 CHECK = (
     "import sys, spritemotion, numpy, scipy, PIL, jsonschema, pytest;"
@@ -47,6 +49,13 @@ def main(argv: list[str] | None = None) -> int:
         print(VENV)
         return 0
 
+    _storage.startup(ROOT, paths_only=True)
+    with _storage.Store(VENV.parent).session() as store:
+        return prepare(args, store)
+
+
+def prepare(args, store):
+
     if args.rebuild and VENV.exists():
         print(f"Removing {VENV}")
         shutil.rmtree(VENV)
@@ -54,16 +63,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Reusing {VENV}")
     else:
         print(f"Creating {VENV}")
-        venv.EnvBuilder(with_pip=True, clear=False).create(VENV)
+        if store.process([sys.executable, '-m', 'venv', str(VENV)], VENV):
+            return 1
     (VENV / 'README.md').write_text(
         '# SpriteMotion checkout environment\n\n'
         'Regenerate from its checkout with `python tools/worktree-venv/run.py`. '
         'The checkout path determines this directory key. Do not reuse this editable install '
         'for another checkout. `--path` prints the directory without creating it.\n', encoding='utf-8')
     python = str(venv_python())
-    env = dict(os.environ, PIP_DISABLE_PIP_VERSION_CHECK="1")
+    env = dict(os.environ, PIP_DISABLE_PIP_VERSION_CHECK="1", PIP_CACHE_DIR=str(VENV.parent / '.pip-cache'),
+               PYTHONPYCACHEPREFIX=str(VENV / 'pycache'))
 
-    if subprocess.run([python, "-m", "pip", "install", "-e", ".[test]"], cwd=ROOT, env=env).returncode:
+    if store.process([python, "-m", "pip", "install", "-e", ".[test]"], VENV, cwd=ROOT, env=env):
         print("pip install -e .[test] failed", file=sys.stderr)
         return 1
 
@@ -85,4 +96,8 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (ValueError, OSError) as error:
+        print('[SpriteMotion environment] ' + str(error), file=sys.stderr)
+        raise SystemExit(2)
