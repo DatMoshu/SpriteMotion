@@ -11,6 +11,8 @@ import pytest
 
 from spritemotion import storage, workpaths
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'tools/uo-content'))
+
 
 def job(home, number, state='complete', age=20):
     p = home / 'jobs' / f'{number:012x}'
