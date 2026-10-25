@@ -218,7 +218,7 @@ def startup(checkout, python=None, paths_only=False):
     paths.external_path(content, checkout)
     if not paths_only:
         if not python:
-            python = paths.checkout_venv(checkout) / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+            python = os.environ.get('SPRITEMOTION_PYTHON') or paths.checkout_venv(checkout) / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
         exe = Path(python).resolve()
         paths.external_path(exe, checkout)
         result = subprocess.run([str(exe), '-c', 'import spritemotion; print(spritemotion.__file__)'],

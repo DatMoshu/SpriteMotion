@@ -201,6 +201,7 @@ def test_download_extraction_refuses_expansion_before_unpack(tmp_path, monkeypat
 def test_missing_keyed_environment_never_creates_local_fallback(tmp_path, monkeypatch):
     root = Path(__file__).resolve().parents[2]
     monkeypatch.setenv('SPRITEMOTION_WORK_ROOT', str(tmp_path / 'external'))
+    monkeypatch.delenv('SPRITEMOTION_PYTHON', raising=False)
     with pytest.raises(OSError):
         storage.startup(root)
     assert not (tmp_path / 'external').exists()
@@ -227,6 +228,8 @@ def test_real_launcher_refuses_local_override_and_historical_resume(tmp_path):
     env = dict(os.environ, SPRITEMOTION_PYTHON=sys.executable, SPRITEMOTION_WORK_ROOT=str(tmp_path / 'external'))
     env.pop('SPRITEMOTION_CONTENT_HOME', None)
     result = subprocess.run(command + ['--paths-only'], env=env, capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    result = subprocess.run(command, env=env, capture_output=True, text=True)
     assert result.returncode == 0, result.stdout + result.stderr
     historical = tmp_path / 'historical'
     historical.mkdir()
