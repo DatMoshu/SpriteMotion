@@ -53,7 +53,23 @@ def require_client_files(client, names):
     missing=[n for n in names if not (Path(client)/n).is_file()]
     if missing: raise ValueError(f'Client folder is missing {", ".join(missing)}: choose a classic MUL client folder.')
 
-def stage(vd, client, body, out):
+def staging_store(out):
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('staging_storage',Path(__file__).resolve().parents[2]/'common/storage.py')
+    storage=importlib.util.module_from_spec(spec);spec.loader.exec_module(storage)
+    out=storage.paths.external_path(Path(out))
+    home=storage.paths.content_home()
+    return storage.Store(home if home in out.parents else out.parent)
+
+
+def stage(vd, client, body, out, _store=None):
+    if _store is not None:
+        return _stage(vd,client,body,out,_store)
+    with staging_store(out).session() as store:
+        return _stage(vd,client,body,out,store)
+
+
+def _stage(vd, client, body, out, store):
     vd,client,out=Path(vd).resolve(),Path(client).resolve(),Path(out).resolve()
     if not 400<=body<=2047: raise ValueError('Choose a people animation ID from 400 to 2047.')
     require_client_files(client,ANIM_FILES)
@@ -82,6 +98,9 @@ def stage(vd, client, body, out):
             except (TypeError,IndexError): pass
             except ValueError as e:
                 if 'routed' in str(e): raise
+    # Include the entire client copy, appended VD blocks, index expansion and report.
+    store.require((client/'anim.mul').stat().st_size + sum(map(len,blocks.values()))
+                  + max(len(index),(first+175)*12) + 16384)
     out.mkdir(parents=True)
     try:
         shutil.copy2(client/'anim.mul',out/'anim.mul')
