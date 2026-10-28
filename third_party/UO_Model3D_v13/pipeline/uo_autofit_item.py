@@ -1,12 +1,12 @@
 # Size and place the SELECTED item on the UO body by what the item has to do: wrap the skin it covers, at a small distance, without the skin poking out.
 # uo_import_item.py scales an item from ONE number per KIND (the height of a typical original), which is only right for items shaped like that original: a chest piece
-# that stops at the ribs, a cuirass with huge pauldrons or a short jacket came out too big or too small (docs/qa/autofit.md). This script instead looks at the
+# that stops at the ribs, a cuirass with huge pauldrons or a short jacket came out too big or too small. This script instead looks at the
 # skin of the slot's body parts (PARTS_BY_KIND) and finds the uniform scale and the move (3 numbers, optionally a half turn) for which
 #   - the item's inner surface lies about `GAP` from the skin where it covers it (distance from every skin point to the nearest item surface point), and
 #   - no skin point lies on the outer side of the surface it is nearest to (the skin pokes through): that costs 3x more than a gap that is too large,
 #   - where the item does not cover the skin at all (the item is short, the neck / arm holes) nothing is asked, so a short item is not stretched to cover everything.
 # The vertical place of an item that fits equally well anywhere on the torso (a short cuirass) is settled by the edge of the slot that is stable in the original items
-# (EDGE_BY_KIND: top of shirts, trousers, hair, bottom of boots, gloves, arm guards; docs/AUDYT_2026-10-03.md, point 5), a weak pull of the same weight as ~5 cm of misfit.
+# (EDGE_BY_KIND: top of shirts, trousers, hair, bottom of boots, gloves, arm guards), a weak pull of the same weight as ~5 cm of misfit.
 # The size units are found first (a file in cm, mm): the unit that puts the longest side of the item in 0.15..3 m (UNIT = 0 -> automatic).
 # Run it with the item(s) selected, after uo_import_item.py with FIT = "wrap" (which only converts units and puts the item near the body), before uo_fit_item.py
 # (that one pushes whatever is still in the skin out). Rest Position. Prints the result and the alternatives that were nearly as good ("AMBIGUOUS").
@@ -36,16 +36,17 @@ REPORT = True
 PARTS_BY_KIND = {"shirt": ("pelvis", "spine", "chest", "neck"), "plate": ("pelvis", "spine", "chest", "neck"), "harness": ("pelvis", "spine", "chest", "neck"),
                  "arms": ("upper_arm", "forearm"), "pants": ("pelvis", "thigh", "shin"), "legs": ("pelvis", "thigh", "shin"), "boots": ("shin", "foot"),
                  "gloves": ("forearm", "hand"), "helm": ("head",), "hat": ("head",), "hair": ("head",), "beard": ("head",), "neck": ("neck", "chest", "head"),
-                 "robe": ("pelvis", "spine", "chest", "neck"), "skirt": ("pelvis", "spine"), "cloak": ("pelvis", "spine", "chest", "neck"), "waist": ("pelvis", "spine"), "vest": ("pelvis", "spine", "chest", "neck")}
+                 "robe": ("pelvis", "spine", "chest", "neck"), "skirt": ("pelvis", "spine"), "cloak": ("pelvis", "spine", "chest", "neck"), "waist": ("pelvis", "spine"), "vest": ("pelvis", "spine", "chest", "neck"),
+                 "hood": ("head", "neck")}
 # the edge of the slot that is the same in most original items, and where it is (m, from uo_import_item.py EXTENTS, measured on the original sprites)
 EDGE_BY_KIND = {"shirt": ("top", 1.656), "plate": ("top", 1.643), "harness": ("top", 1.55), "pants": ("top", 1.170), "legs": ("top", 1.138), "boots": ("bottom", -0.069),
                 "gloves": ("bottom", 0.797), "arms": ("bottom", 0.929), "helm": ("top", 1.903), "hat": ("top", 1.92), "hair": ("top", 1.89), "beard": ("top", 1.72),
-                "neck": ("top", 1.64), "robe": ("top", 1.64), "skirt": ("top", 1.17), "cloak": ("top", 1.52), "waist": ("top", 1.19), "vest": ("top", 1.66)}
-GAP_BY_KIND = {"shirt": 0.015, "pants": 0.015, "boots": 0.015, "gloves": 0.015, "plate": 0.03, "legs": 0.03, "arms": 0.03, "helm": 0.03, "neck": 0.03, "harness": 0.015, "robe": 0.03, "skirt": 0.02, "cloak": 0.03, "waist": 0.015, "vest": 0.02}
+                "neck": ("top", 1.64), "robe": ("top", 1.64), "skirt": ("top", 1.17), "cloak": ("top", 1.52), "waist": ("top", 1.19), "vest": ("top", 1.66), "hood": ("top", 1.97)}
+GAP_BY_KIND = {"shirt": 0.015, "pants": 0.015, "boots": 0.015, "gloves": 0.015, "plate": 0.03, "legs": 0.03, "arms": 0.03, "helm": 0.03, "neck": 0.03, "harness": 0.015, "robe": 0.03, "skirt": 0.02, "cloak": 0.03, "waist": 0.015, "vest": 0.02, "hood": 0.03}
 # where the slot lives on the body (m, z of the lowest / highest point of the typical original item, uo_import_item.py EXTENTS): the item may not drift out of this zone
 # (by more than ZONE_MARGIN), and its height may differ from the typical one only by HEIGHT_RATIO - far-away "solutions" fit nothing and cost nothing
 ZONE_BY_KIND = {"shirt": (0.999, 1.656), "plate": (0.651, 1.643), "harness": (0.9, 1.65), "arms": (0.929, 1.694), "pants": (0.057, 1.170), "legs": (-0.107, 1.138),
-                "boots": (-0.069, 0.563), "gloves": (0.797, 1.245), "helm": (1.504, 1.903), "hair": (1.52, 1.89), "beard": (1.52, 1.72), "hat": (1.52, 1.92), "neck": (1.48, 1.64), "robe": (0.0, 1.64), "skirt": (0.4, 1.25), "cloak": (0.0, 1.60), "waist": (0.74, 1.19), "vest": (0.68, 1.66)}
+                "boots": (-0.069, 0.563), "gloves": (0.797, 1.245), "helm": (1.504, 1.903), "hair": (1.52, 1.89), "beard": (1.52, 1.72), "hat": (1.52, 1.92), "neck": (1.48, 1.64), "robe": (0.0, 1.64), "skirt": (0.4, 1.25), "cloak": (0.0, 1.60), "waist": (0.74, 1.19), "vest": (0.68, 1.66), "hood": (1.40, 1.97)}
 ZONE_MARGIN = 0.15
 HEIGHT_RATIO = (0.4, 1.8)
 ZONE_WEIGHT = 4.0     # residual per metre outside the zone / the ratio
@@ -54,13 +55,13 @@ CAP = 0.10            # m, skin farther than this from the item is "not covered"
 CAP_WIDE = 0.40       # the same for the first, coarse stage
 EDGE_WEIGHT = 0.05    # 1/m^2: tie-breaker only (10 cm off costs as much as a 2 cm misfit): the wrap itself fixes the height of every item that has any structure
 SCALE_PRIOR = 0.04    # a pull towards the size the model was made in (after the units): 20 % off costs as much as a 1 cm misfit of every skin point. Models are authored 1:1 far
-                      # more often than not (the helmet of docs/qa/autofit.md came out 41 % too big without it); 0 = the data alone (test_autofit.py measures with 0)
+                      # more often than not (a helmet came out 41 % too big without it); 0 = the data alone (test_autofit.py measures with 0)
 # how far from the skin an item may stand (m) before it counts as too thick: the p90 of the distance of the item's pixels from the body silhouette in the original
-# items of the slot (docs/qa/layer_analysis.md: plate / InnerTorso 5.6-8.1 cm, shirt 5.6, pants 3.9-5.6, arms 4.7-10, helm 8.3, hair 5.6-7.9, boots 3.3) with a margin;
+# items of the slot (measured: plate / InnerTorso 5.6-8.1 cm, shirt 5.6, pants 3.9-5.6, arms 4.7-10, helm 8.3, hair 5.6-7.9, boots 3.3) with a margin;
 # beyond it the part is pulled back by a smaller scale (OUT_WEIGHT) - big pauldrons and flares are what makes an item "too thick"
 PRIOR_BY_KIND = {"gloves": 0.0, "arms": 0.0}   # pairs far from the middle (two gloves, two sleeves): the prior pulled the fit onto one of the two; the data alone finds both (test_autofit.py)
 OUT_BY_KIND = {"shirt": 0.09, "plate": 0.12, "harness": 0.09, "pants": 0.08, "legs": 0.09, "arms": 0.10, "boots": 0.07, "gloves": 0.07, "helm": 0.12, "hat": 0.12,
-               "hair": 0.12, "beard": 0.08, "neck": 0.08, "waist": 0.07, "vest": 0.07}   # loose garments (robe, skirt) have no limit
+               "hair": 0.12, "beard": 0.08, "neck": 0.08, "waist": 0.07, "vest": 0.07, "hood": 0.12}   # loose garments (robe, skirt) have no limit
 OUT_WEIGHT = 3.0      # weight of the "too thick" term: 5 cm too far, over the whole surface, costs like 2.5 cm of misfit of the wrap
 OUT_POINTS = 5000     # item points used for it
 PIERCE = 3.0          # a skin point poking out of the item costs this much more than the same gap too large

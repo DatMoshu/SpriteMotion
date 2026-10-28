@@ -12,10 +12,10 @@ EQUIPMENT_FILES=ANIM_FILES+('art.mul','artidx.mul','tiledata.mul')
 # Existing client records supply known flags, layer and physical defaults.
 TEMPLATES={'helm':0x140A,'chest':0x1415,'arms':0x1410,'gloves':0x1414,'legs':0x1411,
     'boots':0x170B,'robe':0x1F03,'cloak':0x1515,'skirt':0x1516,'weapon':0xF5E,
-    'shield':0x1B76,'bow':0x13B2,'quiver':0x2FB7}
+    'weapon1h':0xF5E,'axe2h':0x13FB,'polearm':0x143E,'shield':0x1B76,'bow':0x13B2,'quiver':0x2FB7}
 LAYERS={'helm':'Helm','chest':'InnerTorso','arms':'Arms','gloves':'Gloves','legs':'InnerLegs',
     'boots':'Shoes','robe':'OuterTorso','cloak':'Cloak','skirt':'OuterLegs','weapon':'OneHanded',
-    'shield':'TwoHanded','bow':'TwoHanded','quiver':'Cloak'}
+    'weapon1h':'OneHanded','axe2h':'TwoHanded','polearm':'TwoHanded','shield':'TwoHanded','bow':'TwoHanded','quiver':'Cloak'}
 
 def tile_layout(data):
     # Canonical complete old/new tiledata layouts. Unknown layouts must not be guessed.

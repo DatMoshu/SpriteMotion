@@ -29,7 +29,7 @@ workspace\venv\Scripts\python.exe tools/uo-content/pipeline.py setup --source th
 This copies the model, its render, bind and VD tools into `workspace/ultima-online/canonical-model/` and records source
 hashes. It prints that folder and exits 0. Facts about the body you are now rendering with:
 
-- Levy's UO_Model3D at upstream `e9544f6` (see `third_party/UO_Model3D_v13/provenance.json`), 54 bones, rig `UO_Rig`,
+- Levy's UO_Model3D at upstream `b212cee` (see `third_party/UO_Model3D_v13/provenance.json`), 54 bones, rig `UO_Rig`,
   35 actions.
 - Direction is a driver, `-d*pi/4`, on the rig's Z rotation. UO frame `i` is scene frame `1 + 3i`.
 - Do not run setup while a build is running. Re-running it later changes the renderer fingerprint, and then `rebuild`
