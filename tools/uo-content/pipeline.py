@@ -24,7 +24,7 @@ _paths = importlib.util.module_from_spec(_paths_spec)
 _paths_spec.loader.exec_module(_paths)
 HOME = _paths.content_home()
 BACKEND = ROOT / 'workspace/ultima-online/canonical-model'
-PARTS = ['helm', 'chest', 'arms', 'gloves', 'legs', 'boots', 'robe', 'cloak', 'skirt', 'weapon', 'shield', 'bow', 'quiver']
+PARTS = ['helm', 'chest', 'arms', 'gloves', 'legs', 'boots', 'robe', 'cloak', 'skirt', 'weapon', 'weapon1h', 'axe2h', 'polearm', 'shield', 'bow', 'quiver']
 MODELS = {'.glb', '.gltf', '.fbx', '.obj', '.stl', '.blend'}
 IMAGES = {'.png', '.jpg', '.jpeg', '.webp'}
 
@@ -93,6 +93,18 @@ def normalize(spec):
             raise ValueError('Blocks must be action/stored-direction pairs within the selected actions.')
         if len(set(map(tuple,blocks))) != len(blocks): raise ValueError('Duplicate blocks.')
     if spec.get('occlusion', 'clothing') not in ('clothing','body','none'): raise ValueError('Invalid occlusion mode.')
+    if not isinstance(spec.get('cloth_sim', False), (bool, dict)): raise ValueError('cloth_sim must be true/false or a dict of uo_cloth_sim.py settings.')
+    wm = spec.get('weapon_motion')
+    if wm is not None and (not isinstance(wm, dict) or any(not isinstance(e, dict) or not {'parent', 'pivot', 'dir', 'poses'} <= set(e) for e in wm.values())):
+        raise ValueError('weapon_motion must map a weapon bone to an entry of weapon_motion.json (parent, pivot, dir, poses).')
+    bd = spec.get('bow_draw')
+    if bd is not None and (not isinstance(bd, dict) or not isinstance(bd.get('weights'), dict) or
+            any(not str(a).isdigit() or not isinstance(w, list) or any(not isinstance(x, (int, float)) or not 0 <= x <= 1 for x in w)
+                for a, w in bd['weights'].items())):
+        raise ValueError('bow_draw must have "weights": {action: [draw weight 0..1 per frame]} (optional "orient", "hand", "bone").')
+    if bd is not None and 'orient' in bd and (not isinstance(bd['orient'], dict) or any(
+            not str(a).isdigit() or not isinstance(f, list) or any(type(x) is not int or x < 0 for x in f) for a, f in bd['orient'].items())):
+        raise ValueError('bow_draw "orient" must map an action to a list of frame indices.')
     for field, default, low, high in [('scale', 1., .01, 100.), ('offset_x', 0., -3., 3.),
             ('offset_y', 0., -3., 3.), ('offset_z', 0., -3., 3.), ('rotate_x', 0., -360., 360.),
             ('rotate_y', 0., -360., 360.), ('rotate_z', 0., -360., 360.)]:
