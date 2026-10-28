@@ -3,12 +3,12 @@
 UO_Model3D v13 by Levy, shared with the artist's permission.
 
 A rigged 3D rebuild of the Ultima Online male body (body 0x190) with its fitting pipeline. SpriteMotion uses it as the
-canonical body (rig `UO_Rig`, 54 bones since the 2026-10-09 update). Start with `README_EN.md` (English) or
-`README.md` (Polish).
+canonical body (rig `UO_Rig`, 54 bones since the 2026-10-09 update). Start with `README.md` (English) or
+`README_PL.md` (Polish).
 
 ## What is here
 
-Upstream commit: https://github.com/Kserian/UO_Model3D at `e9544f6` (2026-10-09; the previous copy was `3eaae69`).
+Upstream commit: https://github.com/Kserian/UO_Model3D at `b212cee` (2026-10-20, v13.5; the previous copy here was `e9544f6`).
 `model/` (the `.blend` and the albedo PNGs), `pipeline/` (scripts, `cloak_pitch.json`, `weapon_motion.json`), `vdtool/`,
 and the two READMEs. The `.blend` is stored with git LFS (`git lfs pull` after cloning). Upstream publishes no `.fbx`
 or `.glb` and SpriteMotion reads none, so none is shipped.

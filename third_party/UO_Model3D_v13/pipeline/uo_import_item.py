@@ -21,7 +21,7 @@ FILE = ""             # path of the model to import ("" = take the SELECTED mesh
 KIND = "shirt"        # shirt, plate, arms, pants, legs, boots, gloves, helm, neck, hair, beard, hat ("" = do not scale or move; only clean + join)
 SCALE = 0.0           # > 0: uniform scale you give (the item is then only moved), 0 = from the height of KIND
 PLACE = "wrap"        # "wrap": the item is only cleaned, joined and reduced here, its units, size and place are found from the skin by uo_autofit_item.py (called by uo_prepare_item.py);
-                      # "height": the old way, one height per KIND (EXTENTS below) - right only for items shaped like the typical original (docs/qa/autofit.md)
+                      # "height": the old way, one height per KIND (EXTENTS below) - right only for items shaped like the typical original
 STRETCH = (1.0, 1.0, 1.0)   # (width, depth, height) factors about the centre of the model, before the fit: a model made on a mannequin with other proportions than the UO body (a vest much wider and shallower than the
                       # torso: (0.8, 1.25, 1.0)). Recipe of uo_make_item.py: "stretch": [0.8, 1.25, 1.0]
 TURN = 0              # deg around the vertical axis (180 when the item came in back to front)
@@ -33,7 +33,27 @@ ARMS_DOWN = 0.0       # deg: a model in a T-pose (arms out) has its sleeves turn
                       # item around the shoulders follows them over ARM_BLEND m of the arm (uo_fit_item.py MATCH_ARMS only finds up to MAX_TURN deg, and a T-pose is beyond it)
 ARM_MATERIALS = ("sleeve",)   # names (parts of names, any case) of the materials of the sleeves (a trim of the sleeves too: "sleeve" matches TrimSleeve)
 ARM_BLEND = 0.12      # m: the width of the shoulder over which the turn fades from the sleeve into the body
+OUTER_SHELL = False   # a model that is a CLOSED SOLID cloth (a cloth simulator exports garments ~1.5 cm thick: outer layer + inner layer): only the outer layer is kept, before the reduction. Reducing the
+                      # solid pastes the two layers into each other (cracks, torn patches, the inner lining showing through); a single sheet reduces cleanly and fits to the skin. Recipe: "outer_shell": true
+OUTER_REMESH = 0.0    # m: > 0 (0.006) = before OUTER_SHELL the solid is rebuilt by Blender's voxel remesh: a garment exported as separate panels (sewing patterns that only touch, 284 of them
+                      # a robe made by a cloth simulator) becomes ONE continuous sheet, so the seams cannot open when the sleeves are turned onto the arms or the item is wrapped. The UVs are lost:
+                      # the texture is baked from the original (BAKE_TEXTURE, 2048 when not given). Recipe: "outer_shell": 0.006
+HOLES = None          # {"close": 0.06, "grow": 0.025, "max": 1.5, "close_above": 0.78}: with OUTER_SHELL, the holes of the sheet (rips of a torn robe): a rim shorter than `close` m is closed
+                      # (a pinhole: 1-px black noise in the sprites), one up to `max` m is widened by `grow` m all round (the rips shrank with the reduction and the shortened hem and read as
+                      # dark specks; the hem, cuffs and neck are longer than `max`); every hole whose rim lies above `close_above` of the sheet's height is closed (the shoulders and the
+                      # roots of the sleeves stay whole: widened rips there read as the sleeve torn off), and every one longer than `slit` times its width (a slit along a hanging
+                      # belt end opened over the belly when the body bent forward), and every one on a sleeve (`sleeve`: the line shoulder -> cuff of the model, |x| and z in its own
+                      # coordinates, and a radius; the elbows read as poking through). Closed holes get the cloth around them in the baked texture (their faces take the
+                      # UVs of the nearest rim). Recipe: "holes": {...}
+BAKE_NORMAL = 0.0     # with BAKE_TEXTURE: > 0 = a tangent normal map of the ORIGINAL'S GEOMETRY is baked too (its own normal map, the weave, is left out: noise at UO size), blurred over this
+                      # many m, and lights the item (uo_materials.py NORMAL_MAP): the sculpted folds of the model shade the reduced shell. Recipe: "bake_normal": 0.01
+BAKE_AO = 0.0         # with BAKE_TEXTURE: 0..1 = the ambient occlusion of the original (folds, the hollows between them, AO_DIST m) darkens the baked colour by up to this share. Recipe: "bake_ao": 0.5
+AO_DIST = 0.08
 NAME = ""             # name of the result ("" = file name)
+BAKE_TEXTURE = 0      # > 0 (px, 2048 is plenty): the reduced model gets a NEW UV map and a texture BAKED from the original: a reduction drags the UVs of a model with a sculpted detail / an embroidery into
+                      # streaks (the cloth turns into smeared noise). Needs the Cycles engine of Blender. Recipe: "bake_texture": 2048
+BAKE_RAY = 0.04       # m: how far from the reduced surface the original is looked for in the bake (layers closer to each other than this, e.g. a robe over a tunic, are not mixed up if they are further apart)
+WELD = 1e-6           # m: vertices closer than this are merged before the reduction (seams of the glTF import; 0 = off)
 DECIMATE_TO = 30000   # a model with more vertices than this is reduced (collapse, UVs and materials kept) - a 144k-vertex scan costs minutes in every later step; uo_densify_item.py adds
                       # vertices back where the item has to bend. 0 = never
 SMOOTH_SHADE = True   # smooth shading on every face (UO art is shaded smoothly; a decimated or scanned model with flat faces turns into noise at 36 px/m)
@@ -43,10 +63,11 @@ PERCENT = 0.5         # the height is measured between the PERCENT and 100 - PER
 # (the ground is z = 0), and the PART of uo_bind_item.py that belongs to the KIND
 EXTENTS = {"shirt": (0.999, 1.656, "chest"), "plate": (0.651, 1.643, "chest"), "arms": (0.929, 1.694, "arms"), "pants": (0.057, 1.170, "legs"),
            "legs": (-0.107, 1.138, "legs"), "boots": (-0.069, 0.563, "boots"), "gloves": (0.797, 1.245, "gloves"), "helm": (1.504, 1.903, "helm"),
-           # medians over the original animations of the layer (docs/qa/layer_analysis.md, pipeline/layer_analysis.py).
+           # medians over the original animations of the layer.
            # hair / beard / hat: the TOP is reliable (hair 1.88-1.93 m for 80 % of the 37 hairstyles), the bottom depends on the style (hair 1.34-1.64):
            # for a long hairstyle give SCALE yourself instead of letting the height decide
-           "hair": (1.52, 1.89, "hair"), "beard": (1.52, 1.72, "beard"), "hat": (1.52, 1.92, "hat"), "neck": (1.48, 1.64, "neck")}
+           "hair": (1.52, 1.89, "hair"), "beard": (1.52, 1.72, "beard"), "hat": (1.52, 1.92, "hat"), "neck": (1.48, 1.64, "neck"),
+           "hood": (1.40, 1.97, "hood")}   # a hood (with a cowl round the neck): from the base of the neck to a little above the head, set from the body, not measured
 
 body = bpy.data.objects["UO_Body"]
 UO_NAMES = {"UO_Body", "UO_Rig", "UO_Camera", "UO_Sun"}
@@ -151,6 +172,223 @@ def arms_down(n):
     me.vertices.foreach_set("co", co.ravel()); me.update()
 
 
+def outer_shell(n, rays=8, reach=1.5, partner_max=0.06, smooth=8, min_island=0.002):
+    """keep only the outer layer of a thick closed garment. Every face looks at the sky through a hemisphere of `rays` rays (an inner face sees mostly cloth: the other side of the robe, the sleeve);
+    its partner is the face hit under it (-normal, up to partner_max m = the other layer); the face that sees more sky is the outer one. The votes are smoothed over the neighbouring faces
+    (the two layers meet only at the hem and the cuffs) and the inner layer is deleted."""
+    import time
+    import bmesh
+    from mathutils import Vector
+    from mathutils.bvhtree import BVHTree
+    t0 = time.time(); me = n.data; me.calc_loop_triangles()
+    tri = [t.vertices[:] for t in me.loop_triangles]
+    if len(tri) != len(me.polygons):
+        bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.triangulate(bm, faces=bm.faces[:]); bm.to_mesh(me); bm.free(); me.update(); me.calc_loop_triangles(); tri = [t.vertices[:] for t in me.loop_triangles]
+    bvh = BVHTree.FromPolygons([v.co.copy() for v in me.vertices], tri)
+    i = np.arange(rays) + 0.5; z = 1 - i / rays; r = np.sqrt(1 - z * z); ph = i * 2.399963
+    D = np.c_[r * np.cos(ph), r * np.sin(ph), z]
+    npoly = len(me.polygons); sky = np.zeros(npoly); partner = -np.ones(npoly, int)
+    for k, p in enumerate(me.polygons):
+        nr = p.normal; c = p.center
+        a = Vector((1, 0, 0)) if abs(nr.x) < 0.9 else Vector((0, 1, 0))
+        u = nr.cross(a).normalized(); w = nr.cross(u); o = c + nr * 1e-3; esc = 0
+        for d in D:
+            if bvh.ray_cast(o, u * d[0] + w * d[1] + nr * d[2], reach)[0] is None:
+                esc += 1
+        sky[k] = esc / rays
+        h = bvh.ray_cast(c - nr * 1e-4, -nr, partner_max)
+        if h[0] is not None:
+            partner[k] = h[2]
+    vote = np.zeros(npoly); has = np.nonzero(partner >= 0)[0]; vote[has] = sky[has] - sky[partner[has]]
+    bm = bmesh.new(); bm.from_mesh(me); bm.faces.ensure_lookup_table()
+    A, B = [], []
+    for e in bm.edges:
+        f = e.link_faces
+        if len(f) == 2:
+            A.append(f[0].index); B.append(f[1].index)
+    A = np.array(A); B = np.array(B); deg = np.maximum(np.bincount(np.r_[A, B], minlength=npoly), 1)
+    for _ in range(smooth):
+        acc = np.zeros(npoly); np.add.at(acc, A, vote[B]); np.add.at(acc, B, vote[A]); vote = 0.5 * vote + 0.5 * acc / deg
+    drop = np.nonzero(vote < 0)[0]
+    bmesh.ops.delete(bm, geom=[bm.faces[k] for k in drop], context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    bm.faces.ensure_lookup_table(); seen = np.zeros(len(bm.faces), bool); bits = []      # bits of the inner layer left alone by the vote (a few faces): removed
+    for f in bm.faces:
+        if seen[f.index]:
+            continue
+        st = [f]; seen[f.index] = True; isl = [f]
+        while st:
+            g = st.pop()
+            for e in g.edges:
+                for h in e.link_faces:
+                    if not seen[h.index]:
+                        seen[h.index] = True; st.append(h); isl.append(h)
+        if len(isl) < min_island * len(bm.faces):
+            bits += isl
+    if bits:
+        bmesh.ops.delete(bm, geom=bits, context="FACES")
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    nv0 = len(me.vertices); bm.to_mesh(me); bm.free(); me.update()
+    print("uo_import_item: OUTER_SHELL %s: %d of %d faces kept (outer layer; %d faces of small pieces removed), %d -> %d vertices, %.0f s" % (n.name, npoly - len(drop) - len(bits), npoly, len(bits), nv0, len(me.vertices), time.time() - t0))
+
+
+def holes(n, cfg):
+    """HOLES: close the pinholes of the sheet, widen the rips"""
+    import bmesh
+    from mathutils.kdtree import KDTree
+    cfg = dict(dict(close=0.06, grow=0.025, max=1.5), **cfg)
+    me = n.data; bm = bmesh.new(); bm.from_mesh(me)
+    seen, loops = set(), []
+    for e0 in bm.edges:
+        if not e0.is_boundary or e0 in seen:
+            continue
+        st, loop = [e0], []; seen.add(e0)
+        while st:
+            e = st.pop(); loop.append(e)
+            for v in e.verts:
+                for f in v.link_edges:
+                    if f.is_boundary and f not in seen:
+                        seen.add(f); st.append(f)
+        loops.append((sum(e.calc_length() for e in loop), loop))
+    zs = [v.co.z for v in bm.verts]; z_cut = min(zs) + cfg.get("close_above", 2.0) * (max(zs) - min(zs))
+    high = lambda l: float(np.mean([e.verts[0].co.z for e in l])) > z_cut
+    def aspect(l):                                               # length / width of a rim (PCA of its vertices): a long narrow slit, e.g. along a hanging belt end
+        P = np.array([e.verts[0].co for e in l]); ev = np.sort(np.linalg.eigvalsh(np.cov((P - P.mean(0)).T)))[::-1]
+        return float(np.sqrt(ev[0] / max(ev[1], 1e-12)))
+    slit = lambda l: aspect(l) > cfg.get("slit", 1e9)
+
+    def sleeve(l):                                               # "sleeve": [[|x|, z] of the shoulder, [|x|, z] of the cuff, r] in the model's own coordinates: a hole within r m of
+        if "sleeve" not in cfg:                                   # that line lies on a sleeve (elbows and upper arms showed through widened rips like the arm poking out)
+            return False
+        (x0, z0), (x1, z1), r = cfg["sleeve"]
+        c = np.mean([e.verts[0].co[:] for e in l], 0); p = np.array([abs(c[0]), c[2]]); a = np.array([x0, z0]); d = np.array([x1, z1]) - a
+        t = np.clip((p - a) @ d / (d @ d), 0, 1)
+        return float(np.linalg.norm(p - a - t * d)) < r
+    shut = lambda l: high(l) or slit(l) or sleeve(l)
+    small = [l for L, l in loops if L < cfg["close"] or (L < cfg["max"] and shut(l))]
+    rips = [l for L, l in loops if cfg["close"] <= L < cfg["max"] and not shut(l)]
+    print("uo_import_item: HOLES rims (m, aspect): " + ", ".join("%.2f/%.1f" % (L, aspect(l)) for L, l in sorted(loops, key=lambda t: -t[0])[:30] if L >= cfg["close"]))
+    if small:                                                     # the patches: a material slot of their own (kept by the reduction) -> bake_texture gives them the cloth of their rim
+        me.materials.append(me.materials[0] if len(me.materials) else None); slot = len(me.materials) - 1
+        n["uo_patch_slot"] = slot
+    for l in small:
+        for f in bmesh.ops.holes_fill(bm, edges=l, sides=0)["faces"]:
+            f.material_index = slot
+    bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 4], quad_method="BEAUTY", ngon_method="BEAUTY")
+    rim = list(set(v for l in rips for e in l for v in e.verts))
+    kd = KDTree(len(rim))
+    for k, v in enumerate(rim):
+        kd.insert(v.co, k)
+    kd.balance()
+    drop = [f for f in bm.faces if any(kd.find(v.co)[2] < cfg["grow"] for v in f.verts)] if rim else []
+    bmesh.ops.delete(bm, geom=drop, context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    for _ in range(3):                                            # the widened rims smoothed along themselves (no 1-face steps)
+        bv = [v for v in bm.verts if v.is_boundary]
+        new = {v: sum((e.other_vert(v).co for e in v.link_edges if e.is_boundary), v.co * 0) for v in bv}
+        for v, c in new.items():
+            k = sum(1 for e in v.link_edges if e.is_boundary)
+            if k == 2:
+                v.co = 0.5 * v.co + 0.25 * c
+    bm.to_mesh(me); bm.free(); me.update()
+    print("uo_import_item: HOLES %s: %d holes closed (rim < %.2f m, or above %.2f m), %d rips widened by %.3f m (%d faces removed), %d rims left as they are, %d vertices" % (
+        n.name, len(small), cfg["close"], z_cut, len(rips), cfg["grow"], len(drop), len(loops) - len(small) - len(rips), len(me.vertices)))
+
+
+def blur_image(img, sigma_px, normal=False):
+    """Gaussian blur of an image in place (a normal map is renormalised)"""
+    from scipy.ndimage import gaussian_filter
+    w, h = img.size; a = np.array(img.pixels[:], np.float32).reshape(h, w, 4)
+    for c in range(3):
+        a[..., c] = gaussian_filter(a[..., c], sigma_px, mode="wrap")
+    if normal:
+        v = a[..., :3] * 2 - 1; v /= np.maximum(np.linalg.norm(v, axis=2, keepdims=True), 1e-6); a[..., :3] = v * 0.5 + 0.5
+    img.pixels[:] = a.ravel()
+    return a
+
+
+def bake_texture(lo, hi, px):
+    """texture of the original `hi` baked onto the reduced `lo` (new smart-projected UVs, one image `px` x `px`, a Principled material with it)"""
+    import math, tempfile, time
+    t0 = time.time(); sc = bpy.context.scene
+    for u in list(lo.data.uv_layers):
+        lo.data.uv_layers.remove(u)
+    lo.data.uv_layers.new(name="UVMap")
+    for o in bpy.context.view_layer.objects:
+        o.select_set(False)
+    lo.select_set(True); bpy.context.view_layer.objects.active = lo
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=0.003, area_weight=0.0, correct_aspect=True, scale_to_bounds=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    img = bpy.data.images.new("uo_baked_" + lo.name, px, px, alpha=False)
+    mat = bpy.data.materials.new("uo_baked_" + lo.name); mat.use_nodes = True; nt = mat.node_tree
+    bsdf = nt.nodes["Principled BSDF"]; tex = nt.nodes.new("ShaderNodeTexImage"); tex.image = img
+    nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"]); nt.nodes.active = tex
+    slot = lo.get("uo_patch_slot")
+    patch = np.array([p.material_index == slot for p in lo.data.polygons]) if slot is not None else np.zeros(len(lo.data.polygons), bool)
+    lo.data.materials.clear(); lo.data.materials.append(mat)
+    for i in range(len(lo.data.polygons)):
+        lo.data.polygons[i].material_index = 0
+    sc.render.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = 1
+    b = sc.render.bake
+    b.use_selected_to_active = True; b.max_ray_distance = BAKE_RAY; b.cage_extrusion = BAKE_RAY; b.margin = 8; b.margin_type = "EXTEND"
+    b.use_pass_direct = False; b.use_pass_indirect = False; b.use_pass_color = True
+    hi.select_set(True); lo.select_set(True); bpy.context.view_layer.objects.active = lo
+    bpy.ops.object.bake(type="DIFFUSE")
+    texels_per_m = px / max(math.sqrt(sum(p.area for p in lo.data.polygons) / 0.6), 1e-6)    # smart project fills ~60 % of the image
+    if BAKE_NORMAL > 0 or BAKE_AO > 0:
+        for m in hi.data.materials:                              # the original's own normal map (the weave) left out: only its geometry
+            if m and m.use_nodes:
+                for l in list(m.node_tree.links):
+                    if l.to_socket.name == "Normal" and l.to_node.type == "BSDF_PRINCIPLED":
+                        m.node_tree.links.remove(l)
+    if BAKE_AO > 0:
+        ao = bpy.data.images.new("uo_ao_" + lo.name, px, px, alpha=False); atex = nt.nodes.new("ShaderNodeTexImage"); atex.image = ao; nt.nodes.active = atex
+        sc.world = sc.world or bpy.data.worlds.new("uo_bake_world"); sc.world.light_settings.distance = AO_DIST; sc.cycles.samples = 16
+        hi.select_set(True); lo.select_set(True); bpy.context.view_layer.objects.active = lo
+        bpy.ops.object.bake(type="AO")
+        A = blur_image(ao, max(1.0, 0.01 * texels_per_m))[..., 0]
+        w_, h_ = img.size; C = np.array(img.pixels[:], np.float32).reshape(h_, w_, 4)
+        C[..., :3] *= (1.0 - BAKE_AO * (1.0 - np.clip(A, 0, 1)))[..., None]; img.pixels[:] = C.ravel()
+        nt.nodes.remove(atex); bpy.data.images.remove(ao); sc.cycles.samples = 1
+        print("uo_import_item: BAKE_AO %s: occlusion of the original (%.2f m) darkens the colour by up to %.0f %%, mean AO %.2f" % (lo.name, AO_DIST, 100 * BAKE_AO, float(A.mean())))
+    if BAKE_NORMAL > 0:
+        nim = bpy.data.images.new("uo_normal_" + lo.name, px, px, alpha=False); nim.colorspace_settings.name = "Non-Color"
+        ntex = nt.nodes.new("ShaderNodeTexImage"); ntex.image = nim; nt.nodes.active = ntex
+        b.normal_space = "TANGENT"
+        hi.select_set(True); lo.select_set(True); bpy.context.view_layer.objects.active = lo
+        bpy.ops.object.bake(type="NORMAL")
+        blur_image(nim, max(1.0, BAKE_NORMAL * texels_per_m), normal=True)
+        nm = nt.nodes.new("ShaderNodeNormalMap"); nt.links.new(ntex.outputs["Color"], nm.inputs["Color"]); nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
+        fn = os.path.join(tempfile.mkdtemp(prefix="uo_bake_"), "normal.png"); nim.filepath_raw = fn; nim.file_format = "PNG"; nim.save(); nim.pack()
+        nt.nodes.active = tex
+        print("uo_import_item: BAKE_NORMAL %s: normal map of the original's geometry, blurred over %.3f m (%.0f texels/m)" % (lo.name, BAKE_NORMAL, texels_per_m))
+    if patch.any():                                              # closed holes: the UVs of the nearest rim vertex (the cloth around, not the dark inside of the rip)
+        from mathutils.kdtree import KDTree
+        me = lo.data; uv = me.uv_layers.active.data
+        rimuv = {}
+        for p in me.polygons:
+            if not patch[p.index]:
+                for li in p.loop_indices:
+                    vi = me.loops[li].vertex_index
+                    if vi not in rimuv:
+                        rimuv[vi] = uv[li].uv.copy()
+        kd = KDTree(len(rimuv)); keys = list(rimuv)
+        for k, vi in enumerate(keys):
+            kd.insert(me.vertices[vi].co, k)
+        kd.balance()
+        for p in me.polygons:                                    # one rim texel per face (UVs of one face from different islands of the atlas would smear across it)
+            if patch[p.index]:
+                t = rimuv[keys[kd.find(p.center)[1]]]
+                for li in p.loop_indices:
+                    uv[li].uv = t
+        print("uo_import_item: HOLES %s: %d faces of closed holes take the cloth of their rim" % (lo.name, int(patch.sum())))
+    if "uo_patch_slot" in lo:
+        del lo["uo_patch_slot"]
+    f = os.path.join(tempfile.mkdtemp(prefix="uo_bake_"), "baked.png"); img.filepath_raw = f; img.file_format = "PNG"; img.save(); img.pack()
+    print("uo_import_item: BAKE_TEXTURE %s: %d x %d px from %s, %d vertices, %.0f s" % (lo.name, px, px, hi.name, len(lo.data.vertices), time.time() - t0))
+
+
 def run():
     if FILE:
         everything = import_file(FILE)
@@ -203,9 +441,33 @@ def run():
     for k, n in enumerate(news):
         n.name = (NAME or os.path.splitext(os.path.basename(FILE))[0] or "Item") + ("" if len(news) == 1 else "_%d" % k)
         n.data.name = n.name
+    bake_px = BAKE_TEXTURE or (2048 if OUTER_SHELL and OUTER_REMESH > 0 else 0)
+    originals = {}
+    if bake_px > 0:                                       # the original (with its texture) stays hidden until the reduced / rebuilt model has its baked texture
+        for n in news:
+            hi = n.copy(); hi.data = n.data.copy(); hi.name = n.name + "_original"; clo.objects.link(hi); originals[n] = hi
+    if OUTER_SHELL:
+        for n in news:
+            if OUTER_REMESH > 0:
+                import time
+                t0 = time.time(); k0 = len(n.data.vertices)
+                md = n.modifiers.new("uo_remesh", "REMESH"); md.mode = "VOXEL"; md.voxel_size = float(OUTER_REMESH); md.adaptivity = 0.0
+                bpy.context.view_layer.update(); dg = bpy.context.evaluated_depsgraph_get()
+                me = bpy.data.meshes.new_from_object(n.evaluated_get(dg)); n.modifiers.clear(); old = n.data; n.data = me; bpy.data.meshes.remove(old)
+                print("uo_import_item: OUTER_REMESH %s: voxels %.1f mm, %d -> %d vertices (one continuous solid), %.0f s" % (n.name, 1000 * OUTER_REMESH, k0, len(me.vertices), time.time() - t0))
+            outer_shell(n)
+            if HOLES:
+                holes(n, HOLES)
     if DECIMATE_TO > 0:
         total = sum(len(n.data.vertices) for n in news)
         if total > DECIMATE_TO:
+            if WELD > 0:                                  # a glTF import splits the vertices on every UV / normal seam: the halves of a seam move apart in the reduction (cracks); the UVs stay with the faces
+                import bmesh
+                for n in news:
+                    bm = bmesh.new(); bm.from_mesh(n.data); k = len(bm.verts)
+                    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=WELD); bm.to_mesh(n.data); bm.free(); n.data.update()
+                    print("uo_import_item: WELD %s: %d -> %d vertices" % (n.name, k, len(n.data.vertices)))
+                total = sum(len(n.data.vertices) for n in news)
             ratio = DECIMATE_TO / total
             for n in news:
                 md = n.modifiers.new("uo_decimate", "DECIMATE"); md.ratio = ratio
@@ -215,6 +477,9 @@ def run():
                 me = bpy.data.meshes.new_from_object(n.evaluated_get(dg))
                 n.modifiers.clear(); old = n.data; n.data = me; bpy.data.meshes.remove(old)
             print("uo_import_item: %d vertices -> %d (DECIMATE_TO %d)" % (total, sum(len(n.data.vertices) for n in news), DECIMATE_TO))
+    for n, hi in originals.items():
+        bake_texture(n, hi, int(bake_px))
+        bpy.data.objects.remove(hi, do_unlink=True)
     if SMOOTH_SHADE:
         for n in news:
             n.data.polygons.foreach_set("use_smooth", [True] * len(n.data.polygons))
@@ -270,7 +535,7 @@ except ImportError:
     if PLACE == "wrap" and KIND:
         PLACE = "height"
         print("uo_import_item: WARNING - scipy is not installed in this Python, so the size and place come from ONE HEIGHT per KIND (PLACE = height), which only suits items shaped like the "
-              "typical original (docs/qa/autofit.md). For the fit to the skin install scipy into Blender's Python or run  python pipeline/uo_make_item.py recipe.json  outside the window.")
+              "typical original. For the fit to the skin install scipy into Blender's Python or run  python pipeline/uo_make_item.py recipe.json  outside the window.")
 FILE = os.environ.get("UO_IMPORT_FILE", FILE)
 KIND = os.environ.get("UO_IMPORT_KIND", KIND)
 SKIP = [k for k in os.environ.get("UO_IMPORT_SKIP", "").split(",") if k] or SKIP
