@@ -47,7 +47,7 @@ headless Blender run, not only a syntax check.
 
 ## Key facts
 
-- Canonical body: UO_Model3D by Levy at upstream e9544f6 (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`),
+- Canonical body: UO_Model3D by Levy at upstream b212cee (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`),
   54 bones (no twist, toe, skirt or cloak chains; `foot.L/R` is the last leg bone; weapon bones `weapon1h.R`, `axe2h.L`,
   `bow.L`, `polearm.L`), rig `UO_Rig`, direction = driver `-d*pi/4` on the rig's Z rotation, UO frame i = scene frame 1 + 3i.
 - In item renders the body is a holdout: body poking through clothing cuts holes in the item sprite. Asset-pack

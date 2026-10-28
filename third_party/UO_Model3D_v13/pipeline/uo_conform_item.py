@@ -6,7 +6,7 @@ and it does not slide or tear when the arms move.
 ITEM.blend is the output of uo_make_item.py (the item in the collection Clothing, placed and sized by uo_autofit_item.py, "prepare": {"FIT": false, "DENSIFY": false};
 uo_make_item.py "conform" does that and runs this script). Its fit and weights are replaced. Why: a model made on another mannequin (the Jedi tunic: sleeves 9-18 cm
 above the UO arms, the chest of the UO body through its front and back) cannot be pushed into place in the rest pose: the push of uo_fit_item.py moved parts up to
-21 cm, the sleeves stayed off the arms and in the actions the arms came out of them (docs/qa/jedi_tunic.md). Here:
+21 cm, the sleeves stayed off the arms and in the actions the arms came out of them. Here:
   1. sleeves onto the arms: per side the centre line of the sleeve (centroids of slices) is turned and moved onto the line of the UO arm (shoulder -> wrist); the move
      fades in over BLEND from the root of the sleeve and out beyond the radius of the sleeve tube, so the torso part stays where it is;
   2. wrap: the item is pulled onto the body like a membrane, to h = GAP + a little of the model's looseness (LOOSE_K, at most LOOSE_MAX) and folds (FOLD_MAX):
@@ -34,6 +34,12 @@ FOLD_MAX = 0.02       # m: folds of the model (stand-off minus its smooth part) 
 FOLD_SMOOTH = 12      # passes that make the smooth part of the stand-off (bigger = broader things count as folds)
 MOVE = (0.0, 0.0, 0.0) # m: the whole item is moved by this first
 SLEEVES = True        # step 1
+SLEEVE_END = -1.0     # m: >= 0 = each sleeve is shortened or lengthened along its arm (only its last SLEEVE_SPAN before the end is squeezed / stretched, the cuff keeps its shape) so that it ends this far past the
+                      # wrist (the head of the hand bone): a bell sleeve of a longer-armed mannequin hid the hands. < 0 = as the model
+SLEEVE_SPAN = 0.25    # m
+SLEEVE_CUFF = -1.0    # m: >= 0 = the end of each sleeve is narrowed to at most this far from the axis of the forearm (a bell sleeve: its wide mouth seen from the front, arms forward on
+                      # the reins, was a ring round the hand; the original robes have narrow sleeves). < 0 = as the model
+CUFF_SPAN = 0.20      # m: along the forearm before the end of the sleeve over which the narrowing grows from none to full
 BLEND = 0.10          # m: along the sleeve from its root, over which it goes from where the model has it to the UO arm
 TUBE_MARGIN = 0.05    # m: beyond the radius of the sleeve tube the move fades out over this (the side of the torso under the arm stays)
 SKIRT = True          # below the crotch: hangs (the model's shape, pushed out of the legs), follows the pelvis, the legs push it in the render
@@ -54,6 +60,16 @@ SETTLE_ITERS = 200    # passes after the wrap that only keep the item out of the
 STRETCH = 1.25        # the most an edge may be stretched against the model while it is wrapped
 WRAP_FLATTEN = 0.2    # share of the smoothing across the surface (0 = only along it)
 WRAP_STEP = 0.01      # m: the most a vertex moves in one pass (the smoothing keeps up: no vertex flies off on its own)
+SPACE_SMOOTH = 0.0    # m: > 0 = the move of the wrap is averaged over everything within this distance in SPACE (not along the mesh): a model of separate overlapping panels (a closure of two
+                      # flaps, knots on it, a stand-up collar) moves as one piece, its panels do not cut through each other and open holes
+SPACE_PASSES = 2      # passes of that averaging
+FINAL_ITERS = 40      # passes of the last push out of the skin (to 0.9 GAP; inside an arm away from its bone)
+OCCLUSION = 0.0       # 0..1: > 0 = the colour darker where the item's own folds, frills and layers (and the body) close the view around a point: x (1 - OCCLUSION x share of OCC_RAYS rays
+                      # over the half sphere of the normal that hit within OCC_DIST), in the rest shape after the wrap (attribute uo_shade, uo_hood_cover.py occlusion_share). The UO light gives
+                      # a smooth shell next to no shading (it comes from about the camera); the user asked for depth on the dress (2026-10-14). 0 = off
+OCC_RAYS = 24
+OCC_DIST = 0.06       # m
+SHADE_MIN = 0.35      # the darkening never takes the colour below this share (deep shade, never black)
 REGIONS = ("torso", "arm.L", "arm.R", "leg.L", "leg.R")
 CLOTH_MARGIN_SHORT, CLOTH_KAPPA_SHORT, CLOTH_MARGIN, CLOTH_KAPPA, CLOTH_DROP = 0.02, 0.5, 0.05, 0.8, 1.0   # uo_bind_item.py mark_cloth
 
@@ -131,6 +147,26 @@ def rot_between(a, b):
     return np.eye(3) + K + K @ K / (1 + c)
 
 
+def sleeve_piece(X, G, sel, J, touch=0.02):
+    """of the vertices `sel` (out past the shoulder) only the piece of the mesh that starts nearest the shoulder joint J and what touches it (a separate cuff panel);
+    returns (mask, vertices left out)"""
+    import scipy.sparse as sp
+    from scipy.sparse.csgraph import connected_components
+    from scipy.spatial import cKDTree
+    idx = np.nonzero(sel)[0]; pos = np.full(len(X), -1); pos[idx] = np.arange(len(idx))
+    e = G.E[sel[G.E[:, 0]] & sel[G.E[:, 1]]]
+    _, comp = connected_components(sp.coo_matrix((np.ones(len(e)), (pos[e[:, 0]], pos[e[:, 1]])), shape=(len(idx), len(idx))), directed=False)
+    d = np.linalg.norm(X[idx] - J, axis=1)
+    keep = comp == comp[np.argmin(d)]
+    tree = cKDTree(X[idx][keep])
+    for c in np.unique(comp[~keep]):
+        m = comp == c
+        if tree.query(X[idx][m], distance_upper_bound=touch)[0].min() < touch:
+            keep |= m
+    out = np.zeros(len(X), bool); out[idx[keep]] = True
+    return out, int((~keep).sum())
+
+
 def align_sleeves(X, rig, G):
     """turn and move each sleeve so that its centre line lies on the UO arm (shoulder joint -> wrist); fades in over BLEND from the root of the sleeve"""
     X = X.copy(); member = np.zeros(len(X))
@@ -141,6 +177,9 @@ def align_sleeves(X, rig, G):
         sel = (X[:, 0] * sg > abs(J[0]) + 0.05) & (X[:, 2] > J[2] - 0.6)
         if sel.sum() < 50:
             print("uo_conform_item: no sleeve on side %s" % sd); continue
+        sel, dropped = sleeve_piece(X, G, sel, J)                       # a ball gown: the top of its skirt is also out past the shoulder and above J - 0.6 (taken for the sleeve,
+        if dropped:                                                     # it was squeezed onto the arm and the sleeve tore)
+            print("uo_conform_item: sleeve %s: %d vertices out past the shoulder left out (not joined to the sleeve: the skirt)" % (sd, dropped))
         S = X[sel]
         far = S[np.argmax(np.linalg.norm(S - J, axis=1))]
         d0 = (far - J) / np.linalg.norm(far - J)
@@ -159,6 +198,7 @@ def align_sleeves(X, rig, G):
         Rt = np.percentile(perp[sel & (sx > 0)], 95)
         wt = np.clip((Rt + TUBE_MARGIN - perp) / TUBE_MARGIN, 0, 1)
         s = (X - root) @ ds
+        wt = wt * np.clip((np.percentile(s[sel], 99.5) + TUBE_MARGIN - s) / TUBE_MARGIN, 0, 1)   # and not past the end of the sleeve (the skirt further along its line)
         w = np.clip(s / BLEND, 0, 1) * wt * (X[:, 0] * sg > 0)
         w = G.smooth(w, 6); w = w * w * (3 - 2 * w)
         Y = (X - cs) @ R.T + target
@@ -257,6 +297,36 @@ def main():
         X0 = X0 + np.array(MOVE)                                         # a nudge of the whole item (e.g. a model that sits too high on the UO shoulders)
         # 1. sleeves onto the arms
         X, sleeve = align_sleeves(X0, rig, G) if SLEEVES else (X0.copy(), np.zeros(len(X0)))
+        if SLEEVE_END >= 0:                                              # sleeves shortened to end SLEEVE_END past the wrist
+            for sd, sg in (("L", 1.0), ("R", -1.0)):
+                J = np.array(rig.matrix_world @ rig.data.bones["upper_arm." + sd].head_local); Hd = np.array(rig.matrix_world @ rig.data.bones["hand." + sd].head_local)
+                ax = (Hd - J) / np.linalg.norm(Hd - J); tw = (Hd - J) @ ax
+                m = (sleeve > 0.5) & (X[:, 0] * sg > 0)
+                if m.sum() < 20:
+                    continue
+                t = (X - J) @ ax; tend = float(np.percentile(t[m], 99.5)); want = tw + SLEEVE_END
+                if abs(tend - want) < 0.002:
+                    continue
+                t0 = want - SLEEVE_SPAN; k = (want - t0) / (tend - t0)
+                w = np.clip(sleeve, 0, 1) * (X[:, 0] * sg > 0) * (t > t0)
+                X = X - (w * (t - t0) * (1 - k))[:, None] * ax
+                print("uo_conform_item: sleeve %s resized along the arm: ended %.1f cm past the wrist, now %.1f cm (last %.0f cm squeezed x%.2f)" % (sd, 100 * (tend - tw), 100 * SLEEVE_END, 100 * SLEEVE_SPAN, k), flush=True)
+
+        if SLEEVE_CUFF >= 0:                                             # the mouth of the sleeve narrowed round the forearm
+            for sd, sg in (("L", 1.0), ("R", -1.0)):
+                El = np.array(rig.matrix_world @ rig.data.bones["forearm." + sd].head_local); Hd = np.array(rig.matrix_world @ rig.data.bones["hand." + sd].head_local)
+                ax = (Hd - El) / np.linalg.norm(Hd - El)
+                m = (sleeve > 0.5) & (X[:, 0] * sg > 0)
+                if m.sum() < 20:
+                    continue
+                t = (X - El) @ ax; tend = float(np.percentile(t[m], 99.5))
+                R = (X - El) - t[:, None] * ax; r = np.linalg.norm(R, axis=1)
+                w = np.clip(sleeve, 0, 1) * (X[:, 0] * sg > 0) * np.clip((t - (tend - CUFF_SPAN)) / CUFF_SPAN, 0, 1)
+                w = w * w * (3 - 2 * w)
+                rn = np.where(r > SLEEVE_CUFF, SLEEVE_CUFF + (r - SLEEVE_CUFF) * 0.15, r)          # beyond the limit only a little of the flare stays (folds keep their order)
+                k = 1 - w * (1 - rn / np.maximum(r, 1e-9))
+                X = X - ((1 - k) * 1.0)[:, None] * R
+                print("uo_conform_item: sleeve %s cuff: radius at the end %.1f cm (p90) -> at most ~%.1f cm" % (sd, 100 * float(np.percentile(r[m & (t > tend - 0.03)], 90)), 100 * SLEEVE_CUFF), flush=True)
 
         # 2. wrap: the target stand-off h from the model's own (aligned) stand-off
         l, _, f, _ = nearest(bvh_any, X)
@@ -344,12 +414,27 @@ def main():
         sd = nearest(bvh_col, Xs, 0.5)[3]
         print("uo_conform_item: %s: wrapped (%d passes): stand-off minus target p50 %.1f p90 %.1f max %.1f mm; edge length / model's p01 %.2f p99 %.2f max %.2f" % (
             o.name, WRAP_ITERS, *(1000 * np.percentile(sd - h, [50, 90, 100])), *np.percentile(r1, [1, 99, 100])), flush=True)
-        for it in range(10):                                            # what the blend or a concave spot (armpit, crotch) brought too close: out to GAP
+        if SPACE_SMOOTH > 0:                                            # the move of the wrap averaged in space: overlapping panels (flaps, knots, collar) move together
+            from scipy.spatial import cKDTree
+            from scipy.sparse import coo_matrix
+            pr = cKDTree(X).query_pairs(SPACE_SMOOTH, output_type="ndarray")
+            dd = np.linalg.norm(X[pr[:, 0]] - X[pr[:, 1]], axis=1); wk = np.exp(-(dd / (0.5 * SPACE_SMOOTH)) ** 2)
+            K = coo_matrix((np.r_[wk, wk, np.ones(n)], (np.r_[pr[:, 0], pr[:, 1], np.arange(n)], np.r_[pr[:, 1], pr[:, 0], np.arange(n)])), shape=(n, n)).tocsr()
+            ks = np.asarray(K.sum(1)).ravel()
+            D = Xs - X
+            for _ in range(SPACE_PASSES):
+                D = (K @ D) / ks[:, None]
+            Xs = X + D
+            print("uo_conform_item: %s: the wrap's move averaged over %.0f mm in space (%d passes, %.0f neighbours per vertex)" % (o.name, 1000 * SPACE_SMOOTH, SPACE_PASSES, 2 * len(pr) / n), flush=True)
+        for it in range(FINAL_ITERS):                                   # what the blend or a concave spot (armpit, crotch) brought too close: out to GAP
             _, nr2, _, S1 = nearest(bvh_any, Xs, 0.3)
+            nr2 = np.where((S1 < 0)[:, None], limb_out(Xs, nr2), nr2)    # inside an arm: straight away from its bone
             need = np.clip(GAP * 0.9 - S1, 0, None)
             if need.max() < 5e-4:
                 break
             Xs = Xs + G.smooth(need[:, None] * nr2, 2) + need[:, None] * nr2
+        S1 = nearest(bvh_any, Xs, 0.3)[3]
+        print("uo_conform_item: %s: after the last push (%d passes): %d vertices inside the skin, deepest %.1f mm" % (o.name, it + 1, int((S1 < 0).sum()), -1000 * min(S1.min(), 0)), flush=True)
         X1 = Xs
         S1 = nearest(bvh_any, X1, 0.3)[3]
         print("uo_conform_item: %s: %d vertices; shell %.0f mm + looseness / folds: stand-off p50 %.1f / p90 %.1f / max %.1f cm (model %.1f / %.1f / %.1f), min %.1f mm%s" % (
@@ -409,6 +494,14 @@ def main():
         lab = rs.argmax(1)
         lab = np.where((lab > 0) & (rs[:, 0] >= ROOT_SHARE), lab + 2, lab)     # the root of a sleeve (some weight of the torso): kept off both
         at.data.foreach_set("value", lab[node].astype(np.int32))     # 0 torso part, 1 / 2 left / right sleeve, 3 / 4 their roots: cloth_lib.conform_push, render_uo_layer.py
+        if OCCLUSION > 0:                                               # depth: folds, frills, the side under a sleeve darker (rest shape; the vertices carry it into every frame)
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from uo_hood_cover import occlusion_share, apply_shade
+            occ = occlusion_share(X1, orient * item_normals(X1), itri, E, Vb, tri, OCC_RAYS, OCC_DIST)
+            fsh = np.maximum(1 - OCCLUSION * occ, SHADE_MIN)
+            apply_shade(o.data, fsh[node])
+            print("uo_conform_item: %s: occlusion x%.2f (rays %d, %.0f mm): share hit p50 %.2f p90 %.2f, colour x p10 %.2f, %d vertices at SHADE_MIN %.2f" % (
+                o.name, OCCLUSION, OCC_RAYS, 1000 * OCC_DIST, np.percentile(occ, 50), np.percentile(occ, 90), np.percentile(fsh, 10), int((fsh <= SHADE_MIN).sum()), SHADE_MIN), flush=True)
         o["uo_conform"] = json.dumps(dict(gap=POSE_GAP))
         if SKIRT and (Wleg.sum(1) > 0.05).any():
             o["uo_cloth"] = json.dumps(cloth_params(rig, X1))
