@@ -147,9 +147,14 @@ def recover_interrupted_jobs(jobs):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('--port',type=int,default=8772)
-    args=p.parse_args(); (pipeline.HOME/'jobs').mkdir(parents=True,exist_ok=True)
+    args=p.parse_args()
+    import sys
+    pipeline.storage.startup(pipeline.ROOT, sys.executable)
+    # Recovery must not mark a different process's live renders as failed.
+    with pipeline.storage.Store(pipeline.HOME).session():
+        (pipeline.HOME/'jobs').mkdir(parents=True,exist_ok=True)
+        for file,error in recover_interrupted_jobs(pipeline.HOME/'jobs'):
+            print(f'Skipped job {file.parent.name}: unreadable status.json ({error})',flush=True)
     # Jobs interrupted by a server shutdown are never presented as still rendering.
-    for file,error in recover_interrupted_jobs(pipeline.HOME/'jobs'):
-        print(f'Skipped job {file.parent.name}: unreadable status.json ({error})',flush=True)
     print(f'SpriteMotion content studio: http://127.0.0.1:{args.port}',flush=True)
     ThreadingHTTPServer(('127.0.0.1',args.port),Handler).serve_forever()

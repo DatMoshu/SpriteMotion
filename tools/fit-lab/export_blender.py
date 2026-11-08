@@ -7,6 +7,7 @@ items/     one .glb per item: the pack parts fitted by pack_fit (no lab adjustme
            skinned to the same rig, with the pack palette.
 manifest.json  camera, directions, actions and the item list (merged with an earlier export).
 """
+import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -24,9 +25,12 @@ import pack_fit  # noqa: E402
 
 argv = sys.argv[sys.argv.index('--') + 1:]
 items_doc = labpaths.load(argv[0])
-OUT = Path(argv[1]); FORCE = '--force' in argv
+_paths_spec = importlib.util.spec_from_file_location('export_workpaths', REPO / 'common/workpaths.py')
+_paths = importlib.util.module_from_spec(_paths_spec)
+_paths_spec.loader.exec_module(_paths)
+OUT = _paths.external_path(Path(argv[1])); FORCE = '--force' in argv
 (OUT / 'items').mkdir(parents=True, exist_ok=True)
-MODEL = Path(items_doc.get('model', REPO / 'workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend'))
+MODEL = Path(items_doc.get('model', _paths.backend_home() / 'model/UO_Body_0x190.blend'))
 STEP = 3
 
 bpy.ops.wm.open_mainfile(filepath=str(MODEL), load_ui=False, use_scripts=False)

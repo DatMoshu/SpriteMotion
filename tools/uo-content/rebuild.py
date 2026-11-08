@@ -36,6 +36,15 @@ def changed_blocks(spec, document, blocks):
 
 def rebuild_job(source, adjustments, selected=None):
     import pipeline
+    source = Path(source).resolve()
+    if source.parent != (pipeline.HOME / 'jobs').resolve():
+        raise ValueError('Rebuild source must belong to this external content store.')
+    with pipeline.storage.pin(source):
+        return _rebuild_job(source, adjustments, selected)
+
+
+def _rebuild_job(source, adjustments, selected=None):
+    import pipeline
     from client_import import vd_blocks
     from adjustments import validate
     source = Path(source).resolve()
@@ -58,11 +67,19 @@ def rebuild_job(source, adjustments, selected=None):
     patch_spec = {**spec, 'fit_adjustments':document, 'actions':sorted({b[0] for b in selected}), 'blocks':selected}
     patch = pipeline.create_job(patch_spec, spec.get('asset'))
     pipeline.run_job(patch)
+    with pipeline.storage.Store(pipeline.HOME).session(protect=[source, patch]) as store:
+        # Account for the private copy before creating it; the source stays intact.
+        store.require(pipeline.storage.usage(source) + pipeline.storage.usage(patch))
+        return _merge_revision(source, patch, spec, document, selected, store)
+
+
+def _merge_revision(source, patch, spec, document, selected, store):
+    import pipeline
     identity = uuid.uuid4().hex[:12]
     stage = pipeline.HOME/'staging'/identity
     destination = pipeline.HOME/'jobs'/identity
     try:
-        shutil.copytree(source,stage)
+        shutil.copytree(source,stage,ignore=shutil.ignore_patterns('.storage.pin'))
         render = stage/'render/clothing'
         meta = json.loads((render/'meta.json').read_text(encoding='utf-8'))
         patch_meta = json.loads((patch/'render/clothing/meta.json').read_text(encoding='utf-8'))
@@ -80,7 +97,7 @@ def rebuild_job(source, adjustments, selected=None):
         pipeline.write_json(stage/'job.json',spec)
         # The editable scene has the latest base and bindings; per-block settings remain in job.json.
         shutil.copy2(patch/'item.blend',stage/'item.blend')
-        pipeline.finish(stage)
+        pipeline.finish(stage, _store=store)
         stage.rename(destination)
         return destination
     except Exception:

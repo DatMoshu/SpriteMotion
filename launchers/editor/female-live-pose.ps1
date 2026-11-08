@@ -1,8 +1,13 @@
 param([int]$Port = 8768)
 $ErrorActionPreference = 'Stop'
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$pythonExe = Join-Path $repoRoot '.venvs/spritemotion/Scripts/python.exe'
-if (-not (Test-Path -LiteralPath $pythonExe)) { $pythonExe = (Get-Command python -ErrorAction Stop).Source }
+$bootstrap = (Get-Command python -ErrorAction Stop).Source
+$checkoutVenv = & $bootstrap (Join-Path $repoRoot 'tools/worktree-venv/run.py') --path
+if ($LASTEXITCODE -ne 0) { throw 'Cannot resolve external checkout environment.' }
+$pythonExe = $env:SPRITEMOTION_PYTHON
+if (-not $pythonExe) { $pythonExe = Join-Path $checkoutVenv 'Scripts/python.exe' }
+& $bootstrap (Join-Path $repoRoot 'tools/storage/run.py') startup --checkout $repoRoot --python $pythonExe
+if ($LASTEXITCODE -ne 0) { throw 'Storage/environment validation failed.' }
 $editorUrl = "http://127.0.0.1:$Port/editor/"
 try {
     $response = Invoke-WebRequest $editorUrl -TimeoutSec 2

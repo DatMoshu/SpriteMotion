@@ -20,3 +20,8 @@ SPRITEMOTION_MAPPING="games/ultima-online/skeletons/rig-mappings/rigify.json"
 # Blender timeline: source frame f is keyed at FRAME_START + f * FRAME_STEP.
 SPRITEMOTION_FRAME_START=1
 SPRITEMOTION_FRAME_STEP=4
+
+# Content-store limits. Inputs and editable scenes never expire.
+SPRITEMOTION_MAX_WORK_GB=5
+SPRITEMOTION_OUTPUT_DAYS=7
+SPRITEMOTION_KEEP_OUTPUT_JOBS=10

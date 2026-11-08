@@ -36,7 +36,7 @@ Content tools (Content Studio, Fit Lab, the workbench) are described in [editor/
 
 | Launcher | What it does | Arguments |
 |---|---|---|
-| `pipeline/0-setup` | Create .venvs\spritemotion, install SpriteMotion (editable, with test extras) and fetch the tested Godot build into tools\godot unless SPRITEMOTION_GODOT is set. |  |
+| `pipeline/0-setup` | Create an external checkout environment and install the tested Godot build in shared storage unless SPRITEMOTION_GODOT is set. |  |
 | `pipeline/1-extract-uo` | Extract a character from YOUR UO client into workspace\ and apply the bundled annotations, then print its status. | `[character]  (default: body-400)` |
 | `pipeline/2-status` | Print annotation coverage, review state and fingerprint mismatches for a dataset (exit 1 when it does not validate). | `[dataset]  (default: SPRITEMOTION_DATASET)` |
 | `pipeline/3-fit` | Export your model's rig from Blender, then fit one sequence to the dataset's annotations (writes workspace\fits\rig.json and workspace\fits\<sequence>.json). | `<sequence, e.g. action-022> [approved\|independent\|all]` |
@@ -69,6 +69,8 @@ Content tools (Content Studio, Fit Lab, the workbench) are described in [editor/
 | `dev/transfer-fixture` | Regenerate the synthetic transfer-artifact fixture in tests\fixtures\transfer (deterministic, no game data). | `[--out dir]  (default: tests/fixtures/transfer)` |
 | `dev/worktree-venv` | Build a shared-area venv for this checkout, install it editable with the test extras, and verify its import path. | `[--rebuild]  (default: reuse the venv and refresh the editable install)` |
 | `dev/whole-outfit` | Build a whole outfit from a Fit Lab catalogue and composite contact sheets in client layer order (local output, prints a per-slot table). | `build, body or composite ...  (see tools\whole-outfit\run.py --help)` |
+
+| `dev/check-storage` | Validate external storage and the matching Python environment before starting this or a historical checkout. | `[--checkout PATH] [--python PATH] [--paths-only]` |
 
 ## Not launchers
 

@@ -8,7 +8,7 @@
 DIR/jobs.json. `body` renders the bare body into DIR/body. `composite` stacks every job's frames over the body, checks
 each frame (256x256 RGBA, clipped, empty) and writes contact sheets, an overview, two GIFs and a per-slot table into
 --out, named spritemotion_<story>_<subject>_<kind>_<YYYYMMDD-HHMM>.<ext>. All of it is built from game-derived frames:
-keep the output local (workspace/ is ignored).
+keep the output external and private.
 """
 import argparse
 import json
@@ -51,12 +51,15 @@ def build(args):
 
 def body(args):
     import pipeline
-    backend = ROOT/'workspace/ultima-online/canonical-model'
+    backend = pipeline.BACKEND
     blend = next((backend/'model').glob('*.blend'))
     out = Path(args.work)/'body'; out.mkdir(parents=True, exist_ok=True)
     command = [pipeline.blender_path(), '--background', '--factory-startup', '--python-exit-code', '1', str(blend), '--python',
                str(Path(__file__).with_name('body_render.py')), '--', str(backend), str(out), ','.join(ACTIONS.values())]
-    sys.exit(subprocess.run(command).returncode)
+    with pipeline.storage.Store(Path(args.work)).session() as store:
+        result = store.process(command, out)
+    if result:
+        raise SystemExit(result)
 
 
 def composite(args):
@@ -137,6 +140,11 @@ def main():
     c.add_argument('--out', required=True); c.add_argument('--direction', type=int, default=2)
     c.add_argument('--story', default='whole-outfit', help='story id used in the evidence file names')
     args = parser.parse_args()
+    import pipeline
+    pipeline.storage.startup(ROOT, sys.executable)
+    args.work = str(pipeline.storage.paths.external_path(Path(args.work)))
+    if hasattr(args, 'out'):
+        args.out = str(pipeline.storage.paths.external_path(Path(args.out)))
     {'build': build, 'body': body, 'composite': composite}[args.command](args)
 
 

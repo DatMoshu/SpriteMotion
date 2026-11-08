@@ -104,6 +104,12 @@ namespace Server.Items
 '''
 
 def stage_equipment(job,client,body,graphic,flavor='modernuo'):
+    from client_import import staging_store
+    with staging_store(Path(job)/'staged-client').session(protect=[job]) as store:
+        return _stage_equipment(job,client,body,graphic,flavor,store)
+
+
+def _stage_equipment(job,client,body,graphic,flavor,store):
     job,client=Path(job).resolve(),Path(client).resolve()
     require_client_files(client,EQUIPMENT_FILES)
     spec=json.loads((job/'job.json').read_text(encoding='utf-8'))
@@ -122,8 +128,10 @@ def stage_equipment(job,client,body,graphic,flavor='modernuo'):
     if not np.array_equal(decode_art(encoded)[...,3]>0,np.asarray(image)[...,3]>=128):
         raise ValueError('Inventory art round-trip failed.')
     out=job/'staged-client'
-    result=stage(job/'item.vd',client,body,out)   # refuses an existing out, so out is ours from here
+    result=stage(job/'item.vd',client,body,out,_store=store)   # refuses an existing out
     try:
+        store.require(len(data)+(client/'art.mul').stat().st_size+len(encoded)
+                      +max(len(artidx),index+12)+32768)
         data[target:target+size]=data[source:source+size]
         struct.pack_into('<H',data,target+flags+6,body)
         data[target+size-20:target+size]=spec['name'].encode('cp1252',errors='replace')[:19].ljust(20,b'\0')

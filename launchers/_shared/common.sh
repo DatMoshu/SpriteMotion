@@ -4,7 +4,7 @@
 
 SM_ROOT=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)
 _sm_here="$SM_ROOT/launchers/_shared"
-_sm_keys="SPRITEMOTION_UO_SOURCE SPRITEMOTION_DATASET SPRITEMOTION_GODOT SPRITEMOTION_GODOT_CONSOLE SPRITEMOTION_BLENDER SPRITEMOTION_BLEND SPRITEMOTION_ARMATURE SPRITEMOTION_MAPPING SPRITEMOTION_FRAME_START SPRITEMOTION_FRAME_STEP SPRITEMOTION_PYTHON SPRITEMOTION_WORK_ROOT SPRITEMOTION_CONTENT_HOME"
+_sm_keys="SPRITEMOTION_UO_SOURCE SPRITEMOTION_DATASET SPRITEMOTION_GODOT SPRITEMOTION_GODOT_CONSOLE SPRITEMOTION_BLENDER SPRITEMOTION_BLEND SPRITEMOTION_ARMATURE SPRITEMOTION_MAPPING SPRITEMOTION_FRAME_START SPRITEMOTION_FRAME_STEP SPRITEMOTION_PYTHON SPRITEMOTION_WORK_ROOT SPRITEMOTION_CONTENT_HOME SPRITEMOTION_BACKEND SPRITEMOTION_MAX_WORK_GB SPRITEMOTION_OUTPUT_DAYS SPRITEMOTION_KEEP_OUTPUT_JOBS"
 
 # Remember what the environment already says (a blank value counts as unset, like in common.bat).
 _sm_env=""
@@ -16,15 +16,11 @@ done
 [ -f "$_sm_here/config.local.sh" ] && . "$_sm_here/config.local.sh"
 for _k in $_sm_env; do eval "$_k=\$_sm_saved_$_k"; done
 
-sm_find_venv_python() {
-    local c
-    for c in "$SM_ROOT/.venvs/spritemotion/bin/python" "$SM_ROOT/.venvs/spritemotion/Scripts/python.exe"; do
-        if [ -x "$c" ]; then printf '%s\n' "$c"; return 0; fi
-    done
-    return 1
-}
-SM_VENV_PYTHON=$(sm_find_venv_python || true)
-export SPRITEMOTION_WORK_ROOT SPRITEMOTION_CONTENT_HOME
+export SPRITEMOTION_WORK_ROOT SPRITEMOTION_CONTENT_HOME SPRITEMOTION_BACKEND
+export SPRITEMOTION_MAX_WORK_GB SPRITEMOTION_OUTPUT_DAYS SPRITEMOTION_KEEP_OUTPUT_JOBS
+_sm_bootstrap=$(command -v python3 || command -v python || true)
+if [ -z "$_sm_bootstrap" ]; then echo '[SpriteMotion] Python is required for external-storage validation.' >&2; return 1; fi
+"$_sm_bootstrap" "$SM_ROOT/tools/storage/run.py" startup --checkout "$SM_ROOT" --paths-only >/dev/null || return 1
 if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
     _sm_bootstrap=$(command -v python3 || command -v python || true)
     if [ -n "$_sm_bootstrap" ]; then
@@ -35,16 +31,18 @@ if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
     fi
 fi
 if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
-    # workspace/venv (launchers/dev/worktree-venv) tests THIS checkout; .venvs/spritemotion is main's editable install.
-    for _c in "$SM_ROOT/workspace/venv/bin/python" "$SM_ROOT/workspace/venv/Scripts/python.exe"; do
-        if [ -x "$_c" ]; then SPRITEMOTION_PYTHON=$_c; break; fi
-    done
+    SPRITEMOTION_PYTHON="$SM_CHECKOUT_VENV/bin/python"
 fi
-if [ -z "${SPRITEMOTION_PYTHON:-}" ]; then
-    if [ -n "$SM_VENV_PYTHON" ]; then SPRITEMOTION_PYTHON=$SM_VENV_PYTHON
-    else SPRITEMOTION_PYTHON=$(command -v python3 || command -v python || true); fi
+if [ -x "$SPRITEMOTION_PYTHON" ]; then
+    "$SPRITEMOTION_PYTHON" "$SM_ROOT/tools/storage/run.py" startup --checkout "$SM_ROOT" --python "$SPRITEMOTION_PYTHON" >/dev/null || return 1
 fi
 
+if [ -z "${SPRITEMOTION_GODOT:-}" ]; then
+    SM_GODOT_CACHE=$("$_sm_bootstrap" "$SM_ROOT/tools/storage/run.py" godot-path)
+    for _c in "$SM_GODOT_CACHE/Godot_v4.7-stable_win64.exe" "$SM_GODOT_CACHE/Godot_v4.7-stable_linux.x86_64" "$SM_GODOT_CACHE/Godot.app/Contents/MacOS/Godot"; do
+        if [ -x "$_c" ]; then SPRITEMOTION_GODOT=$_c; break; fi
+    done
+fi
 if [ -z "${SPRITEMOTION_GODOT:-}" ]; then
     for _c in "$SM_ROOT/tools/godot/Godot_v4.7-stable_win64.exe" "$SM_ROOT/tools/godot/Godot_v4.7-stable_linux.x86_64" \
               "$SM_ROOT/tools/godot/Godot.app/Contents/MacOS/Godot"; do
@@ -52,7 +50,9 @@ if [ -z "${SPRITEMOTION_GODOT:-}" ]; then
     done
 fi
 if [ -z "${SPRITEMOTION_GODOT_CONSOLE:-}" ]; then
-    if [ -x "$SM_ROOT/tools/godot/Godot_v4.7-stable_win64_console.exe" ]; then
+    if [ -x "${SM_GODOT_CACHE:-}/Godot_v4.7-stable_win64_console.exe" ]; then
+        SPRITEMOTION_GODOT_CONSOLE="$SM_GODOT_CACHE/Godot_v4.7-stable_win64_console.exe"
+    elif [ -x "$SM_ROOT/tools/godot/Godot_v4.7-stable_win64_console.exe" ]; then
         SPRITEMOTION_GODOT_CONSOLE="$SM_ROOT/tools/godot/Godot_v4.7-stable_win64_console.exe"
     else SPRITEMOTION_GODOT_CONSOLE=${SPRITEMOTION_GODOT:-}; fi
 fi
