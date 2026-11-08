@@ -210,7 +210,11 @@ def import_asset(path):
         for o in dst.objects:
             if o: bpy.context.scene.collection.objects.link(o)
     imported=set(bpy.data.objects)-before
-    meshes=[o for o in imported if o.type=='MESH']
+    # glTF import creates mesh custom shapes for its skeleton display. They are
+    # helpers, not supplied geometry, and would corrupt both fit bounds and sprites.
+    bone_shapes={bone.custom_shape for o in imported if o.type=='ARMATURE'
+                 for bone in o.pose.bones if bone.custom_shape is not None}
+    meshes=[o for o in imported if o.type=='MESH' and o not in bone_shapes]
     if not meshes: raise ValueError('No mesh found in supplied asset.')
     dg=bpy.context.evaluated_depsgraph_get()
     # Flatten an imported asset's current shape before binding it to the canonical rig.

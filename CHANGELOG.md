@@ -26,8 +26,8 @@
 - Robustness fixes for issues #5-#11 (#18): VD offsets are bounded in `vdtool`/`uo_vd_writer`, outfit-lab `vd.py` clips
   runs, `vdtool` prints usage on bad arguments, `jsonio` writes are atomic, `restore()` compares sha256, annotation
   errors are narrowed and warn, and the studio skips an unreadable job status.
-- Issue #12 (portability) is partly done in #18: the `region_fonts` font fallback and `find_blender` discovery. The
-  rest is still open (SM-12).
+- Issue #12 (portability) fixed (#18, #30): the `region_fonts` font fallback, one `find_blender` discovery shared by
+  the tools, and no hardcoded Windows paths (the hardcoded-path test matches backslash and slash).
 
 ### Local servers (security)
 - Content Studio, Fit Lab and the live pose editor bind to the loopback interface only and check `Host` and `Origin`

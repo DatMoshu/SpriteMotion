@@ -1,5 +1,11 @@
 # workspace/
 
+Task 553 moved the existing local payloads into the shared work area's `workspace/`
+directory. This checkout keeps local symbolic links for legacy paths used by the
+editor, pipeline launchers and authoring scripts. The data is stored outside the
+checkout; preserve the links when using those legacy paths. No authoring data was
+deleted. New jobs should use `SPRITEMOTION_WORK_ROOT` directly.
+
 Generated payloads now belong under `SPRITEMOTION_WORK_ROOT` (Windows default:
 `D:/_agentShared/work/spritemotion`); review screenshots, logs and clips belong in
 central evidence runs. New content-studio jobs and checkout-specific Python

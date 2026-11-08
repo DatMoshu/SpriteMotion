@@ -68,3 +68,40 @@ launchers/_shared/config.local.sh
 
 # Browser automation scratch
 /.playwright-mcp/
+
+# Fleet size floor: generated payloads stay outside checkouts.
+build/
+builds/
+out/
+output/
+outputs/
+exports/
+dist/
+tmp/
+temp/
+.venv/
+.venv-*/
+node_modules/
+.worktrees/
+worktrees/
+.claude/worktrees/
+runs/
+evidence/
+*.log
+*.zip
+*.7z
+*.rar
+*.iso
+*.chd
+*.bin
+*.mov
+*.wav
+*.psd
+!data/**
+
+# Local compatibility symlinks are files to Git (directory patterns do not match).
+/.playwright-mcp
+/.venv
+/.venvs
+/build
+/outputs
