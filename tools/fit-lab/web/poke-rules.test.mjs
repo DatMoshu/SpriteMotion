@@ -21,8 +21,8 @@ test('hide-body inward larger than the margin is the contact allowance; off fall
 test('rigid items get no push-out whatever the studio part', () => {
   assert.equal(pokeRule(fit({ bind: 'rigid' }), 'chest').allowance, HOLDOUT_MARGIN);
 });
-test('helm, weapon, shield, bow and quiver studio parts get no push-out', () => {
-  for (const part of ['helm', 'weapon', 'shield', 'bow', 'quiver'])
+test('helm, weapon parts, shield, bow and quiver studio parts get no push-out', () => {
+  for (const part of ['helm', 'weapon', 'weapon1h', 'axe2h', 'polearm', 'shield', 'bow', 'quiver'])
     assert.equal(pokeRule(fit(), part).allowance, HOLDOUT_MARGIN);
 });
 test('pack part codes and layer names do not decide the push-out', () => {
@@ -41,7 +41,7 @@ test('cc0 starter mapping: every part gets the allowance the renderer implies', 
   const plain = ['hood', 'hair', 'beard', 'weapon-sword', 'shield-round', 'backpack'];
   const pushedCodes = ['shirt', 'pants', 'cloak'];
   for (const p of mapping.parts) {
-    const rigid = p.bind === 'rigid', free = ['helm', 'weapon', 'shield', 'bow', 'quiver'].includes(p.studio_part);
+    const rigid = p.bind === 'rigid', free = ['helm', 'weapon', 'weapon1h', 'axe2h', 'polearm', 'shield', 'bow', 'quiver'].includes(p.studio_part);
     const r = pokeRule(fit({ bind: p.bind }), p.studio_part);
     near(r.allowance, rigid || free ? .01 : .016);
     if (plain.includes(p.code)) near(r.allowance, .01);

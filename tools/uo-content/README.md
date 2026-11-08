@@ -95,7 +95,26 @@ python -m unittest discover -s tools/uo-content -p test_content.py
 
 The example settings document shows the minimum fields. Optional `rotate_x/y/z` are degrees; `offset_x/y/z` are metres, `scale` is a uniform multiplier, `fit` is `auto` or `preserve`, `mode` is `preview` or `full`. Every job stores its resolved settings, the original prompt and input hash. A custom generator can hand off a model plus these settings without changing the renderer.
 
+Weapon parts. `weapon` is rigid in `hand.R` (no calibration). `weapon1h`, `axe2h` and `polearm` bind the item to the
+canonical body's weapon bones `weapon1h.R`, `axe2h.L` and `polearm.L` (`uo_bind_item.py`), which move as the original
+weapons of that class do in the attack, idle and run actions; `bow` rides on `bow.L`. Model the item along the class
+line (see `uo_place_weapon.py` in the backend). None of the weapon parts is pushed out of the body (`BODY_GAP` 0).
+
+Optional weapon and bow settings:
+
+* `weapon_motion`: `{bone: entry}` with entries in the format of the backend's `weapon_motion.json` (`parent`, `pivot`,
+  `dir`, `poses`). It replaces that bone's calibration for this build only and re-keys the weapon bones before the bind.
+  Use it when a class calibration does not suit one item, e.g. a `bow.L` class fitted on bows alone (the stock one is
+  fitted on bows and crossbows together and turns a bow flat at the release of `attack_bow`).
+* `bow_draw`: bends a bow in the draw. The item brings four shape keys: `draw` (limbs bent at full draw, weight 1) and
+  `string_x`/`string_y`/`string_z` (the middle of the string moved 1 m along the mesh's local X/Y/Z). `"weights":
+  {action: [0..1 per UO frame]}` gives the draw weight per frame; per frame the build keys the weight and the offset
+  from the nock to the drawing hand on the rig, and drivers move the keys, so the limbs bend and the string follows the
+  fingers. Optional `"orient": {action: [frames]}` turns the bow about its own axis toward the drawing hand in those
+  frames (the original bows hold the draw in the bow's plane); `"hand"` (default `hand.R`) and `"bone"` (default
+  `bow.L`). The imported asset keeps its shape keys when `bow_draw` is set.
+
 To hand a finished job to another tool (GUO's importer) without its folder layout, export it as a transfer artifact:
 `python tools/transfer-export/run.py --job <job> --out <new-folder>`. See [Making one](../../docs/transfer-artifact.md#making-one).
 
-Clipping and empty frames are reported, not hidden. Cloth template binding is included; running a fresh physics cloth bake is not automated here. Mounted occlusion uses the source project's horse proxy/masks and needs visual review. The source file was saved by a later Blender 4.2 patch than the local 4.2.0 test runtime; use the author's version when investigating discrepancies.
+Clipping and empty frames are reported, not hidden. Cloth template binding is included. Loose garments (`robe`, `skirt`) can also get a physics cloth pass: `"cloth_sim": true` (or a dict of `uo_cloth_sim.py` settings, e.g. `{"arm_goal": -1, "thick": 0.005, "in_max": -1}`) runs `uo_cloth_sim.py` on the saved `item.blend` in a separate Blender (`cloth_sim_run.py`) and the renderer adds `cloth_sim.npz` to the leg push; it adds about a minute to a preview. It needs a supplied model: the simulation reads the mesh vertex by vertex, so the procedural template (which carries a Solidify) is refused. Upstream before b2d22af pinned the cloth to the first pose (the whole garment drifted off the body). Mounted occlusion uses the source project's horse proxy/masks and needs visual review. The source file was saved by a later Blender 4.2 patch than the local 4.2.0 test runtime; use the author's version when investigating discrepancies.
