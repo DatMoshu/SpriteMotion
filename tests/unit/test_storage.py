@@ -50,6 +50,21 @@ def test_retention_preserves_inputs_scenes_active_recent_and_pinned(tmp_path):
     assert all((p / 'render/frame.png').exists() for p in [active, queued, recent, pinned])
 
 
+def test_usage_tolerates_a_producer_removing_its_temporary_file(tmp_path, monkeypatch):
+    (tmp_path / 'kept.bin').write_bytes(b'12345')
+    temporary = tmp_path / 'module.pyc.1234'
+    temporary.write_bytes(b'transient')
+    original = storage.linked
+
+    def removed_after_listing(path):
+        if path == temporary:
+            temporary.unlink()
+        return original(path)
+
+    monkeypatch.setattr(storage, 'linked', removed_after_listing)
+    assert storage.usage(tmp_path) == 5
+
+
 def test_protected_plan_aborts_before_any_deletion(tmp_path):
     home = tmp_path / 'content'
     first = job(home, 1)
@@ -307,7 +322,7 @@ def test_missing_keyed_environment_never_creates_local_fallback(tmp_path, monkey
     assert not (tmp_path / 'external').exists()
 
 
-def test_wrong_editable_install_rejected(tmp_path, monkeypatch):
+def guarded_checkout(tmp_path, monkeypatch):
     checkout = tmp_path / 'different'
     (checkout / 'common').mkdir(parents=True)
     (checkout / 'common/storage.py').write_text('STORAGE_GUARD_VERSION = 1')
@@ -317,8 +332,77 @@ def test_wrong_editable_install_rejected(tmp_path, monkeypatch):
         (launchers / name).write_text('tools/storage/run.py')
     monkeypatch.setenv('SPRITEMOTION_WORK_ROOT', str(tmp_path / 'external'))
     monkeypatch.delenv('SPRITEMOTION_CONTENT_HOME', raising=False)
+    return checkout
+
+
+def test_wrong_editable_install_rejected(tmp_path, monkeypatch):
+    checkout = guarded_checkout(tmp_path, monkeypatch)
     with pytest.raises(ValueError, match='does not import this checkout'):
         storage.startup(checkout, sys.executable)
+
+
+def venv_link(folder, target):
+    folder.mkdir(parents=True)
+    link = folder / 'python'
+    try:
+        link.symlink_to(target)
+    except OSError as error:
+        pytest.skip(f'symlinks unavailable: {error}')
+    return link
+
+
+def test_startup_runs_venv_link_not_its_base_interpreter(tmp_path, monkeypatch):
+    checkout = guarded_checkout(tmp_path, monkeypatch)
+    base = tmp_path / 'base-python'
+    base.write_bytes(b'interpreter')
+    link = venv_link(tmp_path / 'external/venv/bin', base)
+    commands = []
+
+    def imports_checkout(command, **kwargs):
+        commands.append(command)
+        return subprocess.CompletedProcess(command, 0, stdout=str(checkout / 'common/__init__.py'))
+
+    monkeypatch.setattr(storage.subprocess, 'run', imports_checkout)
+    storage.startup(checkout, link)
+    assert commands[0][0] == str(link)
+
+
+@pytest.mark.parametrize('inside', ['link', 'target'])
+def test_startup_refuses_environment_or_interpreter_inside_checkout(tmp_path, monkeypatch, inside):
+    checkout = guarded_checkout(tmp_path, monkeypatch)
+    base = (checkout if inside == 'target' else tmp_path) / 'base-python'
+    base.write_bytes(b'interpreter')
+    link = venv_link((checkout if inside == 'link' else tmp_path / 'external') / 'venv/bin', base)
+    monkeypatch.setattr(storage.subprocess, 'run', lambda *a, **k: pytest.fail('checkout environment was executed'))
+    with pytest.raises(ValueError, match='outside'):
+        storage.startup(checkout, link)
+
+
+def test_expired_jobs_do_not_displace_the_jobs_kept(tmp_path):
+    home = tmp_path / 'content'
+    kept = [job(home, 1, age=20), job(home, 2, age=21)]
+    expired = [job(home, 3, age=22), job(home, 4, age=23)]
+    finished = [(p / 'status.json').stat().st_mtime for p in expired]
+    store = storage.Store(home, storage.Policy(max_bytes=100000, days=7, keep=2))
+    store.prune()
+    # A second pass is what sees the first pass's rewritten status files.
+    store.prune()
+    assert all((p / 'render/frame.png').exists() for p in kept)
+    assert not any((p / 'render').exists() for p in expired)
+    assert [json.loads((p / 'status.json').read_text())['completed_at'] for p in expired] == finished
+
+
+@pytest.mark.parametrize('stamp', ['yesterday', True, float('nan')])
+def test_unusable_completion_stamp_falls_back_to_file_time(tmp_path, stamp):
+    home = tmp_path / 'content'
+    old = job(home, 1)
+    status = old / 'status.json'
+    mtime = status.stat().st_mtime
+    status.write_text(json.dumps(dict(state='complete', completed_at=stamp)))
+    os.utime(status, (mtime, mtime))
+    job(home, 2, age=0)
+    storage.Store(home, storage.Policy(max_bytes=100000, days=7, keep=1)).prune()
+    assert not (old / 'render').exists()
 
 
 @pytest.mark.skipif(os.name != 'nt', reason='Windows launcher verification')

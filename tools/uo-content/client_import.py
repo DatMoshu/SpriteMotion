@@ -65,7 +65,8 @@ def staging_store(out):
 def stage(vd, client, body, out, _store=None):
     if _store is not None:
         return _stage(vd,client,body,out,_store)
-    with staging_store(out).session() as store:
+    # The VD usually sits in a finished job, which this session's retention could expire.
+    with staging_store(out).session(protect=[Path(vd).resolve().parent]) as store:
         return _stage(vd,client,body,out,store)
 
 

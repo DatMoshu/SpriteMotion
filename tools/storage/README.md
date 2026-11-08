@@ -31,6 +31,9 @@ editable `.blend` files, staging/client payloads, unknown files and protected
 fleet filenames never expire. Queued/building jobs, `.keep` jobs and pinned
 rebuild sources are excluded. Protected/unknown contents abort the deletion
 plan before any candidate is removed. Links are never traversed for deletion.
+Jobs rank by when they finished: the status file's modification time, or the
+`completed_at` Unix timestamp retention writes to `status.json` when it expires a
+job, so that rewrite cannot make an expired job look new.
 
 `python tools/storage/run.py check` reports current use; `prune` runs the same
 retention policy immediately. Locks serialize builds and cleanup. An acquired

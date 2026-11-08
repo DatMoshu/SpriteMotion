@@ -11,6 +11,7 @@ import numpy as np
 root = Path(__file__).resolve().parents[2]
 tree = ast.parse((root / 'tools/uo-content/blender_build.py').read_text(encoding='utf-8'))
 function = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'import_asset')
+spec = {}  # the build script's job settings, read as a module global by import_asset
 exec(compile(ast.Module(body=[function], type_ignores=[]), 'import_asset', 'exec'))
 
 with tempfile.TemporaryDirectory() as temp:

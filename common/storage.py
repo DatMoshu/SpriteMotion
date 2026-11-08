@@ -50,7 +50,10 @@ def usage(root):
             p = Path(parent, name)
             if linked(p):
                 continue
-            s = p.stat()
+            try:
+                s = p.stat()
+            except FileNotFoundError:
+                continue  # A running producer removed its temporary file mid-walk.
             key = (s.st_dev, s.st_ino)
             if key not in seen:
                 total += s.st_size
@@ -133,6 +136,14 @@ def pin(job):
             marker.unlink()
 
 
+def finished_at(status, path):
+    """When a job finished: the stamp expiry recorded, else its status file's mtime."""
+    stamp = status.get('completed_at')
+    if isinstance(stamp, (int, float)) and not isinstance(stamp, bool) and math.isfinite(stamp):
+        return stamp
+    return path.stat().st_mtime
+
+
 class Store:
     def __init__(self, home, policy=None):
         self.home = paths.external_path(Path(home))
@@ -165,18 +176,21 @@ class Store:
             except (OSError, ValueError):
                 continue  # Unknown or corrupt state is not proof of obsolescence.
             if isinstance(status, dict) and status.get('state') in ('complete', 'failed'):
-                jobs.append((p.stat().st_mtime, p, status))
+                jobs.append((finished_at(status, p), p, status))
         plans = []
-        for index, (stamp, p, status) in enumerate(sorted(jobs, reverse=True)):
+        for index, (stamp, p, status) in enumerate(sorted(jobs, key=lambda job: job[0], reverse=True)):
             if index < self.policy.keep or time.time() - stamp < self.policy.days * 86400:
                 continue
-            plans.append((p, status, derivative_paths(p.parent)))
-        protected_guard([q for p, status, candidates in plans for q in candidates])
+            plans.append((stamp, p, status, derivative_paths(p.parent)))
+        protected_guard([q for stamp, p, status, candidates in plans for q in candidates])
         removed = []
-        for p, status, candidates in plans:
+        for stamp, p, status, candidates in plans:
             deleted = delete_paths(candidates)
             if deleted:
-                status.update(state='failed', error='Generated derivatives expired; retained inputs/settings/scene can rebuild.')
+                # This rewrite refreshes the file's mtime, so record when the job
+                # really finished or it would outrank the jobs meant to be kept.
+                status.update(state='failed', completed_at=stamp,
+                              error='Generated derivatives expired; retained inputs/settings/scene can rebuild.')
                 p.write_text(json.dumps(status, indent=2), encoding='utf-8')
                 removed.extend(deleted)
         return removed
@@ -240,8 +254,12 @@ def startup(checkout, python=None, paths_only=False):
     if not paths_only:
         if not python:
             python = os.environ.get('SPRITEMOTION_PYTHON') or paths.checkout_venv(checkout) / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
-        exe = Path(python).resolve()
+        # Run the path as given: a venv's bin/python is a symlink, and following
+        # it would start the base interpreter without the venv's site-packages.
+        exe = Path(os.path.abspath(python))
+        # Check both the interpreter's physical file and the environment holding the link.
         paths.external_path(exe, checkout)
+        paths.external_path(exe.parent, checkout)
         result = subprocess.run([str(exe), '-c', 'import spritemotion; print(spritemotion.__file__)'],
                                 cwd=checkout.parent, capture_output=True, text=True)
         if result.returncode or Path(result.stdout.strip()).resolve().parent != checkout / 'common':

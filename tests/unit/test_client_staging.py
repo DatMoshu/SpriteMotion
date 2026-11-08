@@ -3,8 +3,10 @@
 Fixtures are synthetic byte buffers, never client data.
 """
 import json
+import os
 from pathlib import Path
 import sys
+import time
 
 import pytest
 from PIL import Image
@@ -51,6 +53,26 @@ def test_anim_stage_missing_client_file_fails_before_output(tmp_path):
     with pytest.raises(ValueError, match='anim.idx'):
         client_import.stage(tmp_path / 'item.vd', client(tmp_path, skip=('anim.idx',)), 400, out)
     assert not out.exists()
+
+
+def test_staging_a_vd_keeps_its_old_job_through_retention(tmp_path, monkeypatch):
+    home = tmp_path / 'content'
+    monkeypatch.setenv('SPRITEMOTION_CONTENT_HOME', str(home))
+    monkeypatch.setenv('SPRITEMOTION_KEEP_OUTPUT_JOBS', '1')
+    jobs = {}
+    for name, age in (('000000000001', 30), ('000000000002', 0)):
+        folder = home / 'jobs' / name; folder.mkdir(parents=True)
+        (folder / 'item.vd').write_bytes(b'generated')
+        status = folder / 'status.json'; status.write_text(json.dumps({'state': 'complete'}), encoding='utf-8')
+        stamp = time.time() - age * 86400
+        os.utime(status, (stamp, stamp))
+        jobs[name] = folder
+    source = jobs['000000000001'] / 'item.vd'
+    seen = []
+    monkeypatch.setattr(client_import, '_stage', lambda vd, *rest: seen.append(Path(vd).read_bytes()))
+    client_import.stage(source, client(tmp_path), 400, home / 'staged')
+    assert seen == [b'generated']
+    assert source.exists()
 
 
 def test_equipment_failure_after_staging_removes_partial_output(tmp_path, monkeypatch):
