@@ -8,6 +8,12 @@ RECIPE.json (only "file" and "kind" are required):
    "skip": ["guy"],            # meshes of the file to leave out (parts of names)      "keep": ["Blade"]  only these
    "drop_materials": ["Belt", "Buckle"],   # materials whose faces are cut out (a belt that is one mesh with the robe)
    "arms_down": 0,                  # deg; 80-90 for a model in a T-pose (arms out): the sleeves are turned down about the shoulders ("arm_materials": ["sleeve"] names them, "arm_blend": 0.12 m is the width over which the turn fades into the body)
+   "outer_shell": false,       # true for a garment that is a closed solid ~1.5 cm thick (cloth simulator export): only the outer layer is kept before the reduction (uo_import_item.py OUTER_SHELL);
+                               # a number (0.006 m) = first rebuilt by a voxel remesh into one continuous solid (separate panels whose seams open when the item is fitted), the texture baked (OUTER_REMESH)
+   "holes": {"close": 0.06, "grow": 0.025},   # with outer_shell: pinholes closed, rips widened (a torn robe; uo_import_item.py HOLES)
+   "bake_normal": 0.0, "bake_ao": 0.0,        # with a baked texture: normal map of the original's geometry blurred over m / its occlusion darkening the colour (uo_import_item.py BAKE_NORMAL, BAKE_AO)
+   "bake_texture": 0,          # px (2048): the reduced model gets new UVs and a texture baked from the original (a reduction smears the UVs of a detailed texture; uo_import_item.py BAKE_TEXTURE)
+   "scene": {"uo_outline": 0.6, "uo_hide_erode": 1, "uo_legs_under": 1},   # per-item settings of render_uo_layer.py (outline strength, hands / head hide a pixel less, the legs never hide a long robe; "uo_contrast": 1.5 = a contrast curve on the item (darker creases, brighter lights: sleeves and hands read thinner, README section 4; kind robe / skirt get uo_contrast 1.5, uo_shade_sleeve 0.4, uo_shade_width 4 unless the recipe says otherwise); "uo_samples": 1024 = more Cycles samples; "uo_edge_floor": 24 = the 1-px outline is never darker than 24/255 per channel, no pure black rim)
    "turn": 0,                  # 180 when the model came in back to front (the fit also tries it)
    "stretch": [0.8, 1.25, 1.0],  # width, depth, height factors about the centre (a model made on a mannequin with other proportions than the UO body); "tune": {"uo_autofit_item.py": {"UNIT": 0.3}} = the file is not in metres
    "decimate": 30000,          # vertices above which the model is reduced
@@ -16,13 +22,15 @@ RECIPE.json (only "file" and "kind" are required):
    "tune": {"uo_fit_item.py": {"MIN_GAP": 0.02, "LIMIT": 0.05}, "uo_autofit_item.py": {"GAP": 0.02}},   # settings of the steps it runs (autofit, densify, fit, bind)
    "conform": {"MOVE": [0, 0, -0.07]},   # shirt / tunic / coat made on another mannequin: rebuilt as a shell of the body (uo_conform_item.py: sleeves onto the arms, wrapped GAP off the skin,
                                     # weights of the skin under it; the render keeps it out of the skin of its region in every frame); its settings, true = the defaults
+   "flail": {"BALL_SCALE": 0.7, "CHAIN_SCALE": 0.65},   # a weapon that is a flail: the chain and the ball swing (uo_flail.py, its settings)
+   "hood_cover": true,              # kind hood: brought down onto the skull, cowl onto the shoulders, out of the head skin over the ears, symmetric (uo_hood_cover.py; on by default for a hood, false = off, {"GAP": 0.015} = its settings)
    "sim": true,                     # loose garments (kind robe / skirt): cloth simulation on top of the leg push (uo_cloth_sim.py; on by default, false = off, {"goal": 0.3, ...} = its settings)
    "weapon": {"class": "sword", "part": "weapon1h", "length": null, "tip": "auto"}}   # a weapon instead of "kind": class (sword, dagger, mace, axe, polearm, staff, spear,
-                               # bow, crossbow, gun), part (weapon1h, polearm, axe2h, bow: which hand bone and motion), length m (null = of the class), tip ("auto", "heavy", "+y" ...)
+                               # bow, crossbow, gun), part (weapon1h, polearm, axe2h, bow: which hand bone and motion; weapon.L: 1H in the left hand, the mirrored grip of weapon1h, rigid on hand.L), length m (null = of the class), tip ("auto", "heavy", "+y" ...), butt (m along the hand line where the butt goes, the hand at 0: -0.06 = held near the butt end; default of the class)
 
 A model of several items (straps + a sword on the back; the file has the model's mannequin): "reference": {"keep": ["mannequin mesh"], "kind": "shirt", "turn_back": false} (false = do not try the half turn: for a model whose front is known, e.g. a belt with a sword) is fitted to the body and its
 transform goes to every part of "parts": [{"name": "straps", "keep": [...], "kind": "harness"}, {"name": "sword", "keep": [...], "rigid": "quiver"}] (rigid = stiff on a bone; its
-uo_behind_torso / uo_no_body_gap properties are set: the chest hides what hangs behind it, the item is not bent away from limbs; "move": [x, y, z] m nudges a part; "skin_shell": {"GAP": 0.03, "VNECK": [1.3, 1.56, 0.1], "ZMAX": 1.56} = rebuild a vest as a shell of the body skin (uo_skin_shell.py); "smooth_mesh": {"iterations": 3, "factor": 0.5} = smooth the finished shape (borders stay); "min_piece": 24 = the renderer drops detached bits smaller than 24 px (default 8); "no_body_gap": true = not bent around the limbs by the renderer; "behind_torso": true = the torso hides what is behind it (garments that wrap the trunk); "cut_above" / "cut_below": z (m) at which a part is cut (a collar above the shoulders, a hem over the thighs); "thicken": {"width": 0.05} = widen a thin long part so that every cross-section direction is at least that wide (a sword: 0.05 m = 2 px), {"factor": 1.3, "own_axis": false} for its hilt on the same axis; "pelvis_share": 0.4 = that share of the weight on the pelvis, the rest on the bone: a sword that follows the leg only partly).
+uo_behind_torso / uo_no_body_gap properties are set: the chest hides what hangs behind it, the item is not bent away from limbs; "move": [x, y, z] m nudges a part; "skin_shell": {"GAP": 0.03, "VNECK": [1.3, 1.56, 0.1], "ZMAX": 1.56} = rebuild a vest as a shell of the body skin (uo_skin_shell.py); "smooth_mesh": {"iterations": 3, "factor": 0.5} = smooth the finished shape (borders stay); "min_piece": 24 = the renderer drops detached bits smaller than 24 px (default 8); "no_body_gap": true = not bent around the limbs by the renderer; "behind_torso": true = the torso hides what is behind it (garments that wrap the trunk); "cut_above" / "cut_below": z (m) at which a part is cut (a collar above the shoulders, a hem over the thighs); "skin_wrap": {"GAP": 0.008} = lay straps on the skin: touching it (GAP m), keeping their thickness, none standing off it or poking through (the fit pushes a harness 1.5 cm off the skin and a mannequin's shirt adds more: 3 cm median); "widen": {"width": 0.07} = make straps (ribbons) wider in their own plane, thickness and curve stay (a 4 cm strap is 1.5 px at 36 px/m: invisible); "thicken": {"width": 0.05} = widen a thin long part so that every cross-section direction is at least that wide (a sword: 0.05 m = 2 px), {"factor": 1.3, "own_axis": false} for its hilt on the same axis; "pelvis_share": 0.4 = that share of the weight on the pelvis, the rest on the bone: a sword that follows the leg only partly).
 
 Steps (each is one of the scripts that are also in the .blend, see README): uo_import_item.py (clean, join, reduce) -> uo_materials.py (UO look) ->
 uo_prepare_item.py (uo_autofit_item.py size / place from the skin, uo_densify_item.py, uo_fit_item.py push out of the skin, uo_bind_item.py skin weights).
@@ -33,10 +41,21 @@ import argparse, json, os, re, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+ROBE_SCENE = {"uo_shade_sleeve": 0.4, "uo_shade_width": 4.0, "uo_contrast": 1.5}    # base look of a robe / skirt (2026-10, README section 4): smooth contact shadow at the sleeve-torso junction (needs "conform") and a contrast curve
+
+
+def scene_of(recipe):
+    """the scene properties of the renderer for a recipe: the base look of a robe / skirt, then the recipe's own "scene" (which wins; e.g. {"uo_contrast": 1} turns the curve off)"""
+    base = dict(ROBE_SCENE) if recipe.get("kind") in ("robe", "skirt") else {}
+    base.update(recipe.get("scene", {}))
+    return base
+
+
 PREVIEW_ACTIONS = "04_stand,00_walk_unarmed,02_run_unarmed,09_attack_1h_slash,16_spell_directed,21_die_forward"
 WEAPON_ACTIONS = {"weapon1h": "07_combat_idle_1h,09_attack_1h_slash,10_attack_1h_pierce,11_attack_1h_bash,03_run_armed,21_die_forward",
                   "polearm": "08_combat_idle_2h,13_attack_2h_slash,14_attack_2h_pierce,12_attack_2h_bash,03_run_armed,21_die_forward",
                   "axe2h": "08_combat_idle_2h,13_attack_2h_slash,12_attack_2h_bash,03_run_armed,21_die_forward,20_get_hit",
+                  "weapon.L": "07_combat_idle_1h,09_attack_1h_slash,08_combat_idle_2h,03_run_armed,16_spell_directed,21_die_forward",
                   "bow": "04_stand,19_attack_crossbow,18_attack_bow,03_run_armed,20_get_hit,21_die_forward"}
 
 
@@ -95,6 +114,77 @@ def thicken(obs, th):
         n = len(Vo); new = c + np.outer(t[k:k + n], u) + f * perp[k:k + n]; k += n
         loc = (np.linalg.inv(Mw) @ np.c_[new, np.ones(n)].T).T[:, :3]
         o.data.vertices.foreach_set("co", loc.astype(np.float32).ravel()); o.data.update()
+
+def widen(obs, th):
+    """make ribbons (straps) wider in their own plane: "width": m (every strap at least this wide, e.g. 0.07 m = 2.5 px at 36 px/m; a strap is 4-5 cm = 1.5 px and vanishes in the render),
+    "rings": mesh rings around a vertex that give the local direction of the ribbon (3), "max": largest factor (3); the thickness and the length stay, the curve of the strap is followed"""
+    import bmesh
+    for o in obs:
+        Mw = np.array(o.matrix_world); R = Mw[:3, :3]
+        bm = bmesh.new(); bm.from_mesh(o.data); bm.verts.ensure_lookup_table(); bm.normal_update()
+        W = np.array([(Mw @ np.append(np.array(v.co), 1.0))[:3] for v in bm.verts])
+        Nw = np.array([R @ np.array(v.normal) for v in bm.verts]); Nw /= np.maximum(np.linalg.norm(Nw, axis=1, keepdims=True), 1e-9)
+        new = W.copy(); fs = []
+        for i, v in enumerate(bm.verts):
+            seen = {v.index}; front = [v]
+            for _ in range(int(th.get("rings", 3))):
+                nxt = []
+                for a in front:
+                    for e in a.link_edges:
+                        b = e.other_vert(a)
+                        if b.index not in seen:
+                            seen.add(b.index); nxt.append(b)
+                front = nxt
+            idx = sorted(seen)
+            if len(idx) < 4:
+                continue
+            P = W[idx]; n = Nw[i]; c = P.mean(0)
+            Q = (P - c) - np.outer((P - c) @ n, n)
+            t = np.linalg.eigh(Q.T @ Q)[1][:, -1]
+            sd = np.cross(n, t); sd /= max(np.linalg.norm(sd), 1e-9)
+            w = float(np.ptp(P @ sd))
+            f = min(float(th.get("max", 3.0)), max(1.0, float(th["width"]) / max(w, 1e-6)))
+            fs.append(f)
+            new[i] = W[i] + (f - 1.0) * float((W[i] - c) @ sd) * sd
+        loc = (np.linalg.inv(Mw) @ np.c_[new, np.ones(len(new))].T).T[:, :3]
+        o.data.vertices.foreach_set("co", loc.astype(np.float32).ravel()); o.data.update(); bm.free()
+        print("uo_make_item: widen %%s to %%.1f cm (factor mean %%.2f, max %%.2f)" %% (o.name, 100 * float(th["width"]), float(np.mean(fs)) if fs else 1.0, max(fs) if fs else 1.0))
+
+
+def skin_wrap(obs, th):
+    """lay a ribbon (strap) on the skin of the rest pose: every vertex goes to the nearest skin point + the normal * (GAP + its height over the lowest vertex of its 1-ring, at most THICK), so the strap
+    keeps its thickness, touches the skin (GAP m, 0.008) and does not stand off it or poke through it; a vertex is moved at most MAX m (0.05). The weights are set again afterwards (the skin under each vertex)"""
+    import bmesh
+    from mathutils.bvhtree import BVHTree
+    bpy.context.view_layer.update()
+    body = bpy.data.objects["UO_Body"]; dg = bpy.context.evaluated_depsgraph_get(); eb = body.evaluated_get(dg); mb = eb.to_mesh(); mb.calc_loop_triangles()
+    bv = BVHTree.FromPolygons([eb.matrix_world @ v.co for v in mb.vertices], [t.vertices[:] for t in mb.loop_triangles]); eb.to_mesh_clear()
+    gap, thick, mx = float(th.get("GAP", 0.008)), float(th.get("THICK", 0.006)), float(th.get("MAX", 0.05))
+    for o in obs:
+        Mw = o.matrix_world; bm = bmesh.new(); bm.from_mesh(o.data); bm.verts.ensure_lookup_table()
+        n = len(bm.verts); P = [Mw @ v.co for v in bm.verts]; L = [None] * n; N = [None] * n; d = np.full(n, 9.0)
+        for i, p in enumerate(P):
+            loc, nrm, fi, dist = bv.find_nearest(p, 0.5)
+            if loc is not None:
+                L[i], N[i] = loc, nrm; d[i] = dist if (p - loc).dot(nrm) >= 0 else -dist
+        new = list(P); moved = []
+        for i, v in enumerate(bm.verts):
+            if L[i] is None:
+                continue
+            dmin = min([d[i]] + [d[e.other_vert(v).index] for e in v.link_edges])
+            q = L[i] + N[i] * (gap + min(thick, max(0.0, d[i] - dmin)))
+            sh = q - P[i]
+            if sh.length > mx:
+                q = P[i] + sh * (mx / sh.length)
+            new[i] = q; moved.append((q - P[i]).length)
+        Mi = Mw.inverted()
+        for v, q in zip(bm.verts, new):
+            v.co = Mi @ q
+        bm.to_mesh(o.data); bm.free(); o.data.update()
+        ok = d < 9
+        print("uo_make_item: skin_wrap %%s: median height over the skin %%.1f -> %%.1f cm, inside %%.0f -> 0 %%%% of the vertices, moved %%.1f cm on average (max %%.1f)" %% (
+            o.name, 100 * float(np.median(d[ok])), 100 * gap, 100 * float((d[ok] < 0).mean()), 100 * float(np.mean(moved)) if moved else 0.0, 100 * max(moved) if moved else 0.0))
+
 rig = bpy.data.objects["UO_Rig"]; rig.data.pose_position = "REST"
 for o in list(bpy.data.collections["Clothing"].all_objects):
     bpy.data.objects.remove(o, do_unlink=True)
@@ -127,6 +217,8 @@ for part in %(parts)r:
     bpy.context.view_layer.update()
     if part.get("thicken"):
         thicken(obs, part["thicken"])
+    if part.get("widen"):
+        widen(obs, part["widen"])
     run("uo_materials.py", **part.get("materials", {}))
     if part.get("scale") or part.get("on_bone"):         # a part that is the wrong size / place for the body (a pauldron of a stylised armour): scaled about its own centre, then its centre put on a bone (+ offset, m)
         import numpy as np
@@ -239,6 +331,12 @@ for part in %(parts)r:
             select(obs)
             run("uo_skin_shell.py", **ss)
             run("uo_bind_item.py", PART=part.get("prepare", {}).get("PART") or "torso", **bind_over)
+        if part.get("skin_wrap"):                        # straps and hardware laid on the skin (skin_wrap above), then bound again to the skin under each vertex
+            sw = dict(part["skin_wrap"]) if isinstance(part["skin_wrap"], dict) else {}
+            bind_over = sw.pop("bind", {"SMOOTH": 0})          # the weights of the skin under each vertex, not smoothed over the mesh: the strap moves with the skin and keeps its gap in motion
+            skin_wrap(obs, sw)
+            select(obs)
+            run("uo_bind_item.py", PART=part.get("prepare", {}).get("PART") or "torso", **bind_over)
         if part.get("smooth_mesh"):                      # Laplacian smoothing of the finished rest shape (bumps and waves left by the push-out of the fit); border vertices (armholes, neckline, hem) stay, the skin weights stay
             sm = part["smooth_mesh"] if isinstance(part["smooth_mesh"], dict) else {}
             import bmesh
@@ -272,9 +370,12 @@ for part in %(parts)r:
                     for k in [k for k in o.data.shape_keys.key_blocks if k.name.startswith("uo_")]:
                         o.shape_key_remove(k)
                 print("uo_make_item: %%s -> rigid on %%s" %% (o.name, bone))
+for k, v in %(scene)r.items():                                    # "scene": properties of the scene the renderer reads per item (uo_samples, uo_edge_floor, uo_outline, ...)
+    bpy.context.scene[k] = v
+    print("uo_make_item: scene property %%s = %%r" %% (k, v))
 bpy.ops.wm.save_as_mainfile(filepath=%(out)r)
 print("uo_make_item: saved", %(out)r)
-''' % dict(here=HERE, base=base, ref=ref, parts=parts, out=out_blend)
+''' % dict(here=HERE, base=base, ref=ref, parts=parts, scene=scene_of(recipe), out=out_blend)
 
 
 def build_stage(recipe, out_blend):
@@ -282,7 +383,7 @@ def build_stage(recipe, out_blend):
     if "parts" in recipe:
         return build_parts_stage(recipe, out_blend)
     kind = recipe.get("kind", "")
-    imp = dict(FILE=os.path.abspath(recipe["file"]), KIND="" if recipe.get("weapon") else kind, SKIP=list(recipe.get("skip", [])), KEEP=list(recipe.get("keep", [])), DROP_MATERIALS=list(recipe.get("drop_materials", [])), ARMS_DOWN=float(recipe.get("arms_down", 0.0)), ARM_BLEND=float(recipe.get("arm_blend", 0.12)), TURN=int(recipe.get("turn", 0)),
+    imp = dict(FILE=os.path.abspath(recipe["file"]), KIND="" if recipe.get("weapon") else kind, SKIP=list(recipe.get("skip", [])), KEEP=list(recipe.get("keep", [])), DROP_MATERIALS=list(recipe.get("drop_materials", [])), ARMS_DOWN=float(recipe.get("arms_down", 0.0)), ARM_BLEND=float(recipe.get("arm_blend", 0.12)), TURN=int(recipe.get("turn", 0)), OUTER_SHELL=bool(recipe.get("outer_shell", False)), OUTER_REMESH=float(recipe["outer_shell"]) if not isinstance(recipe.get("outer_shell", False), bool) else 0.0, BAKE_TEXTURE=int(recipe.get("bake_texture", 0)), HOLES=recipe.get("holes"), BAKE_NORMAL=float(recipe.get("bake_normal", 0.0)), BAKE_AO=float(recipe.get("bake_ao", 0.0)),
                DECIMATE_TO=int(recipe.get("decimate", 30000)), NAME=recipe.get("name", ""))
     if "scale" in recipe:
         imp["SCALE"] = float(recipe["scale"])
@@ -305,17 +406,20 @@ def run(script, **over):
 run("uo_import_item.py", **%(imp)r)
 run("uo_materials.py", **%(mat)r)
 prep = %(prep)r
-flat = {k: v for k, v in prep.items() if not isinstance(v, dict)}
+flat = {k: v for k, v in prep.items() if not isinstance(v, dict) or k.isupper()}      # settings of uo_prepare_item.py (a dict setting too: HEM_BAND)
 wp = %(weapon)r
 if wp:                                                           # a weapon: upright, class length, onto the line of its hand bone, rigid on the weapon bone
     run("uo_orient_weapon.py", CLASS=wp["class"], LENGTH=float(wp.get("length") or 0.0), TIP=wp.get("tip", "auto"), FLAT=bool(wp.get("flat", True)))
-    run("uo_place_weapon.py", PART=wp["part"], **({"ROLL_DEG": float(wp["roll"])} if "roll" in wp else {}))
+    run("uo_place_weapon.py", PART=wp["part"], **({"ROLL_DEG": float(wp["roll"])} if "roll" in wp else {}), **({"BUTT": float(wp["butt"])} if "butt" in wp else {}))
     run("uo_bind_item.py", PART=wp["part"])
 else:
     run("uo_prepare_item.py", KIND=%(kind)r, **flat)
+for k, v in %(scene)r.items():                                    # "scene": properties of the scene the renderer reads per item (uo_outline, uo_hide_erode, uo_legs_under, ...)
+    bpy.context.scene[k] = v
+    print("uo_make_item: scene property %%s = %%r" %% (k, v))
 bpy.ops.wm.save_as_mainfile(filepath=%(out)r)
 print("uo_make_item: saved", %(out)r)
-''' % dict(here=HERE, imp=imp, mat=recipe.get("materials", {}), prep=recipe.get("prepare", {}), kind=kind, out=out_blend, weapon=recipe.get("weapon"), tune=json.dumps(recipe.get("tune", {})))
+''' % dict(here=HERE, scene=scene_of(recipe), imp=imp, mat=recipe.get("materials", {}), prep=recipe.get("prepare", {}), kind=kind, out=out_blend, weapon=recipe.get("weapon"), tune=json.dumps(recipe.get("tune", {})))
 
 
 def run_blend(base, stage_text, log):
@@ -395,6 +499,27 @@ if __name__ == "__main__":
             q = subprocess.run([sys.executable, os.path.join(HERE, "item_clearance.py"), blend, "--json", os.path.join(out, "clearance.json")], capture_output=True, text=True)
             line = next((l for l in q.stdout.splitlines() if l.startswith("CLEARANCE")), "item_clearance failed: " + (q.stderr or q.stdout)[-300:])
             print(line); open(os.path.join(out, "report.txt"), "a").write(line + "\n")
+    if recipe.get("hood_cover", recipe.get("kind") == "hood"):      # a hood: pushed out of the head skin it does not cover (ears), symmetric, smooth (uo_hood_cover.py)
+        cfg = recipe["hood_cover"] if isinstance(recipe.get("hood_cover"), dict) else {}
+        sets = sum([["--set", "%s=%s" % kv] for kv in cfg.items()], [])
+        r = subprocess.run([sys.executable, os.path.join(HERE, "uo_hood_cover.py"), blend, blend] + sets, capture_output=True, text=True)
+        lines = [l for l in r.stdout.splitlines() if l.startswith("uo_hood_cover")]
+        open(os.path.join(out, "report.txt"), "a").write("\n".join(lines) + "\n")
+        if r.returncode or not any("saved" in l for l in lines):
+            sys.exit("uo_hood_cover failed:\n%s\n%s" % (r.stdout[-3000:], r.stderr[-2000:]))
+        for l in lines:
+            print(l[:260])
+    if recipe.get("flail"):                                  # a flail: haft rigid in the hand, the chain and the ball simulated per action (uo_flail.py -> flail_sim.npz next to item.blend)
+        t = time.time(); cfg = recipe["flail"] if isinstance(recipe["flail"], dict) else {}
+        sets = sum([["--set", "%s=%s" % kv] for kv in cfg.items()], [])
+        r = subprocess.run([sys.executable, os.path.join(HERE, "uo_flail.py"), blend, blend, "--out", os.path.join(out, "flail_sim.npz")] + sets, capture_output=True, text=True)
+        lines = [l for l in r.stdout.splitlines() if l.startswith("uo_flail")]
+        open(os.path.join(out, "report.txt"), "a").write("\n".join(lines) + "\n")
+        if r.returncode or not any("wrote" in l for l in lines):
+            sys.exit("uo_flail failed:\n%s\n%s" % (r.stdout[-3000:], r.stderr[-2000:]))
+        for l in lines:
+            print(l[:260])
+        print("flail simulated in %.0f s" % (time.time() - t))
     sim = recipe.get("sim", recipe.get("kind") in ("robe", "skirt")) and not recipe.get("weapon")      # loose garments: cloth simulation on top of the leg push (uo_cloth_sim.py), on by default
     if sim and a.no_sim is False:
         t = time.time(); cfg = ["%s=%s" % kv for kv in (recipe["sim"].items() if isinstance(recipe.get("sim"), dict) else [])]

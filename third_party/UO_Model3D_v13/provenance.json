@@ -4,12 +4,12 @@
   "license": "shared with permission of the artist (Levy)",
   "upstream": {
     "repository": "https://github.com/Kserian/UO_Model3D",
-    "commit": "e9544f6",
-    "date": "2026-10-09",
-    "previous_commit": "3eaae69"
+    "commit": "b212cee",
+    "date": "2026-10-20",
+    "previous_commit": "e9544f6"
   },
   "note": "UO_Body_0x190.blend is the stripped copy: the packed original client frame atlas (UO_Original_Atlas, uo_original_frames.json) is removed with pipeline/strip_originals.py and uo_exact is 0. No .fbx/.glb are shipped: upstream publishes none and nothing in SpriteMotion reads them.",
   "files": {
-    "model/UO_Body_0x190.blend": "80a323730621343d4c0666a5711294f916e921180f3c2e8fadf0e2226c745a32"
+    "model/UO_Body_0x190.blend": "0a8f105ec91091fa1250981f85ad55129e97732ad5cd1c5a8d0aaa09f235efcd"
   }
 }

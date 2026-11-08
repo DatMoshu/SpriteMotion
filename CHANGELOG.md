@@ -47,6 +47,9 @@
 - Vendors Levy's UO_Model3D at upstream e9544f6 (was 3eaae69): 54-bone symmetric rig (no twist, toe, skirt or cloak
   chains), action 17 arm fix, narrower shoulders. `blender_build.py` checks the bones it needs by name instead of a bone
   count. Mappings use `foot.L/R` where they used `toe.L/R` (#27). Client data is not vendored.
+- Vendors UO_Model3D at upstream b212cee (v13.5, was e9544f6): the cloth simulation pins the cloth to the moving
+  target (it stayed on the first pose), fabric presets, adaptive item render, pose keys re-fitted for natural motion.
+  `pipeline.py setup` copies `bpy_compat.py` and checks `README.md` (upstream dropped `README_EN.md`).
 
 ### Launchers
 - Every `.bat` has a one-sentence description, calls `_shared/common.bat` and has a `.sh` twin; new `dev/` launchers

@@ -1,5 +1,7 @@
 # SpriteMotion: project rules for coding agents
 
+Fleet rules: read D:/.projects/.Org/rules/00_index.md first (roles in D:/.projects/.Org/roles/). Seats are `chief`, `<project>-lead` and `<project>-worker-<slug>`, launched by `D:/.projects/.Org/launchers/{chief,lead,worker}.bat`; mail is `org mail`, leases `org lease`, state `org seat`, budget `org budget check` (`org` = `python D:/.projects/.Org/tools/org/run.py`). The old fleet_inbox, switchboard, roster and exec-fable/exec-astra names are retired (2026-10-24).
+
 Shared by every agent (Claude Code, Codex, Cursor, Copilot). Workflows live in `.claude/skills/`; the routers
 (`AGENTS.md`, `.github/copilot-instructions.md`, `.cursor/rules/`) are generated from them by
 `python tools/agents/run.py`. Edit this file or a skill, never a router.
@@ -47,7 +49,7 @@ headless Blender run, not only a syntax check.
 
 ## Key facts
 
-- Canonical body: UO_Model3D by Levy at upstream e9544f6 (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`),
+- Canonical body: UO_Model3D by Levy at upstream b212cee (`workspace/ultima-online/canonical-model/model/UO_Body_0x190.blend`),
   54 bones (no twist, toe, skirt or cloak chains; `foot.L/R` is the last leg bone; weapon bones `weapon1h.R`, `axe2h.L`,
   `bow.L`, `polearm.L`), rig `UO_Rig`, direction = driver `-d*pi/4` on the rig's Z rotation, UO frame i = scene frame 1 + 3i.
 - In item renders the body is a holdout: body poking through clothing cuts holes in the item sprite. Asset-pack
@@ -56,9 +58,9 @@ headless Blender run, not only a syntax check.
 
 ## Evidence
 Save all evidence in `D:/_agentShared/runs/<project>/<run-id>/`; run-id is `<YYYYMMDD>_<seat-or-story>_<topic>` (UTC, lower-case kebab).
-Name files by `D:/_agentShared/rules/evidence_naming.md`; storage and retention follow `D:/_agentShared/rules/evidence_central.md`.
-Start: `python D:/_fable/tools/evidence/run.py start --project PROJECT --seat SEAT --story STORY --topic TOPIC --repo REPO` (prints the folder).
-Capture there or use `python D:/_fable/tools/evidence/run.py add FILE --seat SEAT --subject SUBJECT --kind KIND`; finish with `python D:/_fable/tools/evidence/run.py done --seat SEAT --summary RESULT` and put the run id in DONE.
+Naming, storage and retention follow `D:/.projects/.Org/rules/done.md`.
+Start: `python D:/.projects/.Org/tools/evidence/run.py start --project PROJECT --seat SEAT --story STORY --topic TOPIC --repo REPO` (prints the folder).
+Capture there or use `python D:/.projects/.Org/tools/evidence/run.py add FILE --seat SEAT --subject SUBJECT --kind KIND`; finish with `python D:/.projects/.Org/tools/evidence/run.py done --seat SEAT --summary RESULT` and put the run id in DONE.
 Never save evidence in this repo/worktree; product source assets and test fixtures keep their own paths. Weekly purge removes only reviewed done runs older than 14 days; working/blocked/unreviewed runs are protected.
 
 ## Evidence emitter follow-up

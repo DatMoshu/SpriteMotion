@@ -14,12 +14,12 @@ import numpy as np
 KIND = ""             # kind of item (as in uo_fit_item.py): picks TARGET_EDGE from EDGE_BY_KIND when TARGET_EDGE < 0 ("" = not given)
 TARGET_EDGE = -1.0    # m, mean edge length to reach; < 0 = from KIND (EDGE_BY_KIND, else 0.03); 0 = off
 # TARGET_EDGE by KIND. Measured (test_density.py, replicas decimated to 10 % and densified, IoU with the sprite and px/frame from the full-density
-# render, `docs/qa/density.json`): shirt, pants, boots reach the full-density result at a mean edge <= 5 cm (no gain below), gloves need 2 cm (fingers; at 5 cm
+# render, `test_density.py`): shirt, pants, boots reach the full-density result at a mean edge <= 5 cm (no gain below), gloves need 2 cm (fingers; at 5 cm
 # nothing is subdivided and the gloves stay 16 px/frame off, at 2 cm 4 px). The others are set by analogy (limbs bend like pants / shirt), NOT measured:
 # 4 cm for limbs and trunk, 2 cm for small parts, 0 for what does not bend (helmets, rigid items ride on one bone; the push of uo_fit_item.py only needs faces
 # not much bigger than the gap, 5 cm).
 EDGE_BY_KIND = {"shirt": 0.04, "pants": 0.04, "legs": 0.04, "arms": 0.03, "plate": 0.04, "boots": 0.03, "gloves": 0.02, "neck": 0.02,
-                "helm": 0.05, "hair": 0.05, "beard": 0.03, "robe": 0.04, "skirt": 0.04, "cloak": 0.04, "harness": 0.04, "waist": 0.03, "vest": 0.04}
+                "helm": 0.05, "hair": 0.05, "beard": 0.03, "robe": 0.04, "skirt": 0.04, "cloak": 0.04, "harness": 0.04, "waist": 0.03, "vest": 0.04, "hood": 0.04}
 MAX_LEVEL = 3         # subdivision steps at most
 MAX_VERTS = 30000     # vertices at most after densifying
 SMOOTH = 0.0          # 0..1, see above
