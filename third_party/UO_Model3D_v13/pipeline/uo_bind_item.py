@@ -36,10 +36,12 @@ PARTS = {
     "boots":     (["shin.L", "foot.L", "shin.R", "foot.R"], {}),               # boots, greaves
     "helm":      (["head"], {}),                                               # helmet, hat, mask
     "neck":      (["neck", "chest", "head"], {}),                              # gorget, collar
+    "hood":      (["head", "neck", "chest", "upper_arm.L", "upper_arm.R"], {"upper_arm": 0.5}),   # hood with a cowl round the neck: the hood on the head, the cowl on the neck and chest; a cowl
+                                                                               # over the shoulders takes half the shoulder's motion (on the chest only, the shoulders came through it in the attacks and spells)
     "belt":      (["pelvis", "spine", "chest", "thigh.L", "thigh.R"], {}),     # belt with straps and hangers that reach down over the hips: what hangs below the waist follows the thigh under it
     # loose garments (robe, dress, skirt, kilt): above the hips like "all"; the hanging part follows the PELVIS only (it does not stick to the legs like trousers): the weight
     # of thighs, shins and feet goes to the pelvis. The legs push it out when they reach it: render_uo_layer.py does that per frame (custom property `uo_cloth`, set below;
-    # cloth_lib.hull_push, calibrated on the original robes, docs/qa/robe_physics.md). FOLLOW also takes (share, t0, t1, end share): share near the joint -> end share along the bone.
+    # cloth_lib.hull_push, calibrated on the original robes). FOLLOW also takes (share, t0, t1, end share): share near the joint -> end share along the bone.
     "robe":      (None, {"hand": 0.0, "foot": 0.0, "shin": 0.0, "thigh": 0.0}),
     "skirt":     (None, {"hand": 0.0, "foot": 0.0, "shin": 0.0, "thigh": 0.0}),
     "cloak":     (None, {"hand": 0.0, "foot": 0.0, "shin": 0.0, "thigh": 0.0}),   # cape from the shoulders: hangs from the chest, the rest follows the pelvis; swings back per action (render_uo_layer.py)
@@ -230,8 +232,10 @@ def bind(ob, allowed):
 CLOTH_PARTS = ("robe", "skirt", "cloak")
 LEG_BONES = ("thigh.L", "shin.L", "foot.L", "thigh.R", "shin.R", "foot.R")
 CLOTH_DROP = 1.0                           # m of radius the hem may narrow per m of height below a push (0 = hangs straight down from it, larger = tapers back in sooner)
-CLOTH_MARGIN_SHORT, CLOTH_KAPPA_SHORT = 0.02, 0.5   # a garment that ends at the knee or above (kilt, short skirt): only the thighs push it, and less (robe_calib.py on the originals 455, 971)
-CLOTH_MARGIN, CLOTH_KAPPA = 0.05, 0.8      # a long robe (hem below 0.15 m); between 0.15 and 0.30 m of hem height the values blend into the short ones; how far past the legs the hem goes, how much of the way to the legs the cloth is pushed (robe_calib.py: best of the sweep on robe 469)
+CLOTH_MARGIN_SHORT = 0.02
+CLOTH_KAPPA_SHORT = 0.5                    # a garment that ends at the knee or above (kilt, short skirt): only the thighs push it, and less (robe_calib.py on the originals 455, 971)
+CLOTH_MARGIN = 0.05                        # a long robe (settings on separate lines: a recipe overrides them by name, "tune": {"uo_bind_item.py": {"CLOTH_KAPPA": 1.0}})
+CLOTH_KAPPA = 0.8                          # a long robe (hem below 0.15 m); between 0.15 and 0.30 m of hem height the values blend into the short ones; how far past the legs the hem goes, how much of the way to the legs the cloth is pushed (robe_calib.py: best of the sweep on robe 469)
 
 
 def mark_cloak(ob):

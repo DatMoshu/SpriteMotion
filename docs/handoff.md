@@ -65,6 +65,27 @@ in `jobs/` (listed as a partial job by the studio); the fit lab's render index i
 jobs started outside the lab need `fit_item` when the saved adjustments hold non-zero item offsets or non-pack
 corrections.
 
+## UO_Model3D b212cee (2026-10-20, v13.5, vendored)
+
+`third_party/UO_Model3D_v13/` now holds Levy's repo at b212cee (was e9544f6; through b2d22af and 9db841d, about 140
+commits), stripped the same way (the .blend saved by Blender 4.2 through `strip_originals.py`; texts and images as
+before, no original atlas, no `.vd`, `.npz`, `.pkl`, `body13` or `test_data`). For SpriteMotion:
+
+- `uo_cloth_sim.py` drives the pinned target with animated shape keys: the old frame handler left the pin on the first
+  pose and the whole robe drifted 7-12 cm off the body. It gained `thick`, `in_max`, `smooth` (needs scipy, which
+  Blender does not ship), fabric presets (`fabric=silk|cotton|wool|denim|leather`) and imports `bpy_compat.py`, which
+  `pipeline.py setup` now copies and the render fingerprint includes.
+- `render_uo_layer.py`: 512 adaptive samples for items, `DESPECKLE` 0, `OUTLINE_TARGET` 0.38 (one rim factor per
+  render, measured on the original items) and optional robe shading (`uo_contrast`, `uo_shade_sleeve/body/width`).
+- 9db841d re-fitted the pose keys for natural motion and added the mounted head/neck yaw; b212cee leaves the model
+  unchanged. A/B on a one-handed katana preview (`weapon1h.R`) between b2d22af and 9db841d: 0.14% of the review sheet
+  changed.
+- Upstream made `README.md` the English README and `README_PL.md` the Polish one (`README_EN.md` is gone);
+  `pipeline.py setup` now checks `README.md`.
+- Measured on a robe built with the cloth pass: `thick` 0.02 (the upstream default) cracked the pleats and left a dark
+  ring under the hem; 0.005 with `in_max` -1 stayed clean. Upstream measured more leg pixels through the robe in a run
+  at 0.005, so it is a per-garment choice.
+
 ## UO_Model3D e9544f6 (2026-10-09, vendored, SM-MODEL3)
 
 `third_party/UO_Model3D_v13/` now holds Levy's repo at e9544f6 (was 3eaae69), stripped as in its NOTICE. The rig is 54
